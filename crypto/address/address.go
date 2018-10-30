@@ -6,7 +6,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
-	"github.com/orbs-network/orbs-network-go/crypto/base58"
+	"github.com/orbs-network/orbs-client-sdk-go/crypto/base58"
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/ripemd160"
 	"hash/crc32"

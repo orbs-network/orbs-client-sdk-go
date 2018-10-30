@@ -2,7 +2,7 @@ package base58_test
 
 import (
 	"bytes"
-	"github.com/orbs-network/orbs-network-go/crypto/base58"
+	"github.com/orbs-network/orbs-client-sdk-go/crypto/base58"
 	"testing"
 )
 

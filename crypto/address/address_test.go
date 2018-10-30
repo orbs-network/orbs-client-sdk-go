@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
-	"github.com/orbs-network/orbs-network-go/crypto/address"
+	"github.com/orbs-network/orbs-client-sdk-go/crypto/address"
 	"strconv"
 	"testing"
 )

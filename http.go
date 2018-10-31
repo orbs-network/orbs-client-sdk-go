@@ -9,18 +9,15 @@ import (
 )
 
 const CONTENT_TYPE = "application/membuffers"
+const (
+	SEND_TRANSACTION_URL       = "/api/v1/send-transaction"
+	CALL_METHOD_URL            = "/api/v1/call-method"
+	GET_TRANSACTION_STATUS_URL = "/api/v1/get-transaction-status"
+)
 
 func (c *OrbsClient) SendTransaction(payload []byte) (response *codec.SendTransactionResponse, err error) {
-	res, err := http.Post(c.Endpoint, CONTENT_TYPE, bytes.NewReader(payload))
+	res, buf, err := c.sendHttpPost(SEND_TRANSACTION_URL, payload)
 	if err != nil {
-		err = errors.Wrap(err, "failed sending http post")
-		return
-	}
-
-	buf, err := ioutil.ReadAll(res.Body)
-	defer res.Body.Close()
-	if err != nil {
-		err = errors.Wrap(err, "failed reading http response")
 		return
 	}
 
@@ -39,16 +36,8 @@ func (c *OrbsClient) SendTransaction(payload []byte) (response *codec.SendTransa
 }
 
 func (c *OrbsClient) CallMethod(payload []byte) (response *codec.CallMethodResponse, err error) {
-	res, err := http.Post(c.Endpoint, CONTENT_TYPE, bytes.NewReader(payload))
+	res, buf, err := c.sendHttpPost(CALL_METHOD_URL, payload)
 	if err != nil {
-		err = errors.Wrap(err, "failed sending http post")
-		return
-	}
-
-	buf, err := ioutil.ReadAll(res.Body)
-	defer res.Body.Close()
-	if err != nil {
-		err = errors.Wrap(err, "failed reading http response")
 		return
 	}
 
@@ -67,16 +56,8 @@ func (c *OrbsClient) CallMethod(payload []byte) (response *codec.CallMethodRespo
 }
 
 func (c *OrbsClient) GetTransactionStatus(payload []byte) (response *codec.GetTransactionStatusResponse, err error) {
-	res, err := http.Post(c.Endpoint, CONTENT_TYPE, bytes.NewReader(payload))
+	res, buf, err := c.sendHttpPost(GET_TRANSACTION_STATUS_URL, payload)
 	if err != nil {
-		err = errors.Wrap(err, "failed sending http post")
-		return
-	}
-
-	buf, err := ioutil.ReadAll(res.Body)
-	defer res.Body.Close()
-	if err != nil {
-		err = errors.Wrap(err, "failed reading http response")
 		return
 	}
 
@@ -92,4 +73,19 @@ func (c *OrbsClient) GetTransactionStatus(payload []byte) (response *codec.GetTr
 	}
 
 	return
+}
+
+func (c *OrbsClient) sendHttpPost(relativeUrl string, payload []byte) (*http.Response, []byte, error) {
+	res, err := http.Post(c.Endpoint+relativeUrl, CONTENT_TYPE, bytes.NewReader(payload))
+	if err != nil {
+		return nil, nil, errors.Wrap(err, "failed sending http post")
+	}
+
+	buf, err := ioutil.ReadAll(res.Body)
+	defer res.Body.Close()
+	if err != nil {
+		return nil, buf, errors.Wrap(err, "failed reading http response")
+	}
+
+	return res, buf, nil
 }

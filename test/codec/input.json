@@ -1,0 +1,64 @@
+[
+  {
+    "Test": "st_req_1",
+    "SendTransactionRequest": {
+      "ProtocolVersion": "1",
+      "VirtualChainId": "42",
+      "Timestamp": "2010-11-21T10:00:00.000Z",
+      "NetworkType": "MAIN_NET",
+      "PublicKey": "38BsW+JKZ63ugLNatPFHuxo1xV/4Xtpp9A74J73ewXM=",
+      "ContractName": "BenchmarkToken",
+      "MethodName": "getBalance",
+      "InputArguments": []
+    },
+    "PrivateKey": "k+kZmGoiR3/aAWeJzKMMuEGhNWUJOHFPhfAACmUHa9TfwGxb4kpnre6As1q08Ue7GjXFX/he2mn0Dvgnvd7Bcw==",
+    "InputArgumentsTypes": []
+  },
+  {
+    "Test": "st_req_2",
+    "SendTransactionRequest": {
+      "ProtocolVersion": "1",
+      "VirtualChainId": "34727",
+      "Timestamp": "2020-11-21T20:00:00.000Z",
+      "NetworkType": "TEST_NET",
+      "PublicKey": "38BsW+JKZ63ugLNatPFHuxo1xV/4Xtpp9A74J73ewXM=",
+      "ContractName": "SuperToken",
+      "MethodName": "transfer",
+      "InputArguments": ["1", "2", "hello", "AQID"]
+    },
+    "PrivateKey": "k+kZmGoiR3/aAWeJzKMMuEGhNWUJOHFPhfAACmUHa9TfwGxb4kpnre6As1q08Ue7GjXFX/he2mn0Dvgnvd7Bcw==",
+    "InputArgumentsTypes": ["uint32", "uint64", "string", "bytes"]
+  },
+  {
+    "Test": "st_res_1",
+    "SendTransactionResponse": "AQAAAIsAAAAgAAAAz4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpACAAAAXwAAABAAAAAGAAAAdWludDMyAAABAAAAFAAAAAYAAAB1aW50NjQBAAIAAAAAAAAAFQAAAAYAAABzdHJpbmcCAAUAAABoZWxsbwAAABMAAAAFAAAAYnl0ZXMAAwADAAAAAQIDAAEAAABXCAAAAAAAAABAwJ2SL+gR"
+  },
+  {
+    "Test": "cm_req_1",
+    "CallMethodRequest": {
+      "ProtocolVersion": "1",
+      "VirtualChainId": "34727",
+      "Timestamp": "2020-11-21T20:00:00.000Z",
+      "NetworkType": "TEST_NET",
+      "PublicKey": "38BsW+JKZ63ugLNatPFHuxo1xV/4Xtpp9A74J73ewXM=",
+      "ContractName": "SuperToken",
+      "MethodName": "checkSomething",
+      "InputArguments": ["1", "9223372036854770000", "hello", "AQID"]
+    },
+    "InputArgumentsTypes": ["uint32", "uint64", "string", "bytes"]
+  },
+  {
+    "Test": "cm_res_1",
+    "CallMethodResponse": "AwAAAAAAAAABAAAAjlUBAAAAAAAAQMCdki/oEQ=="
+  },
+  {
+    "Test": "gt_req_1",
+    "GetTransactionStatusRequest": {
+      "TxId": "AIBBAU6eSRZyajFx2NNzrlg88uyatTEc8vt2dkxqo0asDHiltqxVVQ=="
+    }
+  },
+  {
+    "Test": "gt_res_1",
+    "GetTransactionStatusResponse": "BAAAAEQAAAAgAAAAz4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpADAAAAGAAAABQAAAAGAAAAdWludDY0AQAX/P///////wsAAAB37P///////wCAQQFOnkkW"
+  }
+]

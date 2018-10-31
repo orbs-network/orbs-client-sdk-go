@@ -5,7 +5,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func methodArgumentsBuilders(args ...interface{}) (res []*protocol.MethodArgumentBuilder, err error) {
+func methodArgumentsBuilders(args []interface{}) (res []*protocol.MethodArgumentBuilder, err error) {
 	res = []*protocol.MethodArgumentBuilder{}
 	for index, arg := range args {
 		switch arg.(type) {
@@ -25,9 +25,9 @@ func methodArgumentsBuilders(args ...interface{}) (res []*protocol.MethodArgumen
 	return
 }
 
-func methodArgumentsArray(args ...interface{}) (*protocol.MethodArgumentArray, error) {
+func methodArgumentsArray(args []interface{}) (*protocol.MethodArgumentArray, error) {
 	res := []*protocol.MethodArgumentBuilder{}
-	builders, err := methodArgumentsBuilders(args...)
+	builders, err := methodArgumentsBuilders(args)
 	if err != nil {
 		return nil, err
 	}
@@ -37,15 +37,15 @@ func methodArgumentsArray(args ...interface{}) (*protocol.MethodArgumentArray, e
 	return (&protocol.MethodArgumentArrayBuilder{Arguments: res}).Build(), nil
 }
 
-func methodArgumentsOpaqueEncode(args ...interface{}) ([]byte, error) {
-	argArray, err := methodArgumentsArray(args...)
+func MethodArgumentsOpaqueEncode(args []interface{}) ([]byte, error) {
+	argArray, err := methodArgumentsArray(args)
 	if err != nil {
 		return nil, err
 	}
 	return argArray.RawArgumentsArray(), nil
 }
 
-func methodArgumentsOpaqueDecode(buf []byte) (res []interface{}, err error) {
+func MethodArgumentsOpaqueDecode(buf []byte) (res []interface{}, err error) {
 	res = []interface{}{}
 	argsArray := protocol.MethodArgumentArrayReader(buf)
 	index := 0

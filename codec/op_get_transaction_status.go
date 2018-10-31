@@ -64,7 +64,7 @@ func DecodeGetTransactionStatusResponse(buf []byte) (*GetTransactionStatusRespon
 	}
 
 	// decode method arguments
-	outputArgumentArray, err := methodArgumentsOpaqueDecode(res.TransactionReceipt().RawOutputArgumentArrayWithHeader())
+	outputArgumentArray, err := MethodArgumentsOpaqueDecode(res.TransactionReceipt().RawOutputArgumentArrayWithHeader())
 	if err != nil {
 		return nil, err
 	}

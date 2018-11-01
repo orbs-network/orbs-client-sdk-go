@@ -15,18 +15,18 @@
 
     ```go
     const virtualChainId = 42
-    client := orbsclient.NewOrbsClient("http://endpoint.com", virtualChainId, codec.NETWORK_TYPE_TEST_NET)
+    client := orbsclient.NewOrbsClient("http://node-endpoint.com", virtualChainId, codec.NETWORK_TYPE_TEST_NET)
     ```
 
 3. Send a transaction:
 
     ```go
     payload, txId, err := client.CreateSendTransactionPayload(
-    		sender.PublicKey,
-    		sender.PrivateKey,
-    		"BenchmarkToken",
-    		"transfer",
-    		uint64(10), receiver.RawAddress)
+        sender.PublicKey,
+        sender.PrivateKey,
+        "BenchmarkToken",
+        "transfer",
+        uint64(10), receiver.RawAddress)
     response, err := client.SendTransaction(payload)
     ```
     
@@ -41,10 +41,10 @@
 
     ```go
     payload, err = client.CreateCallMethodPayload(
-    		receiver.PublicKey,
-    		"BenchmarkToken",
-    		"getBalance",
-    		receiver.RawAddress)
+        receiver.PublicKey,
+        "BenchmarkToken",
+        "getBalance",
+        receiver.RawAddress)
     response, err := client.CallMethod(payload)
     ```
 

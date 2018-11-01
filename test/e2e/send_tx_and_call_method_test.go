@@ -12,8 +12,8 @@ func TestTransferFundsAndGetBalance(t *testing.T) {
 	defer h.shutdown()
 
 	client := orbsclient.NewOrbsClient("http://localhost:8080", 42, codec.NETWORK_TYPE_TEST_NET)
-	sender, err1:= orbsclient.CreateAccount()
-	receiver, err2:= orbsclient.CreateAccount()
+	sender, err1 := orbsclient.CreateAccount()
+	receiver, err2 := orbsclient.CreateAccount()
 
 	require.NoError(t, err1)
 	require.NoError(t, err2)
@@ -54,4 +54,3 @@ func TestTransferFundsAndGetBalance(t *testing.T) {
 	require.Equal(t, codec.EXECUTION_RESULT_SUCCESS, getReceiverBalanceResponse.ExecutionResult)
 	require.Equal(t, uint64(10), getReceiverBalanceResponse.OutputArguments[0])
 }
-

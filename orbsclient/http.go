@@ -1,4 +1,4 @@
-package main
+package orbsclient
 
 import (
 	"bytes"
@@ -76,6 +76,10 @@ func (c *OrbsClient) GetTransactionStatus(payload []byte) (response *codec.GetTr
 }
 
 func (c *OrbsClient) sendHttpPost(relativeUrl string, payload []byte) (*http.Response, []byte, error) {
+	if len(payload) == 0 {
+		return nil, nil, errors.New("payload sent by http is empty")
+	}
+
 	res, err := http.Post(c.Endpoint+relativeUrl, CONTENT_TYPE, bytes.NewReader(payload))
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "failed sending http post")

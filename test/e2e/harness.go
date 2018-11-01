@@ -6,6 +6,12 @@ import (
 	"strconv"
 )
 
+const (
+	GAMMA_PORT       = 8080
+	GAMMA_ENDPOINT   = "localhost"
+	VIRTUAL_CHAIN_ID = 42
+)
+
 type harness struct {
 	gamma *gammacli.GammaServer
 	port  int

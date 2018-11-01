@@ -4,7 +4,7 @@
 
 ## Usage
 
-1. Create an end user account:
+1. Create a few end user accounts:
 
     ```go
     sender, err := orbsclient.CreateAccount()

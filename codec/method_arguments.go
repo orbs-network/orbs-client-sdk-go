@@ -18,7 +18,7 @@ func methodArgumentsBuilders(args []interface{}) (res []*protocol.MethodArgument
 		case []byte:
 			res = append(res, &protocol.MethodArgumentBuilder{Name: "bytes", Type: protocol.METHOD_ARGUMENT_TYPE_BYTES_VALUE, BytesValue: arg.([]byte)})
 		default:
-			err = errors.Errorf("given method argument %d has unsupported type, supported: uint32, uint64, string, []byte", index)
+			err = errors.Errorf("given method argument %d has unsupported type (%T), supported: (uint32) (uint64) (string) ([]byte)", index, arg)
 			return
 		}
 	}

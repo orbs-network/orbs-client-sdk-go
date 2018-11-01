@@ -1,4 +1,4 @@
-package main
+package orbsclient
 
 import (
 	"github.com/orbs-network/orbs-client-sdk-go/codec"

@@ -26,15 +26,11 @@ func methodArgumentsBuilders(args []interface{}) (res []*protocol.MethodArgument
 }
 
 func methodArgumentsArray(args []interface{}) (*protocol.MethodArgumentArray, error) {
-	res := []*protocol.MethodArgumentBuilder{}
 	builders, err := methodArgumentsBuilders(args)
 	if err != nil {
 		return nil, err
 	}
-	for _, builder := range builders {
-		res = append(res, builder)
-	}
-	return (&protocol.MethodArgumentArrayBuilder{Arguments: res}).Build(), nil
+	return (&protocol.MethodArgumentArrayBuilder{Arguments: builders}).Build(), nil
 }
 
 func MethodArgumentsOpaqueEncode(args []interface{}) ([]byte, error) {

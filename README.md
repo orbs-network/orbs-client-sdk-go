@@ -86,3 +86,28 @@
     cd ./test/codec/
     go run main.go
     ``` 
+
+## Alternative Client SDK Implementations
+
+Creating alternative client SDK implementations is highly encouraged, particularly in languages not supported by the core team. To make sure your client implementation is compliant to the Orbs [protocol specificiations](https://github.com/orbs-network/orbs-spec), we've created a set of compliance tests.
+
+#### Codec contract test
+
+The codec is the part that encodes and decodes protocol messages. The contract is created by the reference implementation (this repo) and embodied into an [input JSON](https://github.com/orbs-network/orbs-client-sdk-go/blob/master/test/codec/input.json) file and an [output JSON](https://github.com/orbs-network/orbs-client-sdk-go/blob/master/test/codec/output.json) file.
+
+To run the contract test in your own implementation, encode/decode the messages according to `input.json` and compare your results to `output.json`. You can generate the JSON files from code by running
+
+    ```sh
+    cd ./test/codec/
+    go run main.go
+    ``` 
+
+#### End to end test with Gamma server
+
+Gamma server is a local development server for the Orbs network that can run on your own machine and be used for testing. This server can process smart contract deployments and transactions. The server is accessed via HTTP (just like a regular node) which makes it excellent for testing clients.
+
+Take a look at the example [e2e test](https://github.com/orbs-network/orbs-client-sdk-go/tree/master/test/e2e) implemented in this repo.
+
+#### Example compliant implementation
+
+The JavaScript alternative implementation is a great source for inspiration. It contains both a codec [contract test](https://github.com/orbs-network/orbs-client-sdk-javascript/blob/master/src/codec/contract.test.ts) and an [end-to-end test](https://github.com/orbs-network/orbs-client-sdk-javascript/tree/master/e2e/nodejs).

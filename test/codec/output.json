@@ -13,6 +13,7 @@
     "Test": "st_res_1",
     "SendTransactionResponse": {
       "BlockHeight": "2135",
+      "BlockTimestamp": "2010-11-21T10:00:00.000Z",
       "OutputArguments": [
         "1",
         "2",
@@ -22,8 +23,7 @@
       "RequestStatus": "COMPLETED",
       "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA=",
       "ExecutionResult": "ERROR_SMART_CONTRACT",
-      "TransactionStatus": "COMMITTED",
-      "BlockTimestamp": "2010-11-21T10:00:00Z"
+      "TransactionStatus": "COMMITTED"
     }
   },
   {
@@ -34,10 +34,10 @@
     "Test": "cm_res_1",
     "CallMethodResponse": {
       "BlockHeight": "87438",
+      "BlockTimestamp": "2010-11-21T10:00:00.000Z",
       "OutputArguments": [],
       "RequestStatus": "NOT_FOUND",
-      "ExecutionResult": "SUCCESS",
-      "BlockTimestamp": "2010-11-21T10:00:00Z"
+      "ExecutionResult": "SUCCESS"
     }
   },
   {
@@ -48,14 +48,14 @@
     "Test": "gt_res_1",
     "GetTransactionStatusResponse": {
       "BlockHeight": "18446744073709546615",
+      "BlockTimestamp": "2020-11-21T20:00:00.000Z",
       "OutputArguments": [
         "18446744073709550615"
       ],
       "RequestStatus": "REJECTED",
       "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA=",
       "ExecutionResult": "ERROR_INPUT",
-      "TransactionStatus": "REJECTED_UNKNOWN_SIGNER_SCHEME",
-      "BlockTimestamp": "2020-11-21T20:00:00Z"
+      "TransactionStatus": "REJECTED_UNKNOWN_SIGNER_SCHEME"
     }
   }
 ]

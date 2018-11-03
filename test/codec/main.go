@@ -7,7 +7,6 @@ import (
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"os"
-	"time"
 )
 
 // the purpose of the contract test is to create an output.json which other client implementations can compare against
@@ -42,8 +41,6 @@ func die(err error) {
 }
 
 func main() {
-	time.Local = time.UTC
-
 	// read input.json
 	inputBytes, err := ioutil.ReadFile("input.json")
 	if err != nil {

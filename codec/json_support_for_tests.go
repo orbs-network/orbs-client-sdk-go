@@ -8,6 +8,8 @@ import (
 
 // this file is only required for the json-based contract test in /test/codec
 
+const ISO_DATE_FORMAT = "2006-01-02T15:04:05.000Z07:00"
+
 func (r *SendTransactionRequest) UnmarshalJSON(data []byte) error {
 	type OtherFields SendTransactionRequest
 	aux := &struct {
@@ -41,10 +43,12 @@ func (r *SendTransactionResponse) MarshalJSON() ([]byte, error) {
 	type OtherFields SendTransactionResponse
 	return json.Marshal(&struct {
 		BlockHeight     string
+		BlockTimestamp  string
 		OutputArguments []string
 		*OtherFields
 	}{
 		BlockHeight:     strconv.FormatUint(r.BlockHeight, 10),
+		BlockTimestamp:  r.BlockTimestamp.UTC().Format(ISO_DATE_FORMAT),
 		OutputArguments: jsonMarshalMethodArguments(r.OutputArguments),
 		OtherFields:     (*OtherFields)(r),
 	})
@@ -83,10 +87,12 @@ func (r *CallMethodResponse) MarshalJSON() ([]byte, error) {
 	type OtherFields CallMethodResponse
 	return json.Marshal(&struct {
 		BlockHeight     string
+		BlockTimestamp  string
 		OutputArguments []string
 		*OtherFields
 	}{
 		BlockHeight:     strconv.FormatUint(r.BlockHeight, 10),
+		BlockTimestamp:  r.BlockTimestamp.UTC().Format(ISO_DATE_FORMAT),
 		OutputArguments: jsonMarshalMethodArguments(r.OutputArguments),
 		OtherFields:     (*OtherFields)(r),
 	})
@@ -96,10 +102,12 @@ func (r *GetTransactionStatusResponse) MarshalJSON() ([]byte, error) {
 	type OtherFields GetTransactionStatusResponse
 	return json.Marshal(&struct {
 		BlockHeight     string
+		BlockTimestamp  string
 		OutputArguments []string
 		*OtherFields
 	}{
 		BlockHeight:     strconv.FormatUint(r.BlockHeight, 10),
+		BlockTimestamp:  r.BlockTimestamp.UTC().Format(ISO_DATE_FORMAT),
 		OutputArguments: jsonMarshalMethodArguments(r.OutputArguments),
 		OtherFields:     (*OtherFields)(r),
 	})

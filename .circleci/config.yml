@@ -1,0 +1,17 @@
+version: 2
+jobs:
+  build:
+    machine: true
+    steps:
+      - checkout
+      - run: ./git-submodule-checkout.sh
+      - run: ./docker-build.sh
+      - run: $(aws ecr get-login --no-include-email --region us-west-2)
+      - run: docker pull $ORBS_NODE_DOCKER_IMAGE:feature-block-height-metric
+      - run: export DOCKER_IMAGE=$ORBS_NODE_DOCKER_IMAGE DOCKER_TAG=feature-block-height-metric && ./docker-test.sh
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build

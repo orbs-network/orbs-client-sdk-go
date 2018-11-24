@@ -30,6 +30,10 @@ func commandShowHelp() {
 	flag.PrintDefaults()
 	fmt.Fprintf(os.Stderr, "\n")
 
+	fmt.Fprintf(os.Stderr, "Multiple environments (eg. local and testnet) can be defined in orbs-gamma-config.json configuration file.\n")
+	fmt.Fprintf(os.Stderr, "See https://github.com/orbs-network/orbs-contract-sdk for more info.\n")
+	fmt.Fprintf(os.Stderr, "\n")
+
 	os.Exit(2)
 }
 

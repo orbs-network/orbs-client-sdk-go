@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/orbs-network/orbs-client-sdk-go/gammacli/jsoncodec"
 	"github.com/orbs-network/orbs-client-sdk-go/orbsclient"
@@ -51,9 +50,8 @@ func getTestKeyFromFile(id string) *jsoncodec.Key {
 	}
 
 	keys, err := jsoncodec.UnmarshalKeys(bytes)
-	err = json.Unmarshal(bytes, &keys)
 	if err != nil {
-		die("failed parsing keys json file\n\n%s", *flagKeyFile, err.Error())
+		die("failed parsing keys json file '%s'\n\n%s", *flagKeyFile, err.Error())
 	}
 
 	key, found := keys[id]

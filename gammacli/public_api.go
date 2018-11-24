@@ -141,8 +141,20 @@ func commandTxStatus() {
 }
 
 func createOrbsClient() *orbsclient.OrbsClient {
-	endpoint := fmt.Sprintf("http://localhost:%d", *flagPort)
-	return orbsclient.NewOrbsClient(endpoint, 42, codec.NETWORK_TYPE_TEST_NET)
+	env := getEnvironmentFromConfigFile(*flagEnv)
+	if len(env.Endpoints) == 0 {
+		die("environment Endpoints key does not contain any endpoints")
+	}
+
+	endpoint := env.Endpoints[0]
+	if endpoint == "localhost" {
+		if !isDockerGammaRunning() {
+			die("local gamma server is not running, use gamma-cli start-local to start it")
+		}
+		endpoint = fmt.Sprintf("http://localhost:%d", *flagPort)
+	}
+
+	return orbsclient.NewOrbsClient(endpoint, env.VirtualChain, codec.NETWORK_TYPE_TEST_NET)
 }
 
 func getProcessorTypeFromFilename(filename string) uint32 {

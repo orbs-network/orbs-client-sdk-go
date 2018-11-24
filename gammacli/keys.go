@@ -44,9 +44,13 @@ func commandGenerateTestKeys() {
 }
 
 func getTestKeyFromFile(id string) *jsoncodec.Key {
+	if !doesFileExist(*flagKeyFile) {
+		commandGenerateTestKeys()
+	}
+
 	bytes, err := ioutil.ReadFile(*flagKeyFile)
 	if err != nil {
-		die("could not open keys file\n\n%s", err.Error())
+		die("could not open keys file '%s'\n\n%s", *flagKeyFile, err.Error())
 	}
 
 	keys, err := jsoncodec.UnmarshalKeys(bytes)

@@ -12,41 +12,6 @@ const DOCKER_REPO = "orbs"
 const DOCKER_RUN = "orbs:gamma-server"
 const CONTAINER_NAME = "orbs-gamma-server"
 
-func verifyDockerInstalled() {
-	out, err := exec.Command("docker", "images", DOCKER_REPO).CombinedOutput()
-	if err != nil {
-		if runtime.GOOS == "darwin" {
-			die("docker not installed on your machine\n  install from:  https://docs.docker.com/docker-for-mac/install/")
-		} else {
-			die("docker not installed on your machine\n  install from:  https://docs.docker.com/install/")
-		}
-	}
-
-	if strings.Count(string(out), "\n") > 1 {
-		return
-	}
-
-	log("docker image not found, downloading:\n")
-	cmd := exec.Command("docker", "pull", DOCKER_REPO)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Run()
-	log("")
-
-	out, err = exec.Command("docker", "images", DOCKER_REPO).CombinedOutput()
-	if err != nil || strings.Count(string(out), "\n") == 1 {
-		die("could not download docker image")
-	}
-}
-
-func isDockerGammaRunning() bool {
-	out, err := exec.Command("docker", "ps", "-f", fmt.Sprintf("name=%s", CONTAINER_NAME)).CombinedOutput()
-	if err != nil {
-		die("could not exec 'docker ps' command\n\n%s", out)
-	}
-	return strings.Count(string(out), "\n") > 1
-}
-
 func commandStartLocal() {
 	verifyDockerInstalled()
 
@@ -55,7 +20,7 @@ func commandStartLocal() {
 *********************************************************************************
                  Orbs Gamma personal blockchain is running!
 
-  Run 'gamma-cli help' in terminal to interact with this instance.
+  Run 'gamma-cli help' in terminal to learn how to interact with this instance.
               
 **********************************************************************************
 `)
@@ -77,7 +42,7 @@ func commandStartLocal() {
                  Orbs Gamma v%s personal blockchain is running!
 
   Local blockchain instance started and listening on port %d.
-  Run 'gamma-cli help' in terminal to interact with this instance.
+  Run 'gamma-cli help' in terminal to learn how to interact with this instance.
               
 **********************************************************************************
 `, GAMMA_CLI_VERSION, *flagPort) // TODO: change version to gamma version (from the docker tag)
@@ -119,4 +84,39 @@ func commandUpgrade() {
 	cmd.Stderr = os.Stderr
 	cmd.Run()
 	log("")
+}
+
+func verifyDockerInstalled() {
+	out, err := exec.Command("docker", "images", DOCKER_REPO).CombinedOutput()
+	if err != nil {
+		if runtime.GOOS == "darwin" {
+			die("docker is required but not installed on your machine\n\nInstall from:  https://docs.docker.com/docker-for-mac/install/")
+		} else {
+			die("docker is required but not installed on your machine\n\nInstall from:  https://docs.docker.com/install/")
+		}
+	}
+
+	if strings.Count(string(out), "\n") > 1 {
+		return
+	}
+
+	log("docker image not found, downloading:\n")
+	cmd := exec.Command("docker", "pull", DOCKER_REPO)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Run()
+	log("")
+
+	out, err = exec.Command("docker", "images", DOCKER_REPO).CombinedOutput()
+	if err != nil || strings.Count(string(out), "\n") == 1 {
+		die("could not download docker image")
+	}
+}
+
+func isDockerGammaRunning() bool {
+	out, err := exec.Command("docker", "ps", "-f", fmt.Sprintf("name=%s", CONTAINER_NAME)).CombinedOutput()
+	if err != nil {
+		die("could not exec 'docker ps' command\n\n%s", out)
+	}
+	return strings.Count(string(out), "\n") > 1
 }

@@ -153,4 +153,5 @@ func getProcessorTypeFromFilename(filename string) uint32 {
 		return PROCESSOR_TYPE_JAVASCRIPT
 	}
 	die("Unsupported code file type\n\nSupported code file extensions are: .go .js")
+	return 0
 }

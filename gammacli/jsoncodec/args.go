@@ -40,7 +40,7 @@ func UnmarshalArgs(args []*Arg, getTestKeyFromFile func(string) *Key) ([]interfa
 			key := getTestKeyFromFile(arg.Value)
 			rawAddress, err := base58.Decode([]byte(key.Address))
 			if err != nil {
-				return nil, errors.Errorf("Value of argument %d should be a string containing the id of the key from '%s'\n\nCurrent value: '%s'", i, *flagKeyFile, arg.Value)
+				return nil, errors.Errorf("Value of argument %d should be a string containing the id of the key from key file\n\nCurrent value: '%s'", i, arg.Value)
 			}
 			res = append(res, []byte(rawAddress))
 		default:

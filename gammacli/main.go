@@ -25,7 +25,7 @@ var commands = map[string]*command{
 	"start-local": {
 		desc:    "start a local Orbs personal blockchain instance listening on port",
 		args:    "-port <PORT>",
-		example: "gamma-cli start-local -port 8081",
+		example: "gamma-cli start-local -port 8080",
 		handler: commandStartLocal,
 		sort:    1,
 	},
@@ -85,10 +85,10 @@ var (
 	flagPort         = flag.Int("port", 8080, "listening port for gamma server")
 	flagSigner       = flag.String("signer", "user1", "id of the signing key from the test key json")
 	flagContractName = flag.String("name", "", "name of the smart contract being deployed")
-	flagCodeFile     = flag.String("code", "contract.go", "go source file for the smart contract being deployed")
+	flagCodeFile     = flag.String("code", "contract.go", "source file for the smart contract being deployed, normally .go or .js file")
 	flagInputFile    = flag.String("i", "input.json", "name of the json input file")
 	flagKeyFile      = flag.String("keys", TEST_KEYS_FILENAME, "name of the json file containing test keys")
-	flagTxId         = flag.String("txid", "", "TxId of a previously sent transaction (given in the response of send-tx)")
+	flagTxId         = flag.String("txid", "", "TxId of a previously sent transaction, given in the response of send-tx")
 )
 
 func main() {

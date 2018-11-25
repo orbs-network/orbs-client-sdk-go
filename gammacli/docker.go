@@ -68,7 +68,7 @@ func commandStopLocal() {
 *********************************************************************************
                     Orbs Gamma personal blockchain stopped.
 
-  The local blockchain instance was only running in memory.
+  A local blockchain instance is running in-memory.
   The next time you start the instance, all contracts and state will disappear. 
               
 **********************************************************************************

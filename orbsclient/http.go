@@ -41,6 +41,8 @@ func (c *OrbsClient) CallMethod(payload []byte) (response *codec.CallMethodRespo
 		return
 	}
 
+	// TODO: improve handling of errors according to content-type header (if text/plain then don't parse response)
+
 	response, err = codec.DecodeCallMethodResponse(buf)
 	if err != nil {
 		err = errors.Wrap(err, "failed decoding response")
@@ -48,7 +50,7 @@ func (c *OrbsClient) CallMethod(payload []byte) (response *codec.CallMethodRespo
 	}
 
 	if res.StatusCode != http.StatusOK {
-		err = errors.Errorf("http status code %d: %s", res.StatusCode, res.Status)
+		err = errors.Errorf("http status code %d (%s)", res.StatusCode, res.Status)
 		return
 	}
 

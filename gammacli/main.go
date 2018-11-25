@@ -63,7 +63,7 @@ var commands = map[string]*command{
 	"status": {
 		desc:    "get the current status of a sent transaction",
 		args:    "-txid <TX_ID>",
-		example: "gamma-cli status -txid abcd", // TODO: improve abcd
+		example: "gamma-cli status -txid nXAmGL2peGvXkrDxC2cFaZwhykfMGFGj1DUJ9eDFRdSnNgCpQ69MQz",
 		handler: commandTxStatus,
 		sort:    6,
 	},

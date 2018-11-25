@@ -22,4 +22,5 @@ func TestVersion(t *testing.T) {
 	out, err := runGammaCli("version")
 	require.NoError(t, err, "version should succeed")
 	require.True(t, strings.Contains(out, "version"))
+	t.Log(out)
 }

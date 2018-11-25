@@ -68,17 +68,20 @@ func commandSendTx() {
 	if err != nil {
 		die("could not encode payload of the message about to be sent to gamma server\n\n%s", err.Error())
 	}
-	response, err := client.SendTransaction(payload)
-	if err != nil {
-		die("failed sending transaction request to gamma server\n\n%s", err.Error())
+
+	response, clientErr := client.SendTransaction(payload)
+	if response != nil {
+		output, err := jsoncodec.MarshalSendTxResponse(response, txId)
+		if err != nil {
+			die("could not encode send-tx response to json\n\n%s", err.Error())
+		}
+
+		log("%s\n", string(output))
 	}
 
-	output, err := jsoncodec.MarshalSendTxResponse(response, txId)
-	if err != nil {
-		die("could not encode response to json\n\n%s", err.Error())
+	if clientErr != nil {
+		die("send-tx request failed on gamma server\n\n%s", clientErr.Error())
 	}
-
-	log("%s\n", string(output))
 }
 
 func commandRead() {
@@ -104,17 +107,20 @@ func commandRead() {
 	if err != nil {
 		die("could not encode payload of the message about to be sent to gamma server\n\n%s", err.Error())
 	}
-	response, err := client.CallMethod(payload)
-	if err != nil {
-		die("failed sending read request to gamma server\n\n%s", err.Error())
+
+	response, clientErr := client.CallMethod(payload)
+	if response != nil {
+		output, err := jsoncodec.MarshalReadResponse(response)
+		if err != nil {
+			die("could not encode read response to json\n\n%s", err.Error())
+		}
+
+		log("%s\n", string(output))
 	}
 
-	output, err := jsoncodec.MarshalReadResponse(response)
-	if err != nil {
-		die("could not encode response to json\n\n%s", err.Error())
+	if clientErr != nil {
+		die("read request failed on gamma server\n\n%s", clientErr.Error())
 	}
-
-	log("%s\n", string(output))
 }
 
 func commandTxStatus() {
@@ -127,17 +133,20 @@ func commandTxStatus() {
 	if err != nil {
 		die("could not encode payload of the message about to be sent to gamma server\n\n%s", err.Error())
 	}
-	response, err := client.GetTransactionStatus(payload)
-	if err != nil {
-		die("failed sending read request to gamma server\n\n%s", err.Error())
+
+	response, clientErr := client.GetTransactionStatus(payload)
+	if response != nil {
+		output, err := jsoncodec.MarshalTxStatusResponse(response)
+		if err != nil {
+			die("could not encode status response to json\n\n%s", err.Error())
+		}
+
+		log("%s\n", string(output))
 	}
 
-	output, err := jsoncodec.MarshalTxStatusResponse(response)
-	if err != nil {
-		die("could not encode response to json\n\n%s", err.Error())
+	if clientErr != nil {
+		die("status request failed on gamma server\n\n%s", clientErr.Error())
 	}
-
-	log("%s\n", string(output))
 }
 
 func createOrbsClient() *orbsclient.OrbsClient {

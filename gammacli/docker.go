@@ -37,6 +37,10 @@ func commandStartLocal() {
 		die("could not run docker image")
 	}
 
+	if *flagWait {
+		waitUntilDockerIsReadyAndListening(IS_READY_TOTAL_WAIT_TIMEOUT)
+	}
+
 	log(`
 *********************************************************************************
                  Orbs Gamma v%s personal blockchain is running!
@@ -55,9 +59,14 @@ func commandStopLocal() {
 		die("gamma server instance is not started")
 	}
 
-	out, err := exec.Command("docker", "rm", "-f", CONTAINER_NAME).CombinedOutput()
+	out, err := exec.Command("docker", "stop", CONTAINER_NAME).CombinedOutput()
 	if err != nil {
 		die("could not stop docker container\n\n%s", out)
+	}
+
+	out, err = exec.Command("docker", "rm", "-f", CONTAINER_NAME).CombinedOutput()
+	if err != nil {
+		die("could not rm docker container\n\n%s", out)
 	}
 
 	if isDockerGammaRunning() {

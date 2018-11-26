@@ -22,7 +22,7 @@ type command struct {
 var commands = map[string]*command{
 	"start-local": {
 		desc:    "start a local Orbs personal blockchain instance listening on port",
-		args:    "-port <PORT>",
+		args:    "-port <PORT> -wait",
 		example: "gamma-cli start-local -port 8080",
 		handler: commandStartLocal,
 		sort:    0,
@@ -92,6 +92,7 @@ var (
 	flagKeyFile      = flag.String("keys", TEST_KEYS_FILENAME, "name of the json file containing test keys")
 	flagTxId         = flag.String("txid", "", "TxId of a previously sent transaction, given in the response of send-tx")
 	flagEnv          = flag.String("env", LOCAL_ENV_ID, fmt.Sprintf("environment from %s containing server connection details", CONFIG_FILENAME))
+	flagWait         = flag.Bool("wait", false, "wait until gamma server is ready and listening")
 )
 
 func main() {

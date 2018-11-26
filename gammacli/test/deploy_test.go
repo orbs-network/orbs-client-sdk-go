@@ -10,8 +10,6 @@ func TestDeployCounter(t *testing.T) {
 	startGammaServer()
 	defer stopGammaServer()
 
-	// TODO: this is failing due to a bug in gamma docker
-
 	out, err := runGammaCli("deploy", "-name", "CounterExample", "-code", "./counter/contract.go")
 	t.Log(out)
 	require.NoError(t, err, "deploy should succeed")

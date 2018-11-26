@@ -25,7 +25,7 @@ func compileGammaCli() string {
 	if err != nil {
 		panic(fmt.Sprintf("compilation failed: %s\noutput:\n%s\n", err.Error(), out))
 	} else {
-		fmt.Printf("compiled gamma-cli successfully: %s\n", binaryOutputPath)
+		fmt.Printf("compiled gamma-cli successfully:\n %s\n", binaryOutputPath)
 	}
 
 	downloadLatestGammaServer(binaryOutputPath)
@@ -51,7 +51,7 @@ func runGammaCli(args ...string) (string, error) {
 }
 
 func startGammaServer() {
-	out, err := runGammaCli("start-local")
+	out, err := runGammaCli("start-local", "-wait")
 	if err != nil {
 		panic(fmt.Sprintf("start gamma server failed: %s\noutput:\n%s\n", err.Error(), out))
 	}

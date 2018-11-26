@@ -38,8 +38,10 @@ func commandShowHelp() {
 }
 
 func commandVersion() {
-	log("gamma-cli version %s", GAMMA_CLI_VERSION)
-	// log("gamma server version %s", "TODO")
+	log("gamma-cli version v%s", GAMMA_CLI_VERSION)
+
+	gammaVersion := verifyDockerInstalled()
+	log("gamma server version %s (docker)", gammaVersion)
 }
 
 func sortCommands() []string {

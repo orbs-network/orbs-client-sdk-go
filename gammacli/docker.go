@@ -4,21 +4,22 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"regexp"
 	"runtime"
 	"strings"
 )
 
-const DOCKER_REPO = "orbs"
-const DOCKER_RUN = "orbs:gamma-server"
+const DOCKER_REPO = "orbsnetwork/gamma"
+const DOCKER_RUN = "orbsnetwork/gamma"
 const CONTAINER_NAME = "orbs-gamma-server"
 
 func commandStartLocal() {
-	verifyDockerInstalled()
+	gammaVersion := verifyDockerInstalled()
 
 	if isDockerGammaRunning() {
 		log(`
 *********************************************************************************
-                 Orbs Gamma personal blockchain is running!
+              Orbs Gamma personal blockchain is already running!
 
   Run 'gamma-cli help' in terminal to learn how to interact with this instance.
               
@@ -43,13 +44,13 @@ func commandStartLocal() {
 
 	log(`
 *********************************************************************************
-                 Orbs Gamma v%s personal blockchain is running!
+                 Orbs Gamma %s personal blockchain is running!
 
   Local blockchain instance started and listening on port %d.
   Run 'gamma-cli help' in terminal to learn how to interact with this instance.
               
 **********************************************************************************
-`, GAMMA_CLI_VERSION, *flagPort) // TODO: change version to gamma version (from the docker tag)
+`, gammaVersion, *flagPort)
 }
 
 func commandStopLocal() {
@@ -95,7 +96,7 @@ func commandUpgrade() {
 	log("")
 }
 
-func verifyDockerInstalled() {
+func verifyDockerInstalled() string {
 	out, err := exec.Command("docker", "images", DOCKER_REPO).CombinedOutput()
 	if err != nil {
 		if runtime.GOOS == "darwin" {
@@ -106,7 +107,7 @@ func verifyDockerInstalled() {
 	}
 
 	if strings.Count(string(out), "\n") > 1 {
-		return
+		return extractTagFromDockerImagesOutput(string(out))
 	}
 
 	log("docker image not found, downloading:\n")
@@ -120,6 +121,7 @@ func verifyDockerInstalled() {
 	if err != nil || strings.Count(string(out), "\n") == 1 {
 		die("could not download docker image")
 	}
+	return extractTagFromDockerImagesOutput(string(out))
 }
 
 func isDockerGammaRunning() bool {
@@ -128,4 +130,14 @@ func isDockerGammaRunning() bool {
 		die("could not exec 'docker ps' command\n\n%s", out)
 	}
 	return strings.Count(string(out), "\n") > 1
+}
+
+func extractTagFromDockerImagesOutput(out string) string {
+	pattern := fmt.Sprintf(`%s\s+(\S+)`, regexp.QuoteMeta(DOCKER_REPO))
+	re := regexp.MustCompile(pattern)
+	res := re.FindStringSubmatch(out)
+	if len(res) < 2 {
+		return "unknown"
+	}
+	return res[1]
 }

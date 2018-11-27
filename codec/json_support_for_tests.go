@@ -98,6 +98,31 @@ func (r *CallMethodResponse) MarshalJSON() ([]byte, error) {
 	})
 }
 
+func (r *GetTransactionStatusRequest) UnmarshalJSON(data []byte) error {
+	type OtherFields GetTransactionStatusRequest
+	aux := &struct {
+		ProtocolVersion string
+		VirtualChainId  string
+		*OtherFields
+	}{
+		OtherFields: (*OtherFields)(r),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	protocolVersion, err := strconv.ParseUint(aux.ProtocolVersion, 10, 32)
+	if err != nil {
+		panic(err)
+	}
+	r.ProtocolVersion = uint32(protocolVersion)
+	virtualChainId, err := strconv.ParseUint(aux.VirtualChainId, 10, 32)
+	if err != nil {
+		panic(err)
+	}
+	r.VirtualChainId = uint32(virtualChainId)
+	return nil
+}
+
 func (r *GetTransactionStatusResponse) MarshalJSON() ([]byte, error) {
 	type OtherFields GetTransactionStatusResponse
 	return json.Marshal(&struct {

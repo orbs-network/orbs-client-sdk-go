@@ -7,15 +7,15 @@ import (
 )
 
 func TestSimpleTransfer(t *testing.T) {
-	startGammaServer()
-	defer stopGammaServer()
+	cli := GammaCli().StartGammaServer()
+	defer cli.StopGammaServer()
 
-	out, err := runGammaCli("read", "-i", "get-balance.json")
+	out, err := cli.Run("read", "-i", "get-balance.json")
 	t.Log(out)
 	require.Error(t, err, "get balance should fail (not deployed)")
 	require.True(t, strings.Contains(out, `"ExecutionResult": "ERROR_UNEXPECTED"`))
 
-	out, err = runGammaCli("send-tx", "-i", "transfer.json")
+	out, err = cli.Run("send-tx", "-i", "transfer.json")
 	t.Log(out)
 	require.NoError(t, err, "transfer should succeed")
 	require.True(t, strings.Contains(out, `"ExecutionResult": "SUCCESS"`))
@@ -23,13 +23,12 @@ func TestSimpleTransfer(t *testing.T) {
 	txId := extractTxIdFromSendTxOutput(out)
 	t.Log(txId)
 
-	// TODO: not sure why this isn't working, need to debug (difficult integration)
-	//out, err = runGammaCli("status", "-txid", txId)
-	//t.Log(out)
-	//require.NoError(t, err, "get tx status should succeed")
-	//require.True(t, strings.Contains(out, `"RequestStatus": "COMPLETED"`))
+	out, err = cli.Run("status", "-txid", txId)
+	t.Log(out)
+	require.NoError(t, err, "get tx status should succeed")
+	require.True(t, strings.Contains(out, `"RequestStatus": "COMPLETED"`))
 
-	out, err = runGammaCli("read", "-i", "get-balance.json")
+	out, err = cli.Run("read", "-i", "get-balance.json")
 	t.Log(out)
 	require.NoError(t, err, "get balance should succeed")
 	require.True(t, strings.Contains(out, `"ExecutionResult": "SUCCESS"`))

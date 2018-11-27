@@ -54,6 +54,8 @@
   {
     "Test": "gt_req_1",
     "GetTransactionStatusRequest": {
+      "ProtocolVersion": "1",
+      "VirtualChainId": "200",
       "TxId": "AIBBAU6eSRZyajFx2NNzrlg88uyatTEc8vt2dkxqo0asDHiltqxVVQ=="
     }
   },

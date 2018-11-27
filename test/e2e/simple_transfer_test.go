@@ -9,7 +9,7 @@ import (
 )
 
 func TestSimpleTransfer(t *testing.T) {
-	h := newHarness(GAMMA_ENDPOINT, GAMMA_PORT)
+	h := newHarness()
 	defer h.shutdown()
 
 	// create sender account

@@ -42,6 +42,8 @@ func (c *OrbsClient) CreateGetTransactionStatusPayload(txId string) (payload []b
 		return nil, err
 	}
 	return codec.EncodeGetTransactionStatusRequest(&codec.GetTransactionStatusRequest{
-		TxId: rawTxId,
+		ProtocolVersion: PROTOCOL_VERSION,
+		VirtualChainId:  c.VirtualChainId,
+		TxId:            rawTxId,
 	})
 }

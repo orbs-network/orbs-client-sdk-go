@@ -9,7 +9,9 @@ import (
 )
 
 type GetTransactionStatusRequest struct {
-	TxId []byte
+	ProtocolVersion uint32
+	VirtualChainId  uint32
+	TxId            []byte
 }
 
 type GetTransactionStatusResponse struct {
@@ -24,6 +26,9 @@ type GetTransactionStatusResponse struct {
 
 func EncodeGetTransactionStatusRequest(req *GetTransactionStatusRequest) ([]byte, error) {
 	// validate
+	if req.ProtocolVersion != 1 {
+		return nil, errors.Errorf("expected ProtocolVersion 1, %d given", req.ProtocolVersion)
+	}
 	if len(req.TxId) != digest.TX_ID_SIZE_BYTES {
 		return nil, errors.Errorf("expected TxId length %d, %d given", digest.TX_ID_SIZE_BYTES, len(req.TxId))
 	}
@@ -36,6 +41,8 @@ func EncodeGetTransactionStatusRequest(req *GetTransactionStatusRequest) ([]byte
 
 	// encode request
 	res := (&client.GetTransactionStatusRequestBuilder{
+		ProtocolVersion:      primitives.ProtocolVersion(req.ProtocolVersion),
+		VirtualChainId:       primitives.VirtualChainId(req.VirtualChainId),
 		TransactionTimestamp: txTimestamp,
 		Txhash:               primitives.Sha256(txHash),
 	}).Build()

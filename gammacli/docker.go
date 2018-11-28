@@ -16,6 +16,10 @@ const CONTAINER_NAME = "orbs-gamma-server"
 func commandStartLocal() {
 	gammaVersion := verifyDockerInstalled()
 
+	if !doesFileExist(*flagKeyFile) {
+		commandGenerateTestKeys()
+	}
+
 	if isDockerGammaRunning() {
 		log(`
 *********************************************************************************

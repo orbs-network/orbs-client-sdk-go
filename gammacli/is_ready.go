@@ -1,6 +1,10 @@
 package main
 
-import "time"
+import (
+	"fmt"
+	"net"
+	"time"
+)
 
 const IS_READY_TOTAL_WAIT_TIMEOUT = 20 * time.Second
 const IS_READY_POLLING_INTERVAL = 500 * time.Millisecond
@@ -28,4 +32,13 @@ func waitUntilDockerIsReadyAndListening(timeout time.Duration) {
 		}
 		time.Sleep(IS_READY_POLLING_INTERVAL)
 	}
+}
+
+func isPortListening(port int) bool {
+	server, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", port))
+	if err != nil {
+		return true // if it fails then the port is likely taken
+	}
+	server.Close()
+	return false
 }

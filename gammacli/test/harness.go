@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os/exec"
-	"path/filepath"
 	"regexp"
-	"runtime"
 	"time"
 )
 
@@ -86,9 +84,4 @@ func extractTxIdFromSendTxOutput(out string) string {
 	re := regexp.MustCompile(`\"TxId\":\s+\"(\w+)\"`)
 	res := re.FindStringSubmatch(out)
 	return res[1]
-}
-
-func getCurrentSourceFileDirPath() string {
-	_, filename, _, _ := runtime.Caller(1)
-	return filepath.Dir(filename)
 }

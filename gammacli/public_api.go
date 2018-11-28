@@ -157,7 +157,7 @@ func createOrbsClient() *orbsclient.OrbsClient {
 
 	endpoint := env.Endpoints[0]
 	if endpoint == "localhost" {
-		if !isDockerGammaRunning() {
+		if !isDockerGammaRunning() && !isPortListening(*flagPort) {
 			die("local gamma server is not running, use gamma-cli start-local to start it")
 		}
 		endpoint = fmt.Sprintf("http://localhost:%d", *flagPort)

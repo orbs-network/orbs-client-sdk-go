@@ -35,7 +35,7 @@ func waitUntilDockerIsReadyAndListening(timeout time.Duration) {
 }
 
 func isPortListening(port int) bool {
-	server, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", port))
+	server, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		return true // if it fails then the port is likely taken
 	}

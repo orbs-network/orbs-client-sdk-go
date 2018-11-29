@@ -131,7 +131,7 @@ func verifyDockerInstalled() string {
 func isDockerGammaRunning() bool {
 	out, err := exec.Command("docker", "ps", "-f", fmt.Sprintf("name=%s", CONTAINER_NAME)).CombinedOutput()
 	if err != nil {
-		die("could not exec 'docker ps' command\n\n%s", out)
+		return false
 	}
 	return strings.Count(string(out), "\n") > 1
 }

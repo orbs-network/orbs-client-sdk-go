@@ -127,8 +127,10 @@ func verifyDockerInstalled() string {
 		return extractTagFromDockerImagesOutput(string(out))
 	}
 
-	log("docker image not found, downloading:\n")
-	cmd := exec.Command("docker", "pull", DOCKER_REPO)
+	latestTag := getLatestDockerTag()
+
+	log("Orbs personal blockchain docker image is not installed, downloading version %s:\n", latestTag)
+	cmd := exec.Command("docker", "pull", fmt.Sprintf("%s:%s", DOCKER_REPO, latestTag))
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Run()

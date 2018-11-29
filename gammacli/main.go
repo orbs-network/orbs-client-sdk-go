@@ -68,12 +68,12 @@ var commands = map[string]*command{
 		sort:    6,
 	},
 	"upgrade-server": {
-		desc:    "upgrade to the latest version of gamma server",
+		desc:    "upgrade to the latest version of Gamma server",
 		handler: commandUpgradeServer,
 		sort:    7,
 	},
 	"version": {
-		desc:    "print gamma-cli and gamma server versions",
+		desc:    "print gamma-cli and Gamma server versions",
 		handler: commandVersion,
 		sort:    8,
 	},
@@ -84,7 +84,7 @@ var commands = map[string]*command{
 }
 
 var (
-	flagPort         = flag.Int("port", 8080, "listening port for gamma server")
+	flagPort         = flag.Int("port", 8080, "listening port for Gamma server")
 	flagSigner       = flag.String("signer", "user1", "id of the signing key from the test key json")
 	flagContractName = flag.String("name", "", "name of the smart contract being deployed")
 	flagCodeFile     = flag.String("code", "contract.go", "source file for the smart contract being deployed, normally .go or .js file")
@@ -92,7 +92,7 @@ var (
 	flagKeyFile      = flag.String("keys", TEST_KEYS_FILENAME, "name of the json file containing test keys")
 	flagTxId         = flag.String("txid", "", "TxId of a previously sent transaction, given in the response of send-tx")
 	flagEnv          = flag.String("env", LOCAL_ENV_ID, fmt.Sprintf("environment from %s containing server connection details", CONFIG_FILENAME))
-	flagWait         = flag.Bool("wait", false, "wait until gamma server is ready and listening")
+	flagWait         = flag.Bool("wait", false, "wait until Gamma server is ready and listening")
 )
 
 func main() {
@@ -108,7 +108,7 @@ func main() {
 
 	cmd, found := commands[cmdName]
 	if !found {
-		die("command '%s' not found, run 'gamma-cli help' to see available commands", cmdName)
+		die("Command '%s' not found, run 'gamma-cli help' to see available commands.", cmdName)
 	}
 
 	cmd.handler()

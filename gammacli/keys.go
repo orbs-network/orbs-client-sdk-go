@@ -12,7 +12,7 @@ func commandGenerateTestKeys() {
 	for i := 0; i < 10; i++ {
 		account, err := orbsclient.CreateAccount()
 		if err != nil {
-			die("could not create Orbs account")
+			die("Could not create Orbs account.")
 		}
 		user := fmt.Sprintf("user%d", i+1)
 		keys[user] = &jsoncodec.Key{
@@ -24,7 +24,7 @@ func commandGenerateTestKeys() {
 
 	bytes, err := jsoncodec.MarshalKeys(keys)
 	if err != nil {
-		die("could not encode keys to json\n\n%s", err.Error())
+		die("Could not encode keys to json.\n\n%s", err.Error())
 	}
 
 	filename := *flagKeyFile
@@ -33,14 +33,14 @@ func commandGenerateTestKeys() {
 	}
 	err = ioutil.WriteFile(filename, bytes, 0644)
 	if err != nil {
-		die("could not write keys to file\n\n%s", err.Error())
+		die("Could not write keys to file.\n\n%s", err.Error())
 	}
 
 	if !doesFileExist(filename) {
-		die("file not found after write")
+		die("File not found after write.")
 	}
 
-	log("10 new test keys written successfully to '%s'\n", filename)
+	log("10 new test keys written successfully to '%s'.\n", filename)
 }
 
 func getTestKeyFromFile(id string) *jsoncodec.Key {
@@ -50,17 +50,17 @@ func getTestKeyFromFile(id string) *jsoncodec.Key {
 
 	bytes, err := ioutil.ReadFile(*flagKeyFile)
 	if err != nil {
-		die("could not open keys file '%s'\n\n%s", *flagKeyFile, err.Error())
+		die("Could not open keys file '%s'.\n\n%s", *flagKeyFile, err.Error())
 	}
 
 	keys, err := jsoncodec.UnmarshalKeys(bytes)
 	if err != nil {
-		die("failed parsing keys json file '%s'\n\n%s", *flagKeyFile, err.Error())
+		die("Failed parsing keys json file '%s'.\n\n%s", *flagKeyFile, err.Error())
 	}
 
 	key, found := keys[id]
 	if !found {
-		die("key with id '%s' not found in key file '%s'", id, *flagKeyFile)
+		die("Key with id '%s' not found in key file '%s'.", id, *flagKeyFile)
 	}
 
 	return key

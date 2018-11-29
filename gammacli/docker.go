@@ -42,11 +42,11 @@ func commandStartLocal() {
 	run := fmt.Sprintf(DOCKER_RUN, gammaVersion)
 	out, err := exec.Command("docker", "run", "-d", "--name", CONTAINER_NAME, "-p", p, run).CombinedOutput()
 	if err != nil {
-		die("could not exec 'docker run' command\n\n%s", out)
+		die("Could not exec 'docker run' command.\n\n%s", out)
 	}
 
 	if !isDockerGammaRunning() {
-		die("could not run docker image")
+		die("Could not run docker image.")
 	}
 
 	if *flagWait {
@@ -68,21 +68,21 @@ func commandStopLocal() {
 	verifyDockerInstalled()
 
 	if !isDockerGammaRunning() {
-		die("gamma server instance is not started")
+		die("Gamma server instance is not started.")
 	}
 
 	out, err := exec.Command("docker", "stop", CONTAINER_NAME).CombinedOutput()
 	if err != nil {
-		die("could not stop docker container\n\n%s", out)
+		die("Could not stop docker container.\n\n%s", out)
 	}
 
 	out, err = exec.Command("docker", "rm", "-f", CONTAINER_NAME).CombinedOutput()
 	if err != nil {
-		die("could not rm docker container\n\n%s", out)
+		die("Could not remove docker container.\n\n%s", out)
 	}
 
 	if isDockerGammaRunning() {
-		die("could not stop docker container")
+		die("Could not stop docker container.")
 	}
 
 	log(`
@@ -101,11 +101,11 @@ func commandUpgradeServer() {
 	latestTag := getLatestDockerTag()
 
 	if cmpTags(latestTag, currentTag) <= 0 {
-		log("current version %s does not require upgrade\n", currentTag)
+		log("Current Gamma server version %s does not require upgrade.\n", currentTag)
 		exit()
 	}
 
-	log("downloading latest version %s:\n", latestTag)
+	log("Downloading latest version %s:\n", latestTag)
 	cmd := exec.Command("docker", "pull", fmt.Sprintf("%s:%s", DOCKER_REPO, latestTag))
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -117,9 +117,9 @@ func verifyDockerInstalled() string {
 	out, err := exec.Command("docker", "images", DOCKER_REPO).CombinedOutput()
 	if err != nil {
 		if runtime.GOOS == "darwin" {
-			die("docker is required but not installed on your machine\n\nInstall from:  https://docs.docker.com/docker-for-mac/install/")
+			die("Docker is required but not installed on your machine.\n\nInstall from:  https://docs.docker.com/docker-for-mac/install/")
 		} else {
-			die("docker is required but not installed on your machine\n\nInstall from:  https://docs.docker.com/install/")
+			die("Docker is required but not installed on your machine.\n\nInstall from:  https://docs.docker.com/install/")
 		}
 	}
 
@@ -138,7 +138,7 @@ func verifyDockerInstalled() string {
 
 	out, err = exec.Command("docker", "images", DOCKER_REPO).CombinedOutput()
 	if err != nil || strings.Count(string(out), "\n") == 1 {
-		die("could not download docker image")
+		die("Could not download docker image.")
 	}
 	return extractTagFromDockerImagesOutput(string(out))
 }
@@ -164,16 +164,16 @@ func extractTagFromDockerImagesOutput(out string) string {
 func getLatestDockerTag() string {
 	resp, err := http.Get(DOCKER_REGISTRY_TAGS_URL)
 	if err != nil {
-		die("cannot connect to docker registry to get image list")
+		die("Cannot connect to docker registry to get image list.")
 	}
 	defer resp.Body.Close()
 	bytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil || len(bytes) == 0 {
-		die("bad image list response from docker registry")
+		die("Bad image list response from docker registry.")
 	}
 	tag, err := extractLatestTagFromDockerHubResponse(bytes)
 	if err != nil {
-		die("cannot parse image list response from docker registry")
+		die("Cannot parse image list response from docker registry.")
 	}
 	return tag
 }

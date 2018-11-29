@@ -18,19 +18,19 @@ func getEnvironmentFromConfigFile(env string) *jsoncodec.ConfEnv {
 		if env == LOCAL_ENV_ID {
 			return getDefaultLocalConfig()
 		}
-		die("could not open config file '%s' containing environment details\n\n%s", CONFIG_FILENAME, err.Error())
+		die("Could not open config file '%s' containing environment details.\n\n%s", CONFIG_FILENAME, err.Error())
 	}
 
 	confFile, err := jsoncodec.UnmarshalConfFile(bytes)
 	if err != nil {
-		die("failed parsing config json file '%s'\n\n%s", CONFIG_FILENAME, err.Error())
+		die("Failed parsing config json file '%s'.\n\n%s", CONFIG_FILENAME, err.Error())
 	}
 
 	if len(confFile.Environments) == 0 {
 		if env == LOCAL_ENV_ID {
 			return getDefaultLocalConfig()
 		}
-		die("key 'Environments' does not contain data in config file '%s'", CONFIG_FILENAME)
+		die("Key 'Environments' does not contain data in config file '%s'.", CONFIG_FILENAME)
 	}
 
 	confEnv, found := confFile.Environments[env]
@@ -38,7 +38,7 @@ func getEnvironmentFromConfigFile(env string) *jsoncodec.ConfEnv {
 		if env == LOCAL_ENV_ID {
 			return getDefaultLocalConfig()
 		}
-		die("environment with id '%s' not found in config file '%s'", env, *flagKeyFile)
+		die("Environment with id '%s' not found in config file '%s'.", env, *flagKeyFile)
 	}
 
 	return confEnv

@@ -63,7 +63,7 @@ func GammaCliWithPort(port int) *gammaCli {
 func (g *gammaCli) StartGammaServer() *gammaCli {
 	out, err := g.Run("start-local", "-wait")
 	if err != nil {
-		panic(fmt.Sprintf("start gamma server failed: %s\noutput:\n%s\n", err.Error(), out))
+		panic(fmt.Sprintf("start Gamma server failed: %s\noutput:\n%s\n", err.Error(), out))
 	}
 	return g
 }
@@ -81,7 +81,7 @@ func (g *gammaCli) DownloadLatestGammaServer() *gammaCli {
 	start := time.Now()
 	out, err := g.Run("upgrade-server")
 	if err != nil {
-		panic(fmt.Sprintf("download latest gamma server failed: %s\noutput:\n%s\n", err.Error(), out))
+		panic(fmt.Sprintf("download latest Gamma server failed: %s\noutput:\n%s\n", err.Error(), out))
 	}
 	delta := time.Now().Sub(start)
 	fmt.Printf("upgraded gamma-server to latest version (this took %.3fs)\n", delta.Seconds())

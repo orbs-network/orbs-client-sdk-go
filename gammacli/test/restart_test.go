@@ -10,14 +10,14 @@ func TestRestart(t *testing.T) {
 	defer cli.StopGammaServer()
 
 	_, err := cli.Run("start-local")
-	require.NoError(t, err, "start gamma server should succeed")
+	require.NoError(t, err, "start Gamma server should succeed")
 
 	_, err = cli.Run("stop-local")
-	require.NoError(t, err, "stop gamma server should succeed")
+	require.NoError(t, err, "stop Gamma server should succeed")
 
 	_, err = cli.Run("stop-local")
-	require.Error(t, err, "second stop gamma server should fail")
+	require.Error(t, err, "second stop Gamma server should fail")
 
 	_, err = cli.Run("start-local")
-	require.NoError(t, err, "start gamma server should succeed")
+	require.NoError(t, err, "start Gamma server should succeed")
 }

@@ -17,7 +17,7 @@ func isDockerReadyAndListening() bool {
 	client := createOrbsClient()
 	payload, err := client.CreateCallMethodPayload(signer.PublicKey, DEPLOY_SYSTEM_CONTRACT_NAME, DEPLOY_GET_INFO_SYSTEM_METHOD_NAME, DEPLOY_SYSTEM_CONTRACT_NAME)
 	if err != nil {
-		die("could not encode payload of the message about to be sent to gamma server\n\n%s", err.Error())
+		die("Could not encode payload of the message about to be sent to Gamma server.\n\n%s", err.Error())
 	}
 
 	_, err = client.CallMethod(payload)

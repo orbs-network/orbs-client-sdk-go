@@ -16,13 +16,13 @@ const PROCESSOR_TYPE_JAVASCRIPT = uint32(2)
 
 func commandDeploy() {
 	if *flagContractName == "" {
-		die("contract name not provided, use the -name flag to provide it")
+		die("Contract name not provided, use the -name flag to provide it.")
 	}
 
 	processorType := getProcessorTypeFromFilename(*flagCodeFile)
 	code, err := ioutil.ReadFile(*flagCodeFile)
 	if err != nil {
-		die("could not open code file\n\n%s", err.Error())
+		die("Could not open code file.\n\n%s", err.Error())
 	}
 
 	signer := getTestKeyFromFile(*flagSigner)
@@ -30,16 +30,16 @@ func commandDeploy() {
 	client := createOrbsClient()
 	payload, txId, err := client.CreateSendTransactionPayload(signer.PublicKey, signer.PrivateKey, DEPLOY_SYSTEM_CONTRACT_NAME, DEPLOY_SYSTEM_METHOD_NAME, string(*flagContractName), uint32(processorType), []byte(code))
 	if err != nil {
-		die("could not encode payload of the message about to be sent to gamma server\n\n%s", err.Error())
+		die("Could not encode payload of the message about to be sent to Gamma server.\n\n%s", err.Error())
 	}
 	response, err := client.SendTransaction(payload)
 	if err != nil {
-		die("failed sending transaction request to gamma server\n\n%s", err.Error())
+		die("Failed sending transaction request to Gamma server.\n\n%s", err.Error())
 	}
 
 	output, err := jsoncodec.MarshalSendTxResponse(response, txId)
 	if err != nil {
-		die("could not encode response to json\n\n%s", err.Error())
+		die("Could not encode response to json.\n\n%s", err.Error())
 	}
 
 	log("%s\n", string(output))
@@ -50,12 +50,12 @@ func commandSendTx() {
 
 	bytes, err := ioutil.ReadFile(*flagInputFile)
 	if err != nil {
-		die("could not open input file\n\n%s", err.Error())
+		die("Could not open input file.\n\n%s", err.Error())
 	}
 
 	sendTx, err := jsoncodec.UnmarshalSendTx(bytes)
 	if err != nil {
-		die("failed parsing input json file '%s'\n\n%s", *flagInputFile, err.Error())
+		die("Failed parsing input json file '%s'.\n\n%s", *flagInputFile, err.Error())
 	}
 
 	inputArgs, err := jsoncodec.UnmarshalArgs(sendTx.Arguments, getTestKeyFromFile)
@@ -66,21 +66,21 @@ func commandSendTx() {
 	client := createOrbsClient()
 	payload, txId, err := client.CreateSendTransactionPayload(signer.PublicKey, signer.PrivateKey, sendTx.ContractName, sendTx.MethodName, inputArgs...)
 	if err != nil {
-		die("could not encode payload of the message about to be sent to gamma server\n\n%s", err.Error())
+		die("Could not encode payload of the message about to be sent to Gamma server.\n\n%s", err.Error())
 	}
 
 	response, clientErr := client.SendTransaction(payload)
 	if response != nil {
 		output, err := jsoncodec.MarshalSendTxResponse(response, txId)
 		if err != nil {
-			die("could not encode send-tx response to json\n\n%s", err.Error())
+			die("Could not encode send-tx response to json.\n\n%s", err.Error())
 		}
 
 		log("%s\n", string(output))
 	}
 
 	if clientErr != nil {
-		die("send-tx request failed on gamma server\n\n%s", clientErr.Error())
+		die("Request send-tx failed on Gamma server.\n\n%s", clientErr.Error())
 	}
 }
 
@@ -89,12 +89,12 @@ func commandRead() {
 
 	bytes, err := ioutil.ReadFile(*flagInputFile)
 	if err != nil {
-		die("could not open input file\n\n%s", err.Error())
+		die("Could not open input file.\n\n%s", err.Error())
 	}
 
 	read, err := jsoncodec.UnmarshalRead(bytes)
 	if err != nil {
-		die("failed parsing input json file '%s'\n\n%s", *flagInputFile, err.Error())
+		die("Failed parsing input json file '%s'.\n\n%s", *flagInputFile, err.Error())
 	}
 
 	inputArgs, err := jsoncodec.UnmarshalArgs(read.Arguments, getTestKeyFromFile)
@@ -105,60 +105,60 @@ func commandRead() {
 	client := createOrbsClient()
 	payload, err := client.CreateCallMethodPayload(signer.PublicKey, read.ContractName, read.MethodName, inputArgs...)
 	if err != nil {
-		die("could not encode payload of the message about to be sent to gamma server\n\n%s", err.Error())
+		die("Could not encode payload of the message about to be sent to Gamma server.\n\n%s", err.Error())
 	}
 
 	response, clientErr := client.CallMethod(payload)
 	if response != nil {
 		output, err := jsoncodec.MarshalReadResponse(response)
 		if err != nil {
-			die("could not encode read response to json\n\n%s", err.Error())
+			die("Could not encode read response to json.\n\n%s", err.Error())
 		}
 
 		log("%s\n", string(output))
 	}
 
 	if clientErr != nil {
-		die("read request failed on gamma server\n\n%s", clientErr.Error())
+		die("Request read failed on Gamma server.\n\n%s", clientErr.Error())
 	}
 }
 
 func commandTxStatus() {
 	if *flagTxId == "" {
-		die("TxId not provided, it's given in the response of send-tx, use the -txid flag to provide it")
+		die("TxId not provided, it's given in the response of send-tx, use the -txid flag to provide it.")
 	}
 
 	client := createOrbsClient()
 	payload, err := client.CreateGetTransactionStatusPayload(*flagTxId)
 	if err != nil {
-		die("could not encode payload of the message about to be sent to gamma server\n\n%s", err.Error())
+		die("Could not encode payload of the message about to be sent to Gamma server.\n\n%s", err.Error())
 	}
 
 	response, clientErr := client.GetTransactionStatus(payload)
 	if response != nil {
 		output, err := jsoncodec.MarshalTxStatusResponse(response)
 		if err != nil {
-			die("could not encode status response to json\n\n%s", err.Error())
+			die("Could not encode status response to json.\n\n%s", err.Error())
 		}
 
 		log("%s\n", string(output))
 	}
 
 	if clientErr != nil {
-		die("status request failed on gamma server\n\n%s", clientErr.Error())
+		die("Request status failed on Gamma server.\n\n%s", clientErr.Error())
 	}
 }
 
 func createOrbsClient() *orbsclient.OrbsClient {
 	env := getEnvironmentFromConfigFile(*flagEnv)
 	if len(env.Endpoints) == 0 {
-		die("environment Endpoints key does not contain any endpoints")
+		die("Environment Endpoints key does not contain any endpoints.")
 	}
 
 	endpoint := env.Endpoints[0]
 	if endpoint == "localhost" {
 		if !isDockerGammaRunning() && !isPortListening(*flagPort) {
-			die("local gamma server is not running, use gamma-cli start-local to start it")
+			die("Local Gamma server is not running, use 'gamma-cli start-local' to start it.")
 		}
 		endpoint = fmt.Sprintf("http://localhost:%d", *flagPort)
 	}
@@ -173,6 +173,6 @@ func getProcessorTypeFromFilename(filename string) uint32 {
 	if strings.HasSuffix(filename, ".js") {
 		return PROCESSOR_TYPE_JAVASCRIPT
 	}
-	die("Unsupported code file type\n\nSupported code file extensions are: .go .js")
+	die("Unsupported code file type.\n\nSupported code file extensions are: .go .js")
 	return 0
 }

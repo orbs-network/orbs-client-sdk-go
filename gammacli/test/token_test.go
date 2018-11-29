@@ -7,7 +7,7 @@ import (
 )
 
 func TestSimpleTransfer(t *testing.T) {
-	cli := GammaCli().StartGammaServer()
+	cli := GammaCli().DownloadLatestGammaServer().StartGammaServer()
 	defer cli.StopGammaServer()
 
 	out, err := cli.Run("read", "-i", "get-balance.json")

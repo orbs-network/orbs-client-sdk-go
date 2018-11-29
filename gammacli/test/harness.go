@@ -5,10 +5,14 @@ import (
 	"io/ioutil"
 	"os/exec"
 	"regexp"
+	"runtime"
+	"path/filepath"
+	"path"
 	"time"
 )
 
 var cachedGammaCliBinaryPath string
+var downloadedLatestGammaServer bool
 
 type gammaCli struct {
 	port string
@@ -25,29 +29,17 @@ func compileGammaCli() string {
 	}
 
 	binaryOutputPath := tempDir + "/gamma-cli"
-	sourcePackage := "github.com/orbs-network/orbs-client-sdk-go/gammacli"
-	out, err := exec.Command("go", "build", "-o", binaryOutputPath, sourcePackage).CombinedOutput()
+	cmd := exec.Command("go", "build", "-o", binaryOutputPath, ".")
+	cmd.Dir = path.Join(getCurrentSourceFileDirPath(), "..")
+	out, err := cmd.CombinedOutput()
 	if err != nil {
 		panic(fmt.Sprintf("compilation failed: %s\noutput:\n%s\n", err.Error(), out))
 	} else {
 		fmt.Printf("compiled gamma-cli successfully:\n %s\n", binaryOutputPath)
 	}
 
-	downloadLatestGammaServer(binaryOutputPath)
-
 	cachedGammaCliBinaryPath = binaryOutputPath
 	return cachedGammaCliBinaryPath
-}
-
-func downloadLatestGammaServer(gammaCliBinaryPath string) {
-	start := time.Now()
-	// TODO: bring this part back and improve its success
-	//out, err := exec.Command(gammaCliBinaryPath, "upgrade").CombinedOutput()
-	//if err != nil {
-	//	panic(fmt.Sprintf("download latest gamma server failed: %s\noutput:\n%s\n", err.Error(), out))
-	//}
-	delta := time.Now().Sub(start)
-	fmt.Printf("upgraded gamma-server to latest version (this took %.3fs)\n", delta.Seconds())
 }
 
 func (g *gammaCli) Run(args ...string) (string, error) {
@@ -80,8 +72,31 @@ func (g *gammaCli) StopGammaServer() {
 	g.Run("stop-local")
 }
 
+func (g *gammaCli) DownloadLatestGammaServer() *gammaCli {
+	if downloadedLatestGammaServer {
+		return g
+	}
+	downloadedLatestGammaServer = true
+
+	start := time.Now()
+	// TODO: bring this back and improve error handling
+	//out, err := g.Run("upgrade")
+	//if err != nil {
+	//	panic(fmt.Sprintf("download latest gamma server failed: %s\noutput:\n%s\n", err.Error(), out))
+	//}
+	delta := time.Now().Sub(start)
+	fmt.Printf("upgraded gamma-server to latest version (this took %.3fs)\n", delta.Seconds())
+	return g
+}
+
+
 func extractTxIdFromSendTxOutput(out string) string {
 	re := regexp.MustCompile(`\"TxId\":\s+\"(\w+)\"`)
 	res := re.FindStringSubmatch(out)
 	return res[1]
+}
+
+func getCurrentSourceFileDirPath() string {
+	_, filename, _, _ := runtime.Caller(1)
+	return filepath.Dir(filename)
 }

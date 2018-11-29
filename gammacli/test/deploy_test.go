@@ -7,7 +7,7 @@ import (
 )
 
 func TestDeployCounter(t *testing.T) {
-	cli := GammaCli().StartGammaServer()
+	cli := GammaCli().DownloadLatestGammaServer().StartGammaServer()
 	defer cli.StopGammaServer()
 
 	out, err := cli.Run("deploy", "-name", "CounterExample", "-code", "./counter/contract.go")

@@ -79,7 +79,7 @@ func (g *gammaCli) DownloadLatestGammaServer() *gammaCli {
 	downloadedLatestGammaServer = true
 
 	start := time.Now()
-	out, err := g.Run("upgrade")
+	out, err := g.Run("upgrade-server")
 	if err != nil {
 		panic(fmt.Sprintf("download latest gamma server failed: %s\noutput:\n%s\n", err.Error(), out))
 	}

@@ -67,9 +67,9 @@ var commands = map[string]*command{
 		handler: commandTxStatus,
 		sort:    6,
 	},
-	"upgrade": {
+	"upgrade-server": {
 		desc:    "upgrade to the latest version of gamma server",
-		handler: commandUpgrade,
+		handler: commandUpgradeServer,
 		sort:    7,
 	},
 	"version": {

@@ -15,7 +15,7 @@ import (
 )
 
 const DOCKER_REPO = "orbsnetwork/gamma"
-const DOCKER_RUN = "orbsnetwork/gamma"
+const DOCKER_RUN = "orbsnetwork/gamma:%s"
 const CONTAINER_NAME = "orbs-gamma-server"
 const DOCKER_REGISTRY_TAGS_URL = "https://registry.hub.docker.com/v2/repositories/orbsnetwork/gamma/tags/"
 
@@ -39,7 +39,8 @@ func commandStartLocal() {
 	}
 
 	p := fmt.Sprintf("%d:8080", *flagPort)
-	out, err := exec.Command("docker", "run", "-d", "--name", CONTAINER_NAME, "-p", p, DOCKER_RUN).CombinedOutput()
+	run := fmt.Sprintf(DOCKER_RUN, gammaVersion)
+	out, err := exec.Command("docker", "run", "-d", "--name", CONTAINER_NAME, "-p", p, run).CombinedOutput()
 	if err != nil {
 		die("could not exec 'docker run' command\n\n%s", out)
 	}
@@ -95,7 +96,7 @@ func commandStopLocal() {
 `)
 }
 
-func commandUpgrade() {
+func commandUpgradeServer() {
 	currentTag := verifyDockerInstalled()
 	latestTag := getLatestDockerTag()
 

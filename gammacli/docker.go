@@ -7,11 +7,17 @@ import (
 	"regexp"
 	"runtime"
 	"strings"
+	"io/ioutil"
+	"net/http"
+	"encoding/json"
+	"github.com/pkg/errors"
+	"strconv"
 )
 
 const DOCKER_REPO = "orbsnetwork/gamma"
 const DOCKER_RUN = "orbsnetwork/gamma"
 const CONTAINER_NAME = "orbs-gamma-server"
+const DOCKER_REGISTRY_TAGS_URL = "https://registry.hub.docker.com/v2/repositories/orbsnetwork/gamma/tags/"
 
 func commandStartLocal() {
 	gammaVersion := verifyDockerInstalled()
@@ -90,10 +96,16 @@ func commandStopLocal() {
 }
 
 func commandUpgrade() {
-	verifyDockerInstalled()
+	currentTag := verifyDockerInstalled()
+	latestTag := getLatestDockerTag()
 
-	log("downloading latest:\n")
-	cmd := exec.Command("docker", "pull", DOCKER_REPO)
+	if cmpTags(latestTag, currentTag) <= 0 {
+		log("current version %s does not require upgrade\n", currentTag)
+		exit()
+	}
+
+	log("downloading latest version %s:\n", latestTag)
+	cmd := exec.Command("docker", "pull", fmt.Sprintf("%s:%s", DOCKER_REPO, latestTag))
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Run()
@@ -144,4 +156,74 @@ func extractTagFromDockerImagesOutput(out string) string {
 		return "unknown"
 	}
 	return res[1]
+}
+
+func getLatestDockerTag() string {
+	resp, err := http.Get(DOCKER_REGISTRY_TAGS_URL)
+	if err != nil {
+		die("cannot connect to docker registry to get image list")
+	}
+	defer resp.Body.Close()
+	bytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil || len(bytes) == 0 {
+		die("bad image list response from docker registry")
+	}
+	tag, err := extractLatestTagFromDockerHubResponse(bytes)
+	if err != nil {
+		die("cannot parse image list response from docker registry")
+	}
+	return tag
+}
+
+type dockerHubTagsJson struct {
+	Results []*struct {
+		Name string
+	}
+}
+
+func extractLatestTagFromDockerHubResponse(responseBytes []byte) (string, error) {
+	var response *dockerHubTagsJson
+	err := json.Unmarshal(responseBytes, &response)
+	if err != nil {
+		return "", err
+	}
+	maxTag := ""
+	for _, result := range response.Results {
+		if cmpTags(result.Name, maxTag) > 0 {
+			maxTag = result.Name
+		}
+	}
+	if maxTag == "" {
+		return "", errors.New("no valid tags found")
+	}
+	return maxTag, nil
+}
+
+func cmpTags(t1, t2 string) int {
+	re := regexp.MustCompile(`v(\d+)\.(\d+)\.(\d+)`)
+	m1 := re.FindStringSubmatch(t1)
+	if len(m1) < 4 {
+		return -1
+	}
+	m2 := re.FindStringSubmatch(t2)
+	if len(m2) < 4 {
+		return 1
+	}
+	diff := atoi(m1[1]) - atoi(m2[1])
+	if diff != 0 {
+		return diff
+	}
+	diff = atoi(m1[2]) - atoi(m2[2])
+	if diff != 0 {
+		return diff
+	}
+	return atoi(m1[3]) - atoi(m2[3])
+}
+
+func atoi(num string) int {
+	res, err := strconv.Atoi(num)
+	if err != nil {
+		return 0
+	}
+	return res
 }

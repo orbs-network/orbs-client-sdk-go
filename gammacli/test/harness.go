@@ -79,11 +79,10 @@ func (g *gammaCli) DownloadLatestGammaServer() *gammaCli {
 	downloadedLatestGammaServer = true
 
 	start := time.Now()
-	// TODO: bring this back and improve error handling
-	//out, err := g.Run("upgrade")
-	//if err != nil {
-	//	panic(fmt.Sprintf("download latest gamma server failed: %s\noutput:\n%s\n", err.Error(), out))
-	//}
+	out, err := g.Run("upgrade")
+	if err != nil {
+		panic(fmt.Sprintf("download latest gamma server failed: %s\noutput:\n%s\n", err.Error(), out))
+	}
 	delta := time.Now().Sub(start)
 	fmt.Printf("upgraded gamma-server to latest version (this took %.3fs)\n", delta.Seconds())
 	return g

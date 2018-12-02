@@ -9,3 +9,5 @@ RUN env
 RUN go env
 
 RUN ./test.sh
+
+RUN ./gammacli/build.sh

@@ -1,7 +1,7 @@
 package hash_test
 
 import (
-	"github.com/orbs-network/orbs-network-go/crypto/hash"
+	"github.com/orbs-network/orbs-client-sdk-go/crypto/hash"
 	"testing"
 )
 

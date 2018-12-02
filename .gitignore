@@ -88,3 +88,4 @@ orbs-*
 devtools/gamma-server/json/*.json
 gamma-cli
 gamma-server
+_bin

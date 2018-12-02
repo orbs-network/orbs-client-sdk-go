@@ -1,0 +1,7 @@
+version: '2'
+
+services:
+  sdk-e2e:
+    image: orbs:orbs-client-sdk-go-e2e
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

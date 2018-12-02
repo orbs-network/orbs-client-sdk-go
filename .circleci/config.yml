@@ -6,7 +6,7 @@ jobs:
       - checkout
       - run: ./git-submodule-checkout.sh
       - run: ./docker-build.sh
-      - run: GAMMA_CLI_PATH=./_bin/gamma-cli ./_bin/e2e.test
+      - run: ./docker-test.sh
 
 workflows:
   version: 2

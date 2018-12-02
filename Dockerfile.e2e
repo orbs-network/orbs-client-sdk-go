@@ -1,0 +1,15 @@
+FROM golang:1.10-alpine
+
+RUN apk add --no-cache docker
+
+WORKDIR /go/src/github.com/orbs-network/orbs-client-sdk-go/
+
+ADD _bin /go/src/github.com/orbs-network/orbs-client-sdk-go/_bin
+
+RUN env
+
+RUN go env
+
+ENV GAMMA_CLI_PATH=/go/src/github.com/orbs-network/orbs-client-sdk-go/_bin/gamma-cli
+
+CMD ./_bin/e2e.test

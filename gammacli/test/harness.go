@@ -3,6 +3,7 @@ package test
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"os/exec"
 	"regexp"
 	"runtime"
@@ -19,6 +20,10 @@ type gammaCli struct {
 }
 
 func compileGammaCli() string {
+	if gammaCliPathFromEnv := os.Getenv("GAMMA_CLI_PATH"); gammaCliPathFromEnv != "" {
+		return gammaCliPathFromEnv
+	}
+
 	if cachedGammaCliBinaryPath != "" {
 		return cachedGammaCliBinaryPath // cache compilation once per process
 	}

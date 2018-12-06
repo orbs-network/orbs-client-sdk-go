@@ -16,6 +16,4 @@ ENV GAMMA_CLI_PATH=/go/src/github.com/orbs-network/orbs-client-sdk-go/_bin/gamma
 
 ENV GAMMA_ENVIRONMENT=docker
 
-RUN cp gammacli/test/config/orbs-gamma-config.json _bin
-
 CMD ./test.sh

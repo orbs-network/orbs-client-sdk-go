@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-const GAMMA_CLI_VERSION = "0.5.1"
+const GAMMA_CLI_VERSION = "0.5.2"
 const CONFIG_FILENAME = "orbs-gamma-config.json"
 const TEST_KEYS_FILENAME = "orbs-test-keys.json"
 const LOCAL_ENV_ID = "local"
@@ -22,7 +22,7 @@ type command struct {
 var commands = map[string]*command{
 	"start-local": {
 		desc:    "start a local Orbs personal blockchain instance listening on port",
-		args:    "-port <PORT> -wait",
+		args:    "-port <PORT>",
 		example: "gamma-cli start-local -port 8080",
 		handler: commandStartLocal,
 		sort:    0,

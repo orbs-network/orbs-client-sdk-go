@@ -67,10 +67,6 @@ func commandStartLocal() {
 func commandStopLocal() {
 	verifyDockerInstalled()
 
-	if !isDockerGammaRunning() {
-		die("Gamma server instance is not started.")
-	}
-
 	out, err := exec.Command("docker", "stop", CONTAINER_NAME).CombinedOutput()
 	if err != nil {
 		die("Could not stop docker container.\n\n%s", out)

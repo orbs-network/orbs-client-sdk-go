@@ -74,7 +74,10 @@ func (g *gammaCli) StartGammaServer() *gammaCli {
 }
 
 func (g *gammaCli) StopGammaServer() {
-	g.Run("stop-local")
+	out, err := g.Run("stop-local")
+	if err != nil {
+		panic(fmt.Sprintf("start Gamma server failed: %s\noutput:\n%s\n", err.Error(), out))
+	}
 }
 
 func (g *gammaCli) DownloadLatestGammaServer() *gammaCli {
@@ -93,6 +96,13 @@ func (g *gammaCli) DownloadLatestGammaServer() *gammaCli {
 	return g
 }
 
+func getGammaEnvironment() string {
+	if env := os.Getenv("GAMMA_ENVIRONMENT"); env != "" {
+		return env
+	}
+
+	return "local"
+}
 
 func extractTxIdFromSendTxOutput(out string) string {
 	re := regexp.MustCompile(`\"TxId\":\s+\"(\w+)\"`)

@@ -5,7 +5,7 @@ import socket
 def get_config(ip):
     return {
         "Environments": {
-            "local": {
+            "docker": {
                 "VirtualChain": 42,
                 "Endpoints": [
                     "http://" + ip + ":8080"

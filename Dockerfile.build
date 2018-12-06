@@ -1,5 +1,7 @@
 FROM golang:1.10-alpine
 
+RUN apk add --no-cache docker
+
 WORKDIR /go/src/github.com/orbs-network/orbs-client-sdk-go/
 
 ADD . /go/src/github.com/orbs-network/orbs-client-sdk-go/
@@ -8,8 +10,10 @@ RUN env
 
 RUN go env
 
-# RUN ./test.sh
-
 RUN ./gammacli/build.sh
 
-RUN ./build-e2e.sh
+ENV GAMMA_CLI_PATH=/go/src/github.com/orbs-network/orbs-client-sdk-go/_bin/gamma-cli
+
+RUN cp gammacli/test/config/orbs-gamma-config.json _bin
+
+CMD ./test.sh

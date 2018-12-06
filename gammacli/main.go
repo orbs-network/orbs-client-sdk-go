@@ -92,6 +92,7 @@ var (
 	flagKeyFile      = flag.String("keys", TEST_KEYS_FILENAME, "name of the json file containing test keys")
 	flagTxId         = flag.String("txid", "", "TxId of a previously sent transaction, given in the response of send-tx")
 	flagEnv          = flag.String("env", LOCAL_ENV_ID, fmt.Sprintf("environment from %s containing server connection details", CONFIG_FILENAME))
+	flagConfigFile = flag.String("config", CONFIG_FILENAME, fmt.Sprintf("path to config file, by default %s", CONFIG_FILENAME))
 	flagWait         = flag.Bool("wait", false, "wait until Gamma server is ready and listening")
 )
 

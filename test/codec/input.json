@@ -31,7 +31,7 @@
   },
   {
     "Test": "st_res_1",
-    "SendTransactionResponse": "AQAAAIsAAAAgAAAAz4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpACAAAAXwAAABAAAAAGAAAAdWludDMyAAABAAAAFAAAAAYAAAB1aW50NjQBAAIAAAAAAAAAFQAAAAYAAABzdHJpbmcCAAUAAABoZWxsbwAAABMAAAAFAAAAYnl0ZXMAAwADAAAAAQIDAAEAAABXCAAAAAAAAABAwJ2SL+gR"
+    "SendTransactionResponse": "AQAAAJAAAAAgAAAAz4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpACAAAAXwAAABAAAAAGAAAAdWludDMyAAABAAAAFAAAAAYAAAB1aW50NjQBAAIAAAAAAAAAFQAAAAYAAABzdHJpbmcCAAUAAABoZWxsbwAAABMAAAAFAAAAYnl0ZXMAAwADAAAAAQIDAAAAAAABAAAAVwgAAAAAAAAAQMCdki/oEQ=="
   },
   {
     "Test": "cm_req_1",
@@ -49,7 +49,7 @@
   },
   {
     "Test": "cm_res_1",
-    "CallMethodResponse": "AwAAAAAAAAABAAAAjlUBAAAAAAAAQMCdki/oEQ=="
+    "CallMethodResponse": "AwAAAAAAAAAAAAAAAQAAAI5VAQAAAAAAAEDAnZIv6BE="
   },
   {
     "Test": "gt_req_1",
@@ -61,6 +61,18 @@
   },
   {
     "Test": "gt_res_1",
-    "GetTransactionStatusResponse": "BAAAAEQAAAAgAAAAz4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpADAAAAGAAAABQAAAAGAAAAdWludDY0AQAX/P///////wsAAAB37P///////wCAQQFOnkkW"
+    "GetTransactionStatusResponse": "BAAAAEgAAAAgAAAAz4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpADAAAAGAAAABQAAAAGAAAAdWludDY0AQAX/P///////wAAAAALAAAAd+z///////8AgEEBTp5JFg=="
+  },
+  {
+    "Test": "gp_req_1",
+    "GetTransactionReceiptProofRequest": {
+      "ProtocolVersion": "1",
+      "VirtualChainId": "4404",
+      "TxId": "AIBBAU6eSRZyakFx2NNzrlg88uyatTEc8vt2dkxqo0asDHiltqxVVQ=="
+    }
+  },
+  {
+    "Test": "gp_res_1",
+    "GetTransactionReceiptProofResponse": "AgAAAAcAAAAzRFVmd4iZAAYAAAARWAEAAAAAAACAQQFOnkkW"
   }
 ]

@@ -57,5 +57,19 @@
       "ExecutionResult": "ERROR_INPUT",
       "TransactionStatus": "REJECTED_UNKNOWN_SIGNER_SCHEME"
     }
+  },
+  {
+    "Test": "gp_req_1",
+    "GetTransactionReceiptProofRequest": "AQAAADQRAAAAgEEBTp5JFiAAAAByakFx2NNzrlg88uyatTEc8vt2dkxqo0asDHiltqxVVQ=="
+  },
+  {
+    "Test": "gp_res_1",
+    "GetTransactionReceiptProofResponse": {
+      "BlockHeight": "88081",
+      "BlockTimestamp": "2020-11-21T20:00:00.000Z",
+      "RequestStatus": "IN_PROCESS",
+      "PackedProof": "M0RVZneImQ==",
+      "TransactionStatus": "NO_RECORD_FOUND"
+    }
   }
 ]

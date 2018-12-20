@@ -138,6 +138,44 @@ func (r *GetTransactionStatusResponse) MarshalJSON() ([]byte, error) {
 	})
 }
 
+func (r *GetTransactionReceiptProofRequest) UnmarshalJSON(data []byte) error {
+	type OtherFields GetTransactionReceiptProofRequest
+	aux := &struct {
+		ProtocolVersion string
+		VirtualChainId  string
+		*OtherFields
+	}{
+		OtherFields: (*OtherFields)(r),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	protocolVersion, err := strconv.ParseUint(aux.ProtocolVersion, 10, 32)
+	if err != nil {
+		panic(err)
+	}
+	r.ProtocolVersion = uint32(protocolVersion)
+	virtualChainId, err := strconv.ParseUint(aux.VirtualChainId, 10, 32)
+	if err != nil {
+		panic(err)
+	}
+	r.VirtualChainId = uint32(virtualChainId)
+	return nil
+}
+
+func (r *GetTransactionReceiptProofResponse) MarshalJSON() ([]byte, error) {
+	type OtherFields GetTransactionReceiptProofResponse
+	return json.Marshal(&struct {
+		BlockHeight    string
+		BlockTimestamp string
+		*OtherFields
+	}{
+		BlockHeight:    strconv.FormatUint(r.BlockHeight, 10),
+		BlockTimestamp: r.BlockTimestamp.UTC().Format(ISO_DATE_FORMAT),
+		OtherFields:    (*OtherFields)(r),
+	})
+}
+
 func jsonUnmarshalMethodArguments(arguments []interface{}, argumentsTypes []string) []interface{} {
 	res := []interface{}{}
 	for index, arg := range arguments {

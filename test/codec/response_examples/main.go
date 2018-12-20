@@ -33,7 +33,7 @@ func main() {
 		BlockHeight:       2135,
 		BlockTimestamp:    primitives.TimestampNano(t1.UnixNano()),
 	}).Build()
-	fmt.Printf("%s\n\n", base64.StdEncoding.EncodeToString(r1.Raw()))
+	fmt.Printf(`"SendTransactionRespons": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r1.Raw()))
 
 	r2 := (&client.CallMethodResponseBuilder{
 		RequestStatus:       protocol.REQUEST_STATUS_NOT_FOUND,
@@ -42,7 +42,7 @@ func main() {
 		BlockHeight:         87438,
 		BlockTimestamp:      primitives.TimestampNano(t1.UnixNano()),
 	}).Build()
-	fmt.Printf("%s\n\n", base64.StdEncoding.EncodeToString(r2.Raw()))
+	fmt.Printf(`"CallMethodResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r2.Raw()))
 
 	r3 := (&client.GetTransactionStatusResponseBuilder{
 		RequestStatus: protocol.REQUEST_STATUS_REJECTED,
@@ -55,5 +55,14 @@ func main() {
 		BlockHeight:       math.MaxUint64 - 5000,
 		BlockTimestamp:    primitives.TimestampNano(t2.UnixNano()),
 	}).Build()
-	fmt.Printf("%s\n\n", base64.StdEncoding.EncodeToString(r3.Raw()))
+	fmt.Printf(`"GetTransactionStatusResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r3.Raw()))
+
+	r4 := (&client.GetTransactionReceiptProofResponseBuilder{
+		RequestStatus:     protocol.REQUEST_STATUS_IN_PROCESS,
+		Proof:             []byte{0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99},
+		TransactionStatus: protocol.TRANSACTION_STATUS_NO_RECORD_FOUND,
+		BlockHeight:       88081,
+		BlockTimestamp:    primitives.TimestampNano(t2.UnixNano()),
+	}).Build()
+	fmt.Printf(`"GetTransactionReceiptProofResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r4.Raw()))
 }

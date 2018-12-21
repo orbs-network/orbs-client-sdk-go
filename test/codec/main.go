@@ -86,7 +86,6 @@ func main() {
 func generateOutput(scenarioInput *ScenarioInput) (*ScenarioOutput, error) {
 	// SendTransactionRequest
 	if scenarioInput.SendTransactionRequest != nil {
-		scenarioInput.SendTransactionRequest.FixInputArgumentTypes(scenarioInput.InputArgumentsTypes)
 		encodedBytes, txId, err := codec.EncodeSendTransactionRequest(scenarioInput.SendTransactionRequest, scenarioInput.PrivateKey)
 		if err != nil {
 			return nil, err
@@ -96,7 +95,6 @@ func generateOutput(scenarioInput *ScenarioInput) (*ScenarioOutput, error) {
 
 	// CallMethodRequest
 	if scenarioInput.CallMethodRequest != nil {
-		scenarioInput.CallMethodRequest.FixInputArgumentTypes(scenarioInput.InputArgumentsTypes)
 		encodedBytes, err := codec.EncodeCallMethodRequest(scenarioInput.CallMethodRequest)
 		if err != nil {
 			return nil, err

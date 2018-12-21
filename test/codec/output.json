@@ -20,6 +20,24 @@
         "hello",
         "AQID"
       ],
+      "OutputArgumentsTypes": [
+        "uint32",
+        "uint64",
+        "string",
+        "bytes"
+      ],
+      "OutputEvents": [
+        {
+          "ContractName": "Contract3",
+          "EventName": "Event3",
+          "Arguments": [
+            "18446744073709550615"
+          ],
+          "ArgumentsTypes": [
+            "uint64"
+          ]
+        }
+      ],
       "RequestStatus": "COMPLETED",
       "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA=",
       "ExecutionResult": "ERROR_SMART_CONTRACT",
@@ -36,6 +54,31 @@
       "BlockHeight": "87438",
       "BlockTimestamp": "2010-11-21T10:00:00.000Z",
       "OutputArguments": [],
+      "OutputArgumentsTypes": [],
+      "OutputEvents": [
+        {
+          "ContractName": "Contract1",
+          "EventName": "Event1",
+          "Arguments": [
+            "1",
+            "2",
+            "hello",
+            "AQID"
+          ],
+          "ArgumentsTypes": [
+            "uint32",
+            "uint64",
+            "string",
+            "bytes"
+          ]
+        },
+        {
+          "ContractName": "Contract2",
+          "EventName": "Event2",
+          "Arguments": [],
+          "ArgumentsTypes": []
+        }
+      ],
       "RequestStatus": "NOT_FOUND",
       "ExecutionResult": "SUCCESS"
     }
@@ -52,6 +95,10 @@
       "OutputArguments": [
         "18446744073709550615"
       ],
+      "OutputArgumentsTypes": [
+        "uint64"
+      ],
+      "OutputEvents": [],
       "RequestStatus": "REJECTED",
       "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA=",
       "ExecutionResult": "ERROR_INPUT",

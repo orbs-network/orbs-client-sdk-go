@@ -19,6 +19,7 @@ type GetTransactionStatusResponse struct {
 	TxHash            []byte
 	ExecutionResult   ExecutionResult
 	OutputArguments   []interface{}
+	OutputEvents      []*Event
 	TransactionStatus TransactionStatus
 	BlockHeight       uint64
 	BlockTimestamp    time.Time
@@ -71,7 +72,13 @@ func DecodeGetTransactionStatusResponse(buf []byte) (*GetTransactionStatusRespon
 	}
 
 	// decode method arguments
-	outputArgumentArray, err := MethodArgumentsOpaqueDecode(res.TransactionReceipt().RawOutputArgumentArrayWithHeader())
+	outputArgumentArray, err := PackedMethodArgumentsDecode(res.TransactionReceipt().RawOutputArgumentArrayWithHeader())
+	if err != nil {
+		return nil, err
+	}
+
+	// decode events
+	outputEventArray, err := PackedEventsDecode(res.TransactionReceipt().RawOutputEventsArrayWithHeader())
 	if err != nil {
 		return nil, err
 	}
@@ -88,6 +95,7 @@ func DecodeGetTransactionStatusResponse(buf []byte) (*GetTransactionStatusRespon
 		TxHash:            res.TransactionReceipt().Txhash(),
 		ExecutionResult:   executionResult,
 		OutputArguments:   outputArgumentArray,
+		OutputEvents:      outputEventArray,
 		TransactionStatus: transactionStatus,
 		BlockHeight:       uint64(res.BlockHeight()),
 		BlockTimestamp:    time.Unix(0, int64(res.BlockTimestamp())),

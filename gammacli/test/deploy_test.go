@@ -10,7 +10,7 @@ func TestDeployCounter(t *testing.T) {
 	cli := GammaCli().DownloadLatestGammaServer().StartGammaServer()
 	defer cli.StopGammaServer()
 
-	out, err := cli.Run("deploy", "-name", "CounterExample", "-code", "./counter/contract.go")
+	out, err := cli.Run("deploy", "-name", "CounterExample", "-code", "./_counter/contract.go")
 	t.Log(out)
 	require.NoError(t, err, "deploy should succeed")
 	require.True(t, strings.Contains(out, `"ExecutionResult": "SUCCESS"`))

@@ -10,12 +10,12 @@ func TestSimpleTransfer(t *testing.T) {
 	cli := GammaCli().DownloadLatestGammaServer().StartGammaServer()
 	defer cli.StopGammaServer()
 
-	out, err := cli.Run("read", "-env", getGammaEnvironment(), "-config", "./orbs-gamma-config.json", "-i", "get-balance.json")
+	out, err := cli.Run("read", "-env", getGammaEnvironment(), "-i", "get-balance.json")
 	t.Log(out)
 	require.Error(t, err, "get balance should fail (not deployed)")
 	require.True(t, strings.Contains(out, `"ExecutionResult": "ERROR_UNEXPECTED"`))
 
-	out, err = cli.Run("send-tx", "-env", getGammaEnvironment(), "-config", "./orbs-gamma-config.json", "-i", "transfer.json")
+	out, err = cli.Run("send-tx", "-env", getGammaEnvironment(), "-i", "transfer.json")
 	t.Log(out)
 	require.NoError(t, err, "transfer should succeed")
 	require.True(t, strings.Contains(out, `"ExecutionResult": "SUCCESS"`))
@@ -23,18 +23,18 @@ func TestSimpleTransfer(t *testing.T) {
 	txId := extractTxIdFromSendTxOutput(out)
 	t.Log(txId)
 
-	out, err = cli.Run("status", "-env", getGammaEnvironment(), "-config", "./orbs-gamma-config.json", "-txid", txId)
+	out, err = cli.Run("status", "-env", getGammaEnvironment(), "-txid", txId)
 	t.Log(out)
 	require.NoError(t, err, "get tx status should succeed")
 	require.True(t, strings.Contains(out, `"RequestStatus": "COMPLETED"`))
 
-	out, err = cli.Run("tx-proof", "-env", getGammaEnvironment(), "-config", "./orbs-gamma-config.json", "-txid", txId)
+	out, err = cli.Run("tx-proof", "-env", getGammaEnvironment(), "-txid", txId)
 	t.Log(out)
 	require.NoError(t, err, "get tx proof should succeed")
 	require.True(t, strings.Contains(out, `"RequestStatus": "COMPLETED"`))
 	require.True(t, strings.Contains(out, `"PackedProof"`))
 
-	out, err = cli.Run("read", "-env", getGammaEnvironment(), "-config", "./orbs-gamma-config.json", "-i", "get-balance.json")
+	out, err = cli.Run("read", "-env", getGammaEnvironment(), "-i", "get-balance.json")
 	t.Log(out)
 	require.NoError(t, err, "get balance should succeed")
 	require.True(t, strings.Contains(out, `"ExecutionResult": "SUCCESS"`))

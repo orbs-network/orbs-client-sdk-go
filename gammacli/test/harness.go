@@ -77,7 +77,7 @@ func (g *gammaCli) StartGammaServer() *gammaCli {
 func (g *gammaCli) StopGammaServer() {
 	out, err := g.Run("stop-local")
 	if err != nil {
-		panic(fmt.Sprintf("start Gamma server failed: %s\noutput:\n%s\n", err.Error(), out))
+		panic(fmt.Sprintf("stop Gamma server failed: %s\noutput:\n%s\n", err.Error(), out))
 	}
 }
 

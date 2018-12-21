@@ -67,19 +67,26 @@ var commands = map[string]*command{
 		handler: commandTxStatus,
 		sort:    6,
 	},
+	"tx-proof": {
+		desc:    "get a cryptographic proof for a sent transaction receipt",
+		args:    "-txid <TX_ID>",
+		example: "gamma-cli tx-proof -txid nXAmGL2peGvXkrDxC2cFaZwhykfMGFGj1DUJ9eDFRdSnNgCpQ69MQz",
+		handler: commandTxProof,
+		sort:    7,
+	},
 	"upgrade-server": {
 		desc:    "upgrade to the latest version of Gamma server",
 		handler: commandUpgradeServer,
-		sort:    7,
+		sort:    8,
 	},
 	"version": {
 		desc:    "print gamma-cli and Gamma server versions",
 		handler: commandVersion,
-		sort:    8,
+		sort:    9,
 	},
 	"help": {
 		desc: "print this help screen",
-		sort: 9,
+		sort: 10,
 	},
 }
 

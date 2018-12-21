@@ -9,10 +9,10 @@
       "PublicKey": "38BsW+JKZ63ugLNatPFHuxo1xV/4Xtpp9A74J73ewXM=",
       "ContractName": "BenchmarkToken",
       "MethodName": "getBalance",
-      "InputArguments": []
+      "InputArguments": [],
+      "InputArgumentsTypes": []
     },
-    "PrivateKey": "k+kZmGoiR3/aAWeJzKMMuEGhNWUJOHFPhfAACmUHa9TfwGxb4kpnre6As1q08Ue7GjXFX/he2mn0Dvgnvd7Bcw==",
-    "InputArgumentsTypes": []
+    "PrivateKey": "k+kZmGoiR3/aAWeJzKMMuEGhNWUJOHFPhfAACmUHa9TfwGxb4kpnre6As1q08Ue7GjXFX/he2mn0Dvgnvd7Bcw=="
   },
   {
     "Test": "st_req_2",
@@ -24,14 +24,14 @@
       "PublicKey": "38BsW+JKZ63ugLNatPFHuxo1xV/4Xtpp9A74J73ewXM=",
       "ContractName": "SuperToken",
       "MethodName": "transfer",
-      "InputArguments": ["1", "2", "hello", "AQID"]
+      "InputArguments": ["1", "2", "hello", "AQID"],
+      "InputArgumentsTypes": ["uint32", "uint64", "string", "bytes"]
     },
-    "PrivateKey": "k+kZmGoiR3/aAWeJzKMMuEGhNWUJOHFPhfAACmUHa9TfwGxb4kpnre6As1q08Ue7GjXFX/he2mn0Dvgnvd7Bcw==",
-    "InputArgumentsTypes": ["uint32", "uint64", "string", "bytes"]
+    "PrivateKey": "k+kZmGoiR3/aAWeJzKMMuEGhNWUJOHFPhfAACmUHa9TfwGxb4kpnre6As1q08Ue7GjXFX/he2mn0Dvgnvd7Bcw=="
   },
   {
     "Test": "st_res_1",
-    "SendTransactionResponse": "AQAAAIsAAAAgAAAAz4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpACAAAAXwAAABAAAAAGAAAAdWludDMyAAABAAAAFAAAAAYAAAB1aW50NjQBAAIAAAAAAAAAFQAAAAYAAABzdHJpbmcCAAUAAABoZWxsbwAAABMAAAAFAAAAYnl0ZXMAAwADAAAAAQIDAAEAAABXCAAAAAAAAABAwJ2SL+gR"
+    "SendTransactionResponse": "AQAAAMwAAAAgAAAAz4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpACAAAAXwAAABAAAAAGAAAAdWludDMyAAABAAAAFAAAAAYAAAB1aW50NjQBAAIAAAAAAAAAFQAAAAYAAABzdHJpbmcCAAUAAABoZWxsbwAAABMAAAAFAAAAYnl0ZXMAAwADAAAAAQIDADwAAAA4AAAACQAAAENvbnRyYWN0MwAAAAYAAABFdmVudDMAABgAAAAUAAAABgAAAHVpbnQ2NAEAF/z///////8BAAAAVwgAAAAAAAAAQMCdki/oEQ=="
   },
   {
     "Test": "cm_req_1",
@@ -43,13 +43,13 @@
       "PublicKey": "38BsW+JKZ63ugLNatPFHuxo1xV/4Xtpp9A74J73ewXM=",
       "ContractName": "SuperToken",
       "MethodName": "checkSomething",
-      "InputArguments": ["1", "9223372036854770000", "hello", "AQID"]
-    },
-    "InputArgumentsTypes": ["uint32", "uint64", "string", "bytes"]
+      "InputArguments": ["1", "9223372036854770000", "hello", "AQID"],
+      "InputArgumentsTypes": ["uint32", "uint64", "string", "bytes"]
+    }
   },
   {
     "Test": "cm_res_1",
-    "CallMethodResponse": "AwAAAAAAAAABAAAAjlUBAAAAAAAAQMCdki/oEQ=="
+    "CallMethodResponse": "AwAAAAAAAACoAAAAfwAAAAkAAABDb250cmFjdDEAAAAGAAAARXZlbnQxAABfAAAAEAAAAAYAAAB1aW50MzIAAAEAAAAUAAAABgAAAHVpbnQ2NAEAAgAAAAAAAAAVAAAABgAAAHN0cmluZwIABQAAAGhlbGxvAAAAEwAAAAUAAABieXRlcwADAAMAAAABAgMAIAAAAAkAAABDb250cmFjdDIAAAAGAAAARXZlbnQyAAAAAAAAAQAAAI5VAQAAAAAAAEDAnZIv6BE="
   },
   {
     "Test": "gt_req_1",
@@ -61,6 +61,18 @@
   },
   {
     "Test": "gt_res_1",
-    "GetTransactionStatusResponse": "BAAAAEQAAAAgAAAAz4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpADAAAAGAAAABQAAAAGAAAAdWludDY0AQAX/P///////wsAAAB37P///////wCAQQFOnkkW"
+    "GetTransactionStatusResponse": "BAAAAEgAAAAgAAAAz4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpADAAAAGAAAABQAAAAGAAAAdWludDY0AQAX/P///////wAAAAALAAAAd+z///////8AgEEBTp5JFg=="
+  },
+  {
+    "Test": "gp_req_1",
+    "GetTransactionReceiptProofRequest": {
+      "ProtocolVersion": "1",
+      "VirtualChainId": "4404",
+      "TxId": "AIBBAU6eSRZyakFx2NNzrlg88uyatTEc8vt2dkxqo0asDHiltqxVVQ=="
+    }
+  },
+  {
+    "Test": "gp_res_1",
+    "GetTransactionReceiptProofResponse": "AgAAAAcAAAAzRFVmd4iZAAYAAAARWAEAAAAAAACAQQFOnkkW"
   }
 ]

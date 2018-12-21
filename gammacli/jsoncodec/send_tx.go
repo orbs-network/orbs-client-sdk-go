@@ -24,6 +24,7 @@ func MarshalSendTxResponse(r *codec.SendTransactionResponse, txId string) ([]byt
 		TxId              string
 		ExecutionResult   codec.ExecutionResult
 		OutputArguments   []*Arg
+		OutputEvents      []*Event
 		TransactionStatus codec.TransactionStatus
 		BlockHeight       string
 		BlockTimestamp    string
@@ -32,6 +33,7 @@ func MarshalSendTxResponse(r *codec.SendTransactionResponse, txId string) ([]byt
 		TxId:              txId,
 		ExecutionResult:   r.ExecutionResult,
 		OutputArguments:   MarshalArgs(r.OutputArguments),
+		OutputEvents:      MarshalEvents(r.OutputEvents),
 		TransactionStatus: r.TransactionStatus,
 		BlockHeight:       strconv.FormatUint(r.BlockHeight, 10),
 		BlockTimestamp:    r.BlockTimestamp.UTC().Format(codec.ISO_DATE_FORMAT),

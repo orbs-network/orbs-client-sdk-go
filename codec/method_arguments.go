@@ -33,7 +33,7 @@ func methodArgumentsArray(args []interface{}) (*protocol.MethodArgumentArray, er
 	return (&protocol.MethodArgumentArrayBuilder{Arguments: builders}).Build(), nil
 }
 
-func MethodArgumentsOpaqueEncode(args []interface{}) ([]byte, error) {
+func PackedMethodArgumentsEncode(args []interface{}) ([]byte, error) {
 	argArray, err := methodArgumentsArray(args)
 	if err != nil {
 		return nil, err
@@ -41,7 +41,7 @@ func MethodArgumentsOpaqueEncode(args []interface{}) ([]byte, error) {
 	return argArray.RawArgumentsArray(), nil
 }
 
-func MethodArgumentsOpaqueDecode(buf []byte) (res []interface{}, err error) {
+func PackedMethodArgumentsDecode(buf []byte) (res []interface{}, err error) {
 	res = []interface{}{}
 	argsArray := protocol.MethodArgumentArrayReader(buf)
 	index := 0

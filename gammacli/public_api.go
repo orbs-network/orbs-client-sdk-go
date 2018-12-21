@@ -149,6 +149,32 @@ func commandTxStatus() {
 	}
 }
 
+func commandTxProof() {
+	if *flagTxId == "" {
+		die("TxId not provided, it's given in the response of send-tx, use the -txid flag to provide it.")
+	}
+
+	client := createOrbsClient()
+	payload, err := client.CreateGetTransactionReceiptProofPayload(*flagTxId)
+	if err != nil {
+		die("Could not encode payload of the message about to be sent to Gamma server.\n\n%s", err.Error())
+	}
+
+	response, clientErr := client.GetTransactionReceiptProof(payload)
+	if response != nil {
+		output, err := jsoncodec.MarshalTxProofResponse(response)
+		if err != nil {
+			die("Could not encode tx proof response to json.\n\n%s", err.Error())
+		}
+
+		log("%s\n", string(output))
+	}
+
+	if clientErr != nil {
+		die("Request status failed on Gamma server.\n\n%s", clientErr.Error())
+	}
+}
+
 func createOrbsClient() *orbsclient.OrbsClient {
 	env := getEnvironmentFromConfigFile(*flagEnv)
 	if len(env.Endpoints) == 0 {

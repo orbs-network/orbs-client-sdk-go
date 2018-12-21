@@ -10,9 +10,10 @@ import (
 
 const CONTENT_TYPE = "application/membuffers"
 const (
-	SEND_TRANSACTION_URL       = "/api/v1/send-transaction"
-	CALL_METHOD_URL            = "/api/v1/call-method"
-	GET_TRANSACTION_STATUS_URL = "/api/v1/get-transaction-status"
+	SEND_TRANSACTION_URL              = "/api/v1/send-transaction"
+	CALL_METHOD_URL                   = "/api/v1/call-method"
+	GET_TRANSACTION_STATUS_URL        = "/api/v1/get-transaction-status"
+	GET_TRANSACTION_RECEIPT_PROOF_URL = "/api/v1/get-transaction-receipt-proof"
 )
 
 func (c *OrbsClient) SendTransaction(payload []byte) (response *codec.SendTransactionResponse, err error) {
@@ -64,6 +65,26 @@ func (c *OrbsClient) GetTransactionStatus(payload []byte) (response *codec.GetTr
 	}
 
 	response, err = codec.DecodeGetTransactionStatusResponse(buf)
+	if err != nil {
+		err = errors.Wrap(err, "failed decoding response")
+		return
+	}
+
+	if res.StatusCode != http.StatusOK {
+		err = errors.Errorf("http status code %d: %s", res.StatusCode, res.Status)
+		return
+	}
+
+	return
+}
+
+func (c *OrbsClient) GetTransactionReceiptProof(payload []byte) (response *codec.GetTransactionReceiptProofResponse, err error) {
+	res, buf, err := c.sendHttpPost(GET_TRANSACTION_RECEIPT_PROOF_URL, payload)
+	if err != nil {
+		return
+	}
+
+	response, err = codec.DecodeGetTransactionReceiptProofResponse(buf)
 	if err != nil {
 		err = errors.Wrap(err, "failed decoding response")
 		return

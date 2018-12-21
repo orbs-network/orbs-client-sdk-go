@@ -13,26 +13,30 @@ import (
 // this is the reference client implementations
 
 type ScenarioInput struct {
-	Test                         string
-	SendTransactionRequest       *codec.SendTransactionRequest
-	CallMethodRequest            *codec.CallMethodRequest
-	GetTransactionStatusRequest  *codec.GetTransactionStatusRequest
-	PrivateKey                   []byte
-	InputArgumentsTypes          []string
-	SendTransactionResponse      []byte
-	CallMethodResponse           []byte
-	GetTransactionStatusResponse []byte
+	Test                               string
+	SendTransactionRequest             *codec.SendTransactionRequest
+	CallMethodRequest                  *codec.CallMethodRequest
+	GetTransactionStatusRequest        *codec.GetTransactionStatusRequest
+	GetTransactionReceiptProofRequest  *codec.GetTransactionReceiptProofRequest
+	PrivateKey                         []byte
+	InputArgumentsTypes                []string
+	SendTransactionResponse            []byte
+	CallMethodResponse                 []byte
+	GetTransactionStatusResponse       []byte
+	GetTransactionReceiptProofResponse []byte
 }
 
 type ScenarioOutput struct {
-	Test                         string
-	SendTransactionRequest       []byte                              `json:",omitempty"`
-	CallMethodRequest            []byte                              `json:",omitempty"`
-	GetTransactionStatusRequest  []byte                              `json:",omitempty"`
-	TxId                         []byte                              `json:",omitempty"`
-	SendTransactionResponse      *codec.SendTransactionResponse      `json:",omitempty"`
-	CallMethodResponse           *codec.CallMethodResponse           `json:",omitempty"`
-	GetTransactionStatusResponse *codec.GetTransactionStatusResponse `json:",omitempty"`
+	Test                               string
+	SendTransactionRequest             []byte                                    `json:",omitempty"`
+	CallMethodRequest                  []byte                                    `json:",omitempty"`
+	GetTransactionStatusRequest        []byte                                    `json:",omitempty"`
+	GetTransactionReceiptProofRequest  []byte                                    `json:",omitempty"`
+	TxId                               []byte                                    `json:",omitempty"`
+	SendTransactionResponse            *codec.SendTransactionResponse            `json:",omitempty"`
+	CallMethodResponse                 *codec.CallMethodResponse                 `json:",omitempty"`
+	GetTransactionStatusResponse       *codec.GetTransactionStatusResponse       `json:",omitempty"`
+	GetTransactionReceiptProofResponse *codec.GetTransactionReceiptProofResponse `json:",omitempty"`
 }
 
 func die(err error) {
@@ -59,7 +63,7 @@ func main() {
 	for index, scenarioInput := range input {
 		scenarioOutput, err := generateOutput(scenarioInput)
 		if err != nil {
-			die(errors.Wrapf(err, "scenario index %d failed to run", index))
+			die(errors.Wrapf(err, "scenario index %d failed to run\n%+v", index, scenarioInput))
 		}
 		output = append(output, scenarioOutput)
 	}
@@ -82,7 +86,6 @@ func main() {
 func generateOutput(scenarioInput *ScenarioInput) (*ScenarioOutput, error) {
 	// SendTransactionRequest
 	if scenarioInput.SendTransactionRequest != nil {
-		scenarioInput.SendTransactionRequest.FixInputArgumentTypes(scenarioInput.InputArgumentsTypes)
 		encodedBytes, txId, err := codec.EncodeSendTransactionRequest(scenarioInput.SendTransactionRequest, scenarioInput.PrivateKey)
 		if err != nil {
 			return nil, err
@@ -92,7 +95,6 @@ func generateOutput(scenarioInput *ScenarioInput) (*ScenarioOutput, error) {
 
 	// CallMethodRequest
 	if scenarioInput.CallMethodRequest != nil {
-		scenarioInput.CallMethodRequest.FixInputArgumentTypes(scenarioInput.InputArgumentsTypes)
 		encodedBytes, err := codec.EncodeCallMethodRequest(scenarioInput.CallMethodRequest)
 		if err != nil {
 			return nil, err
@@ -107,6 +109,15 @@ func generateOutput(scenarioInput *ScenarioInput) (*ScenarioOutput, error) {
 			return nil, err
 		}
 		return &ScenarioOutput{Test: scenarioInput.Test, GetTransactionStatusRequest: encodedBytes}, nil
+	}
+
+	// GetTransactionReceiptProofRequest
+	if scenarioInput.GetTransactionReceiptProofRequest != nil {
+		encodedBytes, err := codec.EncodeGetTransactionReceiptProofRequest(scenarioInput.GetTransactionReceiptProofRequest)
+		if err != nil {
+			return nil, err
+		}
+		return &ScenarioOutput{Test: scenarioInput.Test, GetTransactionReceiptProofRequest: encodedBytes}, nil
 	}
 
 	// SendTransactionResponse
@@ -134,6 +145,15 @@ func generateOutput(scenarioInput *ScenarioInput) (*ScenarioOutput, error) {
 			return nil, err
 		}
 		return &ScenarioOutput{Test: scenarioInput.Test, GetTransactionStatusResponse: res}, nil
+	}
+
+	// GetTransactionReceiptProofResponse
+	if scenarioInput.GetTransactionReceiptProofResponse != nil {
+		res, err := codec.DecodeGetTransactionReceiptProofResponse(scenarioInput.GetTransactionReceiptProofResponse)
+		if err != nil {
+			return nil, err
+		}
+		return &ScenarioOutput{Test: scenarioInput.Test, GetTransactionReceiptProofResponse: res}, nil
 	}
 
 	return nil, errors.New("scenario type unrecognized")

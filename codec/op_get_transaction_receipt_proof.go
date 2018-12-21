@@ -8,24 +8,21 @@ import (
 	"time"
 )
 
-type GetTransactionStatusRequest struct {
+type GetTransactionReceiptProofRequest struct {
 	ProtocolVersion uint32
 	VirtualChainId  uint32
 	TxId            []byte
 }
 
-type GetTransactionStatusResponse struct {
+type GetTransactionReceiptProofResponse struct {
 	RequestStatus     RequestStatus
-	TxHash            []byte
-	ExecutionResult   ExecutionResult
-	OutputArguments   []interface{}
-	OutputEvents      []*Event
+	PackedProof       []byte
 	TransactionStatus TransactionStatus
 	BlockHeight       uint64
 	BlockTimestamp    time.Time
 }
 
-func EncodeGetTransactionStatusRequest(req *GetTransactionStatusRequest) ([]byte, error) {
+func EncodeGetTransactionReceiptProofRequest(req *GetTransactionReceiptProofRequest) ([]byte, error) {
 	// validate
 	if req.ProtocolVersion != 1 {
 		return nil, errors.Errorf("expected ProtocolVersion 1, %d given", req.ProtocolVersion)
@@ -41,7 +38,7 @@ func EncodeGetTransactionStatusRequest(req *GetTransactionStatusRequest) ([]byte
 	}
 
 	// encode request
-	res := (&client.GetTransactionStatusRequestBuilder{
+	res := (&client.GetTransactionReceiptProofRequestBuilder{
 		ProtocolVersion:      primitives.ProtocolVersion(req.ProtocolVersion),
 		VirtualChainId:       primitives.VirtualChainId(req.VirtualChainId),
 		TransactionTimestamp: txTimestamp,
@@ -52,33 +49,15 @@ func EncodeGetTransactionStatusRequest(req *GetTransactionStatusRequest) ([]byte
 	return res.Raw(), nil
 }
 
-func DecodeGetTransactionStatusResponse(buf []byte) (*GetTransactionStatusResponse, error) {
+func DecodeGetTransactionReceiptProofResponse(buf []byte) (*GetTransactionReceiptProofResponse, error) {
 	// decode response
-	res := client.GetTransactionStatusResponseReader(buf)
+	res := client.GetTransactionReceiptProofResponseReader(buf)
 	if !res.IsValid() {
 		return nil, errors.New("response is corrupt and cannot be decoded")
 	}
 
 	// decode request status
 	requestStatus, err := requestStatusDecode(res.RequestStatus())
-	if err != nil {
-		return nil, err
-	}
-
-	// decode execution result
-	executionResult, err := executionResultDecode(res.TransactionReceipt().ExecutionResult())
-	if err != nil {
-		return nil, err
-	}
-
-	// decode method arguments
-	outputArgumentArray, err := PackedMethodArgumentsDecode(res.TransactionReceipt().RawOutputArgumentArrayWithHeader())
-	if err != nil {
-		return nil, err
-	}
-
-	// decode events
-	outputEventArray, err := PackedEventsDecode(res.TransactionReceipt().RawOutputEventsArrayWithHeader())
 	if err != nil {
 		return nil, err
 	}
@@ -90,12 +69,9 @@ func DecodeGetTransactionStatusResponse(buf []byte) (*GetTransactionStatusRespon
 	}
 
 	// return
-	return &GetTransactionStatusResponse{
+	return &GetTransactionReceiptProofResponse{
 		RequestStatus:     requestStatus,
-		TxHash:            res.TransactionReceipt().Txhash(),
-		ExecutionResult:   executionResult,
-		OutputArguments:   outputArgumentArray,
-		OutputEvents:      outputEventArray,
+		PackedProof:       res.Proof(),
 		TransactionStatus: transactionStatus,
 		BlockHeight:       uint64(res.BlockHeight()),
 		BlockTimestamp:    time.Unix(0, int64(res.BlockTimestamp())),

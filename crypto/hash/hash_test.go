@@ -1,7 +1,7 @@
-package hash_test
+package hash
 
 import (
-	"github.com/orbs-network/orbs-client-sdk-go/crypto/hash"
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
@@ -13,27 +13,31 @@ const (
 )
 
 func TestCalcSha256(t *testing.T) {
-	h := hash.CalcSha256(someData)
-	if h.String() != ExpectedSha256 {
-		t.Errorf("sha256 failed expected %s got %s", ExpectedSha256, h)
-	}
+	h := CalcSha256(someData)
+	require.Equal(t, SHA256_HASH_SIZE_BYTES, len(h))
+	require.Equal(t, ExpectedSha256, h.String(), "result should match")
 }
 
-func TestCalcRipmd160Sha256(t *testing.T) {
-	h := hash.CalcRipmd160Sha256(someData)
-	if h.String() != ExpectedSha256Ripmd160 {
-		t.Errorf("sha256ripmd160 failed expected %s got %s", ExpectedSha256Ripmd160, h)
-	}
+func TestCalcSha256_MultipleChunks(t *testing.T) {
+	h := CalcSha256(someData[:3], someData[3:])
+	require.Equal(t, SHA256_HASH_SIZE_BYTES, len(h))
+	require.Equal(t, ExpectedSha256, h.String(), "result should match")
+}
+
+func TestCalcRipemd160Sha256(t *testing.T) {
+	h := CalcRipemd160Sha256(someData)
+	require.Equal(t, RIPEMD160_HASH_SIZE_BYTES, len(h))
+	require.Equal(t, ExpectedSha256Ripmd160, h.String(), "result should match")
 }
 
 func BenchmarkCalcSha256(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		hash.CalcSha256(someData)
+		CalcSha256(someData)
 	}
 }
 
-func BenchmarkCalcRipmd160Sha256(b *testing.B) {
+func BenchmarkCalcRipemd160Sha256(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		hash.CalcRipmd160Sha256(someData)
+		CalcRipemd160Sha256(someData)
 	}
 }

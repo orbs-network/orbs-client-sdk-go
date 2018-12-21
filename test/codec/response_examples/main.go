@@ -18,9 +18,17 @@ func main() {
 
 	h1, _ := hex.DecodeString("cf80cd8aed482d5d1527d7dc72fceff84e6326592848447d2dc0b0e87dfc9a90")
 
-	a1, _ := codec.MethodArgumentsOpaqueEncode([]interface{}{uint32(1), uint64(2), "hello", []byte{0x01, 0x02, 0x03}})
-	a2, _ := codec.MethodArgumentsOpaqueEncode([]interface{}{})
-	a3, _ := codec.MethodArgumentsOpaqueEncode([]interface{}{uint64(math.MaxUint64 - 1000)})
+	a1, _ := codec.PackedMethodArgumentsEncode([]interface{}{uint32(1), uint64(2), "hello", []byte{0x01, 0x02, 0x03}})
+	a2, _ := codec.PackedMethodArgumentsEncode([]interface{}{})
+	a3, _ := codec.PackedMethodArgumentsEncode([]interface{}{uint64(math.MaxUint64 - 1000)})
+
+	e1 := codec.PackedEventsEncode([]*protocol.EventBuilder{
+		{ContractName: "Contract1", EventName: "Event1", OutputArgumentArray: a1},
+		{ContractName: "Contract2", EventName: "Event2", OutputArgumentArray: a2},
+	})
+	e2 := codec.PackedEventsEncode([]*protocol.EventBuilder{
+		{ContractName: "Contract3", EventName: "Event3", OutputArgumentArray: a3},
+	})
 
 	r1 := (&client.SendTransactionResponseBuilder{
 		RequestStatus: protocol.REQUEST_STATUS_COMPLETED,
@@ -28,21 +36,23 @@ func main() {
 			Txhash:              h1,
 			ExecutionResult:     protocol.EXECUTION_RESULT_ERROR_SMART_CONTRACT,
 			OutputArgumentArray: a1,
+			OutputEventsArray:   e2,
 		},
 		TransactionStatus: protocol.TRANSACTION_STATUS_COMMITTED,
 		BlockHeight:       2135,
 		BlockTimestamp:    primitives.TimestampNano(t1.UnixNano()),
 	}).Build()
-	fmt.Printf("%s\n\n", base64.StdEncoding.EncodeToString(r1.Raw()))
+	fmt.Printf(`"SendTransactionResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r1.Raw()))
 
 	r2 := (&client.CallMethodResponseBuilder{
 		RequestStatus:       protocol.REQUEST_STATUS_NOT_FOUND,
 		OutputArgumentArray: a2,
+		OutputEventsArray:   e1,
 		CallMethodResult:    protocol.EXECUTION_RESULT_SUCCESS,
 		BlockHeight:         87438,
 		BlockTimestamp:      primitives.TimestampNano(t1.UnixNano()),
 	}).Build()
-	fmt.Printf("%s\n\n", base64.StdEncoding.EncodeToString(r2.Raw()))
+	fmt.Printf(`"CallMethodResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r2.Raw()))
 
 	r3 := (&client.GetTransactionStatusResponseBuilder{
 		RequestStatus: protocol.REQUEST_STATUS_REJECTED,
@@ -55,5 +65,14 @@ func main() {
 		BlockHeight:       math.MaxUint64 - 5000,
 		BlockTimestamp:    primitives.TimestampNano(t2.UnixNano()),
 	}).Build()
-	fmt.Printf("%s\n\n", base64.StdEncoding.EncodeToString(r3.Raw()))
+	fmt.Printf(`"GetTransactionStatusResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r3.Raw()))
+
+	r4 := (&client.GetTransactionReceiptProofResponseBuilder{
+		RequestStatus:     protocol.REQUEST_STATUS_IN_PROCESS,
+		Proof:             []byte{0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99},
+		TransactionStatus: protocol.TRANSACTION_STATUS_NO_RECORD_FOUND,
+		BlockHeight:       88081,
+		BlockTimestamp:    primitives.TimestampNano(t2.UnixNano()),
+	}).Build()
+	fmt.Printf(`"GetTransactionReceiptProofResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r4.Raw()))
 }

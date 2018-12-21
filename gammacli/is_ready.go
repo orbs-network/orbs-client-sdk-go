@@ -20,8 +20,17 @@ func isDockerReadyAndListening() bool {
 		die("Could not encode payload of the message about to be sent to Gamma server.\n\n%s", err.Error())
 	}
 
-	_, err = client.CallMethod(payload)
-	return err == nil
+	response, err := client.CallMethod(payload)
+	if err != nil {
+		return false
+	}
+
+	// the system will not accept new transactions before block 1 is closed under consensus
+	if response.BlockHeight == 0 {
+		return false
+	}
+
+	return true
 }
 
 func waitUntilDockerIsReadyAndListening(timeout time.Duration) {

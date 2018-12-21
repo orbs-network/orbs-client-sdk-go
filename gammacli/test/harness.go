@@ -5,10 +5,10 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path"
+	"path/filepath"
 	"regexp"
 	"runtime"
-	"path/filepath"
-	"path"
 	"time"
 )
 
@@ -70,6 +70,7 @@ func (g *gammaCli) StartGammaServer() *gammaCli {
 	if err != nil {
 		panic(fmt.Sprintf("start Gamma server failed: %s\noutput:\n%s\n", err.Error(), out))
 	}
+	fmt.Println(out)
 	return g
 }
 

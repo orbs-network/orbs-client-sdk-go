@@ -24,6 +24,7 @@ type CallMethodResponse struct {
 	RequestStatus   RequestStatus
 	ExecutionResult ExecutionResult
 	OutputArguments []interface{}
+	OutputEvents    []*Event
 	BlockHeight     uint64
 	BlockTimestamp  time.Time
 }
@@ -38,7 +39,7 @@ func EncodeCallMethodRequest(req *CallMethodRequest) ([]byte, error) {
 	}
 
 	// encode method arguments
-	inputArgumentArray, err := MethodArgumentsOpaqueEncode(req.InputArguments)
+	inputArgumentArray, err := PackedMethodArgumentsEncode(req.InputArguments)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +93,13 @@ func DecodeCallMethodResponse(buf []byte) (*CallMethodResponse, error) {
 	}
 
 	// decode method arguments
-	outputArgumentArray, err := MethodArgumentsOpaqueDecode(res.RawOutputArgumentArrayWithHeader())
+	outputArgumentArray, err := PackedMethodArgumentsDecode(res.RawOutputArgumentArrayWithHeader())
+	if err != nil {
+		return nil, err
+	}
+
+	// decode events
+	outputEventArray, err := PackedEventsDecode(res.RawOutputEventsArrayWithHeader())
 	if err != nil {
 		return nil, err
 	}
@@ -102,6 +109,7 @@ func DecodeCallMethodResponse(buf []byte) (*CallMethodResponse, error) {
 		RequestStatus:   requestStatus,
 		ExecutionResult: executionResult,
 		OutputArguments: outputArgumentArray,
+		OutputEvents:    outputEventArray,
 		BlockHeight:     uint64(res.BlockHeight()),
 		BlockTimestamp:  time.Unix(0, int64(res.BlockTimestamp())),
 	}, nil

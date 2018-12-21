@@ -18,7 +18,7 @@ func CreateAccount() (*OrbsAccount, error) {
 	if err != nil {
 		return nil, err
 	}
-	rawAddress := hash.CalcRipmd160Sha256(keyPair.PublicKey())
+	rawAddress := hash.CalcRipemd160Sha256(keyPair.PublicKey())
 	return &OrbsAccount{
 		PublicKey:  keyPair.PublicKey(),
 		PrivateKey: keyPair.PrivateKey(),

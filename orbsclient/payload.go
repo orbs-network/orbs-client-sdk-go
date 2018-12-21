@@ -47,3 +47,15 @@ func (c *OrbsClient) CreateGetTransactionStatusPayload(txId string) (payload []b
 		TxId:            rawTxId,
 	})
 }
+
+func (c *OrbsClient) CreateGetTransactionReceiptProofPayload(txId string) (payload []byte, err error) {
+	rawTxId, err := base58.Decode([]byte(txId))
+	if err != nil {
+		return nil, err
+	}
+	return codec.EncodeGetTransactionReceiptProofRequest(&codec.GetTransactionReceiptProofRequest{
+		ProtocolVersion: PROTOCOL_VERSION,
+		VirtualChainId:  c.VirtualChainId,
+		TxId:            rawTxId,
+	})
+}

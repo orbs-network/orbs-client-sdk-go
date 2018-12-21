@@ -23,12 +23,14 @@ func MarshalReadResponse(r *codec.CallMethodResponse) ([]byte, error) {
 		RequestStatus   codec.RequestStatus
 		ExecutionResult codec.ExecutionResult
 		OutputArguments []*Arg
+		OutputEvents    []*Event
 		BlockHeight     string
 		BlockTimestamp  string
 	}{
 		RequestStatus:   r.RequestStatus,
 		ExecutionResult: r.ExecutionResult,
 		OutputArguments: MarshalArgs(r.OutputArguments),
+		OutputEvents:    MarshalEvents(r.OutputEvents),
 		BlockHeight:     strconv.FormatUint(r.BlockHeight, 10),
 		BlockTimestamp:  r.BlockTimestamp.UTC().Format(codec.ISO_DATE_FORMAT),
 	}, "", "  ")

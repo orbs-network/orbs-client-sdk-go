@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os/exec"
+	"path"
+	"path/filepath"
 	"regexp"
 	"runtime"
-	"path/filepath"
-	"path"
 	"time"
 )
 
@@ -65,6 +65,7 @@ func (g *gammaCli) StartGammaServer() *gammaCli {
 	if err != nil {
 		panic(fmt.Sprintf("start Gamma server failed: %s\noutput:\n%s\n", err.Error(), out))
 	}
+	fmt.Println(out)
 	return g
 }
 
@@ -87,7 +88,6 @@ func (g *gammaCli) DownloadLatestGammaServer() *gammaCli {
 	fmt.Printf("upgraded gamma-server to latest version (this took %.3fs)\n", delta.Seconds())
 	return g
 }
-
 
 func extractTxIdFromSendTxOutput(out string) string {
 	re := regexp.MustCompile(`\"TxId\":\s+\"(\w+)\"`)

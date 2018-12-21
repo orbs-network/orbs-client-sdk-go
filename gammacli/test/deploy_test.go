@@ -25,6 +25,7 @@ func TestDeployCounter(t *testing.T) {
 	t.Log(out)
 	require.NoError(t, err, "add should succeed")
 	require.True(t, strings.Contains(out, `"ExecutionResult": "SUCCESS"`))
+	require.True(t, strings.Contains(out, `"Value": "previous count is 0"`))
 
 	out, err = cli.Run("read", "-i", "counter-get.json")
 	t.Log(out)

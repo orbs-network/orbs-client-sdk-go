@@ -28,6 +28,12 @@ func TestSimpleTransfer(t *testing.T) {
 	require.NoError(t, err, "get tx status should succeed")
 	require.True(t, strings.Contains(out, `"RequestStatus": "COMPLETED"`))
 
+	out, err = cli.Run("tx-proof", "-txid", txId)
+	t.Log(out)
+	require.NoError(t, err, "get tx proof should succeed")
+	require.True(t, strings.Contains(out, `"RequestStatus": "COMPLETED"`))
+	require.True(t, strings.Contains(out, `"PackedProof"`))
+
 	out, err = cli.Run("read", "-i", "get-balance.json")
 	t.Log(out)
 	require.NoError(t, err, "get balance should succeed")

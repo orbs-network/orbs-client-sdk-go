@@ -8,6 +8,7 @@ import (
 type RequestStatus string
 
 const (
+	REQUEST_STATUS_PARSE_ERROR  RequestStatus = "<PARSE_ERROR>"
 	REQUEST_STATUS_COMPLETED    RequestStatus = "COMPLETED"
 	REQUEST_STATUS_IN_PROCESS   RequestStatus = "IN_PROCESS"
 	REQUEST_STATUS_NOT_FOUND    RequestStatus = "NOT_FOUND"
@@ -16,10 +17,14 @@ const (
 	REQUEST_STATUS_SYSTEM_ERROR RequestStatus = "SYSTEM_ERROR"
 )
 
+func (x RequestStatus) String() string {
+	return string(x)
+}
+
 func requestStatusDecode(requestStatus protocol.RequestStatus) (RequestStatus, error) {
 	switch requestStatus {
 	case protocol.REQUEST_STATUS_RESERVED:
-		return "", errors.Errorf("reserved RequestStatus received")
+		return REQUEST_STATUS_PARSE_ERROR, errors.Errorf("reserved RequestStatus received")
 	case protocol.REQUEST_STATUS_COMPLETED:
 		return REQUEST_STATUS_COMPLETED, nil
 	case protocol.REQUEST_STATUS_IN_PROCESS:
@@ -33,6 +38,6 @@ func requestStatusDecode(requestStatus protocol.RequestStatus) (RequestStatus, e
 	case protocol.REQUEST_STATUS_SYSTEM_ERROR:
 		return REQUEST_STATUS_SYSTEM_ERROR, nil
 	default:
-		return "", errors.Errorf("unsupported RequestStatus received: %d", requestStatus)
+		return REQUEST_STATUS_PARSE_ERROR, errors.Errorf("unsupported RequestStatus received: %d", requestStatus)
 	}
 }

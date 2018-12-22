@@ -12,6 +12,10 @@ const (
 	NETWORK_TYPE_TEST_NET NetworkType = "TEST_NET"
 )
 
+func (x NetworkType) String() string {
+	return string(x)
+}
+
 func networkTypeEncode(networkType NetworkType) (protocol.SignerNetworkType, error) {
 	switch networkType {
 	case NETWORK_TYPE_MAIN_NET:

@@ -8,6 +8,7 @@ import (
 type TransactionStatus string
 
 const (
+	TRANSACTION_STATUS_PARSE_ERROR                             TransactionStatus = "<PARSE_ERROR>"
 	TRANSACTION_STATUS_COMMITTED                               TransactionStatus = "COMMITTED"
 	TRANSACTION_STATUS_DUPLICATE_TRANSACTION_ALREADY_COMMITTED TransactionStatus = "DUPLICATE_TRANSACTION_ALREADY_COMMITTED"
 	TRANSACTION_STATUS_PENDING                                 TransactionStatus = "PENDING"
@@ -25,10 +26,14 @@ const (
 	TRANSACTION_STATUS_REJECTED_CONGESTION                     TransactionStatus = "REJECTED_CONGESTION"
 )
 
+func (x TransactionStatus) String() string {
+	return string(x)
+}
+
 func transactionStatusDecode(transactionStatus protocol.TransactionStatus) (TransactionStatus, error) {
 	switch transactionStatus {
 	case protocol.TRANSACTION_STATUS_RESERVED:
-		return "", errors.Errorf("reserved TransactionStatus received")
+		return TRANSACTION_STATUS_PARSE_ERROR, errors.Errorf("reserved TransactionStatus received")
 	case protocol.TRANSACTION_STATUS_COMMITTED:
 		return TRANSACTION_STATUS_COMMITTED, nil
 	case protocol.TRANSACTION_STATUS_DUPLICATE_TRANSACTION_ALREADY_COMMITTED:
@@ -60,6 +65,6 @@ func transactionStatusDecode(transactionStatus protocol.TransactionStatus) (Tran
 	case protocol.TRANSACTION_STATUS_REJECTED_CONGESTION:
 		return TRANSACTION_STATUS_REJECTED_CONGESTION, nil
 	default:
-		return "", errors.Errorf("unsupported TransactionStatus received: %d", transactionStatus)
+		return TRANSACTION_STATUS_PARSE_ERROR, errors.Errorf("unsupported TransactionStatus received: %d", transactionStatus)
 	}
 }

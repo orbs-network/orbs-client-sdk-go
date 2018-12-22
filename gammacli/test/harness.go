@@ -12,6 +12,8 @@ import (
 	"time"
 )
 
+const CONFIG_FILENAME = "orbs-gamma-config.json"
+
 var cachedGammaCliBinaryPath string
 var downloadedLatestGammaServer bool
 
@@ -55,6 +57,8 @@ func (g *gammaCli) Run(args ...string) (string, error) {
 		// needed for dockerized tests in ci
 		if args[0] != "start-local" && args[0] != "stop-local" && args[0] != "upgrade-server" {
 			args = append(args, "-env", getGammaEnvironmentFromEnvVar())
+			pathToConfig := path.Join(os.Getenv("HOME"), ".orbs", CONFIG_FILENAME)
+			args = append(args, "-config", pathToConfig)
 		}
 	}
 	out, err := exec.Command(compileGammaCli(), args...).CombinedOutput()

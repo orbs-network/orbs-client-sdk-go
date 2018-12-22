@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"path"
 )
 
 const GAMMA_CLI_VERSION = "0.5.2"
@@ -92,7 +91,6 @@ var commands = map[string]*command{
 }
 
 var (
-	pathToConfig = path.Join(os.Getenv("HOME"), ".orbs", CONFIG_FILENAME)
 	flagPort         = flag.Int("port", 8080, "listening port for Gamma server")
 	flagSigner       = flag.String("signer", "user1", "id of the signing key from the test key json")
 	flagContractName = flag.String("name", "", "name of the smart contract being deployed")
@@ -100,8 +98,8 @@ var (
 	flagInputFile    = flag.String("i", "input.json", "name of the json input file")
 	flagKeyFile      = flag.String("keys", TEST_KEYS_FILENAME, "name of the json file containing test keys")
 	flagTxId         = flag.String("txid", "", "TxId of a previously sent transaction, given in the response of send-tx")
-	flagConfigFile   = flag.String("config", pathToConfig, fmt.Sprintf("path to config file: %s", pathToConfig))
-	flagEnv          = flag.String("env", LOCAL_ENV_ID, fmt.Sprintf("environment from %s containing server connection details", CONFIG_FILENAME))
+	flagConfigFile   = flag.String("config", CONFIG_FILENAME, "path to config file")
+	flagEnv          = flag.String("env", LOCAL_ENV_ID, "environment from config file containing server connection details")
 	flagWait         = flag.Bool("wait", false, "wait until Gamma server is ready and listening")
 )
 

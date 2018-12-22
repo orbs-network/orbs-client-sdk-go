@@ -49,7 +49,13 @@ func compileGammaCli() string {
 
 func (g *gammaCli) Run(args ...string) (string, error) {
 	if len(args) > 0 {
+		// streamlined supprt for a different port
 		args = append(args, "-port", g.port)
+
+		// needed for dockerized tests in ci
+		if args[0] != "start-local" && args[0] != "stop-local" && args[0] != "upgrade-server" {
+			args = append(args, "-env", getGammaEnvironmentFromEnvVar())
+		}
 	}
 	out, err := exec.Command(compileGammaCli(), args...).CombinedOutput()
 	return string(out), err
@@ -97,7 +103,7 @@ func (g *gammaCli) DownloadLatestGammaServer() *gammaCli {
 	return g
 }
 
-func getGammaEnvironment() string {
+func getGammaEnvironmentFromEnvVar() string {
 	if env := os.Getenv("GAMMA_ENVIRONMENT"); env != "" {
 		return env
 	}

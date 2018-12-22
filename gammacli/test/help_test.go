@@ -8,6 +8,7 @@ import (
 
 func TestHelp(t *testing.T) {
 	out, err := GammaCli().Run("help")
+	t.Log(out)
 	require.Error(t, err, "help should exit nonzero")
 	require.NotEmpty(t, out, "help output should not be empty")
 	require.True(t, strings.Contains(out, "start-local"))

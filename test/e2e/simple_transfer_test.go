@@ -1,7 +1,6 @@
 package e2e
 
 import (
-	"fmt"
 	"github.com/orbs-network/orbs-client-sdk-go/codec"
 	"github.com/orbs-network/orbs-client-sdk-go/orbsclient"
 	"github.com/stretchr/testify/require"
@@ -21,7 +20,7 @@ func TestSimpleTransfer(t *testing.T) {
 	require.NoError(t, err)
 
 	// create client
-	endpoint := fmt.Sprintf("http://%s:%d", GAMMA_ENDPOINT, GAMMA_PORT)
+	endpoint := getEndpoint()
 	client := orbsclient.NewOrbsClient(endpoint, VIRTUAL_CHAIN_ID, codec.NETWORK_TYPE_TEST_NET)
 
 	// create transfer transaction payload

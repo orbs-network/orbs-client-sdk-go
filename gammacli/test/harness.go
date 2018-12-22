@@ -3,6 +3,7 @@ package test
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"os/exec"
 	"path"
 	"path/filepath"
@@ -10,6 +11,8 @@ import (
 	"runtime"
 	"time"
 )
+
+const CONFIG_FILENAME = "orbs-gamma-config.json"
 
 var cachedGammaCliBinaryPath string
 var downloadedLatestGammaServer bool
@@ -19,6 +22,10 @@ type gammaCli struct {
 }
 
 func compileGammaCli() string {
+	if gammaCliPathFromEnv := os.Getenv("GAMMA_CLI_PATH"); gammaCliPathFromEnv != "" {
+		return gammaCliPathFromEnv
+	}
+
 	if cachedGammaCliBinaryPath != "" {
 		return cachedGammaCliBinaryPath // cache compilation once per process
 	}
@@ -44,7 +51,15 @@ func compileGammaCli() string {
 
 func (g *gammaCli) Run(args ...string) (string, error) {
 	if len(args) > 0 {
+		// streamlined supprt for a different port
 		args = append(args, "-port", g.port)
+
+		// needed for dockerized tests in ci
+		if args[0] != "start-local" && args[0] != "stop-local" && args[0] != "upgrade-server" {
+			args = append(args, "-env", getGammaEnvironmentFromEnvVar())
+			pathToConfig := path.Join(os.Getenv("HOME"), ".orbs", CONFIG_FILENAME)
+			args = append(args, "-config", pathToConfig)
+		}
 	}
 	out, err := exec.Command(compileGammaCli(), args...).CombinedOutput()
 	return string(out), err
@@ -70,7 +85,10 @@ func (g *gammaCli) StartGammaServer() *gammaCli {
 }
 
 func (g *gammaCli) StopGammaServer() {
-	g.Run("stop-local")
+	out, err := g.Run("stop-local")
+	if err != nil {
+		panic(fmt.Sprintf("stop Gamma server failed: %s\noutput:\n%s\n", err.Error(), out))
+	}
 }
 
 func (g *gammaCli) DownloadLatestGammaServer() *gammaCli {
@@ -87,6 +105,14 @@ func (g *gammaCli) DownloadLatestGammaServer() *gammaCli {
 	delta := time.Now().Sub(start)
 	fmt.Printf("upgraded gamma-server to latest version (this took %.3fs)\n", delta.Seconds())
 	return g
+}
+
+func getGammaEnvironmentFromEnvVar() string {
+	if env := os.Getenv("GAMMA_ENVIRONMENT"); env != "" {
+		return env
+	}
+
+	return "local"
 }
 
 func extractTxIdFromSendTxOutput(out string) string {

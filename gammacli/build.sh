@@ -2,7 +2,8 @@
 rm -rf ./_bin
 
 mkdir -p ./_bin
-go build -o _bin/gamma-cli ./gammacli
+go build -o _bin/gamma-cli
+./_bin/gamma-cli version
 
 if [ $(uname) == "Darwin" ]; then
     # mac only for now

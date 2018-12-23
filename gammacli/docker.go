@@ -1,17 +1,17 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/pkg/errors"
+	"io/ioutil"
+	"net/http"
 	"os"
 	"os/exec"
 	"regexp"
 	"runtime"
-	"strings"
-	"io/ioutil"
-	"net/http"
-	"encoding/json"
-	"github.com/pkg/errors"
 	"strconv"
+	"strings"
 )
 
 const DOCKER_REPO = "orbsnetwork/gamma"
@@ -19,11 +19,11 @@ const DOCKER_RUN = "orbsnetwork/gamma:%s"
 const CONTAINER_NAME = "orbs-gamma-server"
 const DOCKER_REGISTRY_TAGS_URL = "https://registry.hub.docker.com/v2/repositories/orbsnetwork/gamma/tags/"
 
-func commandStartLocal() {
+func commandStartLocal(requiredOptions []string) {
 	gammaVersion := verifyDockerInstalled()
 
 	if !doesFileExist(*flagKeyFile) {
-		commandGenerateTestKeys()
+		commandGenerateTestKeys(nil)
 	}
 
 	if isDockerGammaRunning() {
@@ -64,7 +64,7 @@ func commandStartLocal() {
 `, gammaVersion, *flagPort)
 }
 
-func commandStopLocal() {
+func commandStopLocal(requiredOptions []string) {
 	verifyDockerInstalled()
 
 	out, err := exec.Command("docker", "stop", CONTAINER_NAME).CombinedOutput()
@@ -92,7 +92,7 @@ func commandStopLocal() {
 `)
 }
 
-func commandUpgradeServer() {
+func commandUpgradeServer(requiredOptions []string) {
 	currentTag := verifyDockerInstalled()
 	latestTag := getLatestDockerTag()
 
@@ -113,9 +113,9 @@ func verifyDockerInstalled() string {
 	out, err := exec.Command("docker", "images", DOCKER_REPO).CombinedOutput()
 	if err != nil {
 		if runtime.GOOS == "darwin" {
-			die("Docker is required but not installed on your machine.\n\nInstall from:  https://docs.docker.com/docker-for-mac/install/")
+			die("Docker is required but not running. Is it installed on your machine?\n\nInstall from:  https://docs.docker.com/docker-for-mac/install/")
 		} else {
-			die("Docker is required but not installed on your machine.\n\nInstall from:  https://docs.docker.com/install/")
+			die("Docker is required but not running. Is it installed on your machine?\n\nInstall from:  https://docs.docker.com/install/")
 		}
 	}
 

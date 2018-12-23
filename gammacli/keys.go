@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 )
 
-func commandGenerateTestKeys() {
+func commandGenerateTestKeys(requiredOptions []string) {
 	keys := make(map[string]*jsoncodec.Key)
 	for i := 0; i < 10; i++ {
 		account, err := orbsclient.CreateAccount()
@@ -45,7 +45,7 @@ func commandGenerateTestKeys() {
 
 func getTestKeyFromFile(id string) *jsoncodec.Key {
 	if !doesFileExist(*flagKeyFile) {
-		commandGenerateTestKeys()
+		commandGenerateTestKeys(nil)
 	}
 
 	bytes, err := ioutil.ReadFile(*flagKeyFile)

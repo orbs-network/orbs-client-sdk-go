@@ -6,6 +6,7 @@ import (
 	"github.com/orbs-network/orbs-client-sdk-go/gammacli/jsoncodec"
 	"github.com/orbs-network/orbs-client-sdk-go/orbsclient"
 	"io/ioutil"
+	"path"
 	"strings"
 )
 
@@ -14,13 +15,15 @@ const DEPLOY_SYSTEM_METHOD_NAME = "deployService"
 const PROCESSOR_TYPE_NATIVE = uint32(1)
 const PROCESSOR_TYPE_JAVASCRIPT = uint32(2)
 
-func commandDeploy() {
+func commandDeploy(requiredOptions []string) {
+	codeFile := requiredOptions[0]
+
 	if *flagContractName == "" {
-		die("Contract name not provided, use the -name flag to provide it.")
+		*flagContractName = getFilenameWithoutExtension(codeFile)
 	}
 
-	processorType := getProcessorTypeFromFilename(*flagCodeFile)
-	code, err := ioutil.ReadFile(*flagCodeFile)
+	processorType := getProcessorTypeFromFilename(codeFile)
+	code, err := ioutil.ReadFile(codeFile)
 	if err != nil {
 		die("Could not open code file.\n\n%s", err.Error())
 	}
@@ -45,19 +48,22 @@ func commandDeploy() {
 	log("%s\n", string(output))
 }
 
-func commandSendTx() {
+func commandSendTx(requiredOptions []string) {
+	inputFile := requiredOptions[0]
+
 	signer := getTestKeyFromFile(*flagSigner)
 
-	bytes, err := ioutil.ReadFile(*flagInputFile)
+	bytes, err := ioutil.ReadFile(inputFile)
 	if err != nil {
 		die("Could not open input file.\n\n%s", err.Error())
 	}
 
 	sendTx, err := jsoncodec.UnmarshalSendTx(bytes)
 	if err != nil {
-		die("Failed parsing input json file '%s'.\n\n%s", *flagInputFile, err.Error())
+		die("Failed parsing input json file '%s'.\n\n%s", inputFile, err.Error())
 	}
 
+	overrideArgsWithFlags(sendTx.Arguments)
 	inputArgs, err := jsoncodec.UnmarshalArgs(sendTx.Arguments, getTestKeyFromFile)
 	if err != nil {
 		die(err.Error())
@@ -84,19 +90,22 @@ func commandSendTx() {
 	}
 }
 
-func commandRead() {
+func commandRead(requiredOptions []string) {
+	inputFile := requiredOptions[0]
+
 	signer := getTestKeyFromFile(*flagSigner)
 
-	bytes, err := ioutil.ReadFile(*flagInputFile)
+	bytes, err := ioutil.ReadFile(inputFile)
 	if err != nil {
 		die("Could not open input file.\n\n%s", err.Error())
 	}
 
 	read, err := jsoncodec.UnmarshalRead(bytes)
 	if err != nil {
-		die("Failed parsing input json file '%s'.\n\n%s", *flagInputFile, err.Error())
+		die("Failed parsing input json file '%s'.\n\n%s", inputFile, err.Error())
 	}
 
+	overrideArgsWithFlags(read.Arguments)
 	inputArgs, err := jsoncodec.UnmarshalArgs(read.Arguments, getTestKeyFromFile)
 	if err != nil {
 		die(err.Error())
@@ -123,13 +132,11 @@ func commandRead() {
 	}
 }
 
-func commandTxStatus() {
-	if *flagTxId == "" {
-		die("TxId not provided, it's given in the response of send-tx, use the -txid flag to provide it.")
-	}
+func commandTxStatus(requiredOptions []string) {
+	txId := requiredOptions[0]
 
 	client := createOrbsClient()
-	payload, err := client.CreateGetTransactionStatusPayload(*flagTxId)
+	payload, err := client.CreateGetTransactionStatusPayload(txId)
 	if err != nil {
 		die("Could not encode payload of the message about to be sent to Gamma server.\n\n%s", err.Error())
 	}
@@ -149,13 +156,11 @@ func commandTxStatus() {
 	}
 }
 
-func commandTxProof() {
-	if *flagTxId == "" {
-		die("TxId not provided, it's given in the response of send-tx, use the -txid flag to provide it.")
-	}
+func commandTxProof(requiredOptions []string) {
+	txId := requiredOptions[0]
 
 	client := createOrbsClient()
-	payload, err := client.CreateGetTransactionReceiptProofPayload(*flagTxId)
+	payload, err := client.CreateGetTransactionReceiptProofPayload(txId)
 	if err != nil {
 		die("Could not encode payload of the message about to be sent to Gamma server.\n\n%s", err.Error())
 	}
@@ -201,4 +206,29 @@ func getProcessorTypeFromFilename(filename string) uint32 {
 	}
 	die("Unsupported code file type.\n\nSupported code file extensions are: .go .js")
 	return 0
+}
+
+func getFilenameWithoutExtension(filename string) string {
+	return strings.Split(path.Base(filename), ".")[0]
+}
+
+func overrideArgsWithFlags(args []*jsoncodec.Arg) {
+	if *flagArg1 != "" {
+		args[0].Value = *flagArg1
+	}
+	if *flagArg2 != "" {
+		args[1].Value = *flagArg2
+	}
+	if *flagArg3 != "" {
+		args[2].Value = *flagArg3
+	}
+	if *flagArg4 != "" {
+		args[3].Value = *flagArg4
+	}
+	if *flagArg5 != "" {
+		args[4].Value = *flagArg5
+	}
+	if *flagArg6 != "" {
+		args[5].Value = *flagArg6
+	}
 }

@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 )
 
 const GAMMA_CLI_VERSION = "0.5.4"
@@ -12,81 +13,97 @@ const TEST_KEYS_FILENAME = "orbs-test-keys.json"
 const LOCAL_ENV_ID = "local"
 
 type command struct {
-	desc    string
-	args    string
-	example string
-	handler func()
-	sort    int
+	desc            string
+	args            string
+	example         string
+	example2        string
+	handler         func([]string)
+	sort            int
+	requiredOptions []string
 }
 
 var commands = map[string]*command{
 	"start-local": {
-		desc:    "start a local Orbs personal blockchain instance listening on port",
-		args:    "-port <PORT>",
-		example: "gamma-cli start-local -port 8080",
-		handler: commandStartLocal,
-		sort:    0,
+		desc:            "start a local Orbs personal blockchain instance listening on port",
+		args:            "-port <PORT>",
+		example:         "gamma-cli start-local -port 8080",
+		handler:         commandStartLocal,
+		sort:            0,
+		requiredOptions: nil,
 	},
 	"stop-local": {
-		desc:    "stop a locally running Orbs personal blockchain instance",
-		handler: commandStopLocal,
-		sort:    1,
+		desc:            "stop a locally running Orbs personal blockchain instance",
+		handler:         commandStopLocal,
+		sort:            1,
+		requiredOptions: nil,
 	},
 	"gen-test-keys": {
-		desc:    "generate a new batch of 10 test keys and store in " + TEST_KEYS_FILENAME + " (default filename)",
-		args:    "-keys <OUTPUT_FILE>",
-		example: "gamma-cli gen-test-keys -keys " + TEST_KEYS_FILENAME,
-		handler: commandGenerateTestKeys,
-		sort:    2,
+		desc:            "generate a new batch of 10 test keys and store in " + TEST_KEYS_FILENAME + " (default filename)",
+		args:            "-keys [OUTPUT_FILE]",
+		example:         "gamma-cli gen-test-keys -keys " + TEST_KEYS_FILENAME,
+		handler:         commandGenerateTestKeys,
+		sort:            2,
+		requiredOptions: nil,
 	},
 	"deploy": {
-		desc:    "deploy a smart contract with the code specified in contract.go (default filename)",
-		args:    "-name <CONTRACT_NAME> -code <CODE_FILE> -signer <ID_FROM_KEYS_JSON>",
-		example: "gamma-cli deploy -name MyToken -code contract.go -signer user1",
-		handler: commandDeploy,
-		sort:    3,
+		desc:            "deploy a smart contract with the code specified in the source file <CODE_FILE>",
+		args:            "<CODE_FILE> -name [CONTRACT_NAME] -signer [ID_FROM_KEYS_JSON]",
+		example:         "gamma-cli deploy MyToken.go -signer user1",
+		example2:        "gamma-cli deploy contract.go -name MyToken",
+		handler:         commandDeploy,
+		sort:            3,
+		requiredOptions: []string{"<CODE_FILE> - path of file with source code"},
 	},
 	"send-tx": {
-		desc:    "sign and send the transaction specified in input.json (default filename)",
-		args:    "-i <INPUT_FILE> -signer <ID_FROM_KEYS_JSON>",
-		example: "gamma-cli send-tx -i transfer.json -signer user1",
-		handler: commandSendTx,
-		sort:    4,
+		desc:            "sign and send the transaction specified in the JSON file <INPUT_FILE>",
+		args:            "<INPUT_FILE> -arg# [OVERRIDE_ARG_#] -signer [ID_FROM_KEYS_JSON]",
+		example:         "gamma-cli send-tx transfer.json -signer user1",
+		example2:        "gamma-cli send-tx transfer.json -arg2 b3d1caa2b3680e2c8feffa269c207c553fbbc828",
+		handler:         commandSendTx,
+		sort:            4,
+		requiredOptions: []string{"<INPUT_FILE> - path of JSON file with transaction details"},
 	},
-	"read": {
-		desc:    "read state or run a read-only contract method as specified in input.json (default filename)",
-		args:    "-i <INPUT_FILE> -signer <ID_FROM_KEYS_JSON>",
-		example: "gamma-cli read -i get-balance.json -signer user1",
-		handler: commandRead,
-		sort:    5,
+	"run-query": {
+		desc:            "read state or run a read-only contract method as specified in the JSON file <INPUT_FILE>",
+		args:            "<INPUT_FILE> -arg# [OVERRIDE_ARG_#] -signer [ID_FROM_KEYS_JSON]",
+		example:         "gamma-cli run-query get-balance.json -signer user1",
+		example2:        "gamma-cli run-query get-balance.json -arg1 b3d1caa2b3680e2c8feffa269c207c553fbbc828",
+		handler:         commandRead,
+		sort:            5,
+		requiredOptions: []string{"<INPUT_FILE> - path of JSON file with query details"},
 	},
-	"status": {
-		desc:    "get the current status of a sent transaction",
-		args:    "-txid <TX_ID>",
-		example: "gamma-cli status -txid nXAmGL2peGvXkrDxC2cFaZwhykfMGFGj1DUJ9eDFRdSnNgCpQ69MQz",
-		handler: commandTxStatus,
-		sort:    6,
+	"get-status": {
+		desc:            "get the current status of a sent transaction with txid <TX_ID> (from send-tx response)",
+		args:            "<TX_ID>",
+		example:         "gamma-cli get-status nXAmGL2peGvXkrDxC2cFaZwhykfMGFGj1DUJ9eDFRdSnNgCpQ69MQz",
+		handler:         commandTxStatus,
+		sort:            6,
+		requiredOptions: []string{"<TX_ID> - txid of previously sent transaction, from send-tx response"},
 	},
 	"tx-proof": {
-		desc:    "get a cryptographic proof for a sent transaction receipt",
-		args:    "-txid <TX_ID>",
-		example: "gamma-cli tx-proof -txid nXAmGL2peGvXkrDxC2cFaZwhykfMGFGj1DUJ9eDFRdSnNgCpQ69MQz",
-		handler: commandTxProof,
-		sort:    7,
+		desc:            "get cryptographic proof for transaction receipt with txid <TX_ID> (from send-tx response)",
+		args:            "<TX_ID>",
+		example:         "gamma-cli tx-proof nXAmGL2peGvXkrDxC2cFaZwhykfMGFGj1DUJ9eDFRdSnNgCpQ69MQz",
+		handler:         commandTxProof,
+		sort:            7,
+		requiredOptions: []string{"<TX_ID> - txid of previously sent transaction, from send-tx response"},
 	},
 	"upgrade-server": {
-		desc:    "upgrade to the latest version of Gamma server",
-		handler: commandUpgradeServer,
-		sort:    8,
+		desc:            "upgrade to the latest version of Gamma server",
+		handler:         commandUpgradeServer,
+		sort:            8,
+		requiredOptions: nil,
 	},
 	"version": {
-		desc:    "print gamma-cli and Gamma server versions",
-		handler: commandVersion,
-		sort:    9,
+		desc:            "print gamma-cli and Gamma server versions",
+		handler:         commandVersion,
+		sort:            9,
+		requiredOptions: nil,
 	},
 	"help": {
-		desc: "print this help screen",
-		sort: 10,
+		desc:            "print this help screen",
+		sort:            10,
+		requiredOptions: nil,
 	},
 }
 
@@ -94,32 +111,49 @@ var (
 	flagPort         = flag.Int("port", 8080, "listening port for Gamma server")
 	flagSigner       = flag.String("signer", "user1", "id of the signing key from the test key json")
 	flagContractName = flag.String("name", "", "name of the smart contract being deployed")
-	flagCodeFile     = flag.String("code", "contract.go", "source file for the smart contract being deployed, normally .go or .js file")
-	flagInputFile    = flag.String("i", "input.json", "name of the json input file")
 	flagKeyFile      = flag.String("keys", TEST_KEYS_FILENAME, "name of the json file containing test keys")
-	flagTxId         = flag.String("txid", "", "TxId of a previously sent transaction, given in the response of send-tx")
 	flagConfigFile   = flag.String("config", CONFIG_FILENAME, "path to config file")
 	flagEnv          = flag.String("env", LOCAL_ENV_ID, "environment from config file containing server connection details")
 	flagWait         = flag.Bool("wait", false, "wait until Gamma server is ready and listening")
+	// args (hidden from help)
+	flagArg1 = flag.String("arg1", "", "")
+	flagArg2 = flag.String("arg2", "", "")
+	flagArg3 = flag.String("arg3", "", "")
+	flagArg4 = flag.String("arg4", "", "")
+	flagArg5 = flag.String("arg5", "", "")
+	flagArg6 = flag.String("arg6", "", "")
 )
 
 func main() {
-	flag.Usage = commandShowHelp
+	flag.Usage = func() { commandShowHelp(nil) }
 	commands["help"].handler = commandShowHelp
 
 	if len(os.Args) <= 1 {
-		commandShowHelp()
+		commandShowHelp(nil)
 	}
 	cmdName := os.Args[1]
-	os.Args = os.Args[1:]
-	flag.Parse()
-
 	cmd, found := commands[cmdName]
 	if !found {
 		die("Command '%s' not found, run 'gamma-cli help' to see available commands.", cmdName)
 	}
 
-	cmd.handler()
+	requiredOptions := []string{}
+	if len(cmd.requiredOptions) > 0 {
+		if len(os.Args) < 2+len(cmd.requiredOptions) {
+			die("Command '%s' is missing required arguments %v.", cmdName, cmd.requiredOptions)
+		}
+		requiredOptions = os.Args[2 : 2+len(cmd.requiredOptions)]
+		for i, requiredOption := range requiredOptions {
+			if strings.HasPrefix(requiredOption, "-") {
+				die("Command '%s' argument %d should be %s.", cmdName, i+1, cmd.requiredOptions[i])
+			}
+		}
+	}
+
+	os.Args = os.Args[2+len(cmd.requiredOptions)-1:]
+	flag.Parse()
+
+	cmd.handler(requiredOptions)
 }
 
 func log(format string, args ...interface{}) {

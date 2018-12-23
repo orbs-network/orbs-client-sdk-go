@@ -116,7 +116,8 @@
       "BlockTimestamp": "2020-11-21T20:00:00.000Z",
       "RequestStatus": "IN_PROCESS",
       "PackedProof": "M0RVZneImQ==",
-      "TransactionStatus": "NO_RECORD_FOUND"
+      "TransactionStatus": "NO_RECORD_FOUND",
+      "PackedReceipt": "qrvM3e4="
     }
   }
 ]

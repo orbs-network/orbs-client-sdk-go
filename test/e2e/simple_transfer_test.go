@@ -50,6 +50,18 @@ func TestSimpleTransfer(t *testing.T) {
 	require.Equal(t, codec.EXECUTION_RESULT_SUCCESS, statusResponse.ExecutionResult)
 	require.Equal(t, codec.TRANSACTION_STATUS_COMMITTED, statusResponse.TransactionStatus)
 
+	// create get tx proof payload
+	payload, err = client.CreateGetTransactionReceiptProofPayload(txId)
+	require.NoError(t, err)
+
+	// send the payload
+	txProofResponse, err := client.GetTransactionReceiptProof(payload)
+	require.NoError(t, err)
+	require.Equal(t, codec.REQUEST_STATUS_COMPLETED, txProofResponse.RequestStatus)
+	require.Equal(t, codec.TRANSACTION_STATUS_COMMITTED, txProofResponse.TransactionStatus)
+	require.True(t, len(txProofResponse.PackedProof) > 20)
+	require.True(t, len(txProofResponse.PackedReceipt) > 10)
+
 	// create balance method call payload
 	payload, err = client.CreateCallMethodPayload(
 		receiver.PublicKey,

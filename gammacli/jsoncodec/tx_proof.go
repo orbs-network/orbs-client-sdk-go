@@ -14,11 +14,13 @@ func MarshalTxProofResponse(r *codec.GetTransactionReceiptProofResponse) ([]byte
 		TransactionStatus codec.TransactionStatus
 		BlockHeight       string
 		BlockTimestamp    string
+		PackedReceipt     string
 	}{
 		RequestStatus:     r.RequestStatus,
 		PackedProof:       hex.EncodeToString(r.PackedProof),
 		TransactionStatus: r.TransactionStatus,
 		BlockHeight:       strconv.FormatUint(r.BlockHeight, 10),
 		BlockTimestamp:    r.BlockTimestamp.UTC().Format(codec.ISO_DATE_FORMAT),
+		PackedReceipt:     hex.EncodeToString(r.PackedReceipt),
 	}, "", "  ")
 }

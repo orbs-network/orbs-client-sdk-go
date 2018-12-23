@@ -69,10 +69,11 @@ func main() {
 
 	r4 := (&client.GetTransactionReceiptProofResponseBuilder{
 		RequestStatus:     protocol.REQUEST_STATUS_IN_PROCESS,
-		Proof:             []byte{0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99},
+		PackedProof:       []byte{0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99},
 		TransactionStatus: protocol.TRANSACTION_STATUS_NO_RECORD_FOUND,
 		BlockHeight:       88081,
 		BlockTimestamp:    primitives.TimestampNano(t2.UnixNano()),
+		PackedReceipt:     []byte{0xaa, 0xbb, 0xcc, 0xdd, 0xee},
 	}).Build()
 	fmt.Printf(`"GetTransactionReceiptProofResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r4.Raw()))
 }

@@ -68,7 +68,7 @@ var commands = map[string]*command{
 		args:            "<INPUT_FILE> -arg# [OVERRIDE_ARG_#] -signer [ID_FROM_KEYS_JSON]",
 		example:         "gamma-cli run-query get-balance.json -signer user1",
 		example2:        "gamma-cli run-query get-balance.json -arg1 b3d1caa2b3680e2c8feffa269c207c553fbbc828",
-		handler:         commandRead,
+		handler:         commandRunQuery,
 		sort:            5,
 		requiredOptions: []string{"<INPUT_FILE> - path of JSON file with query details"},
 	},

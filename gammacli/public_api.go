@@ -63,6 +63,11 @@ func commandSendTx(requiredOptions []string) {
 		die("Failed parsing input json file '%s'.\n\n%s", inputFile, err.Error())
 	}
 
+	// override contract name
+	if *flagContractName != "" {
+		sendTx.ContractName = *flagContractName
+	}
+
 	overrideArgsWithFlags(sendTx.Arguments)
 	inputArgs, err := jsoncodec.UnmarshalArgs(sendTx.Arguments, getTestKeyFromFile)
 	if err != nil {
@@ -90,7 +95,7 @@ func commandSendTx(requiredOptions []string) {
 	}
 }
 
-func commandRead(requiredOptions []string) {
+func commandRunQuery(requiredOptions []string) {
 	inputFile := requiredOptions[0]
 
 	signer := getTestKeyFromFile(*flagSigner)
@@ -100,19 +105,24 @@ func commandRead(requiredOptions []string) {
 		die("Could not open input file.\n\n%s", err.Error())
 	}
 
-	read, err := jsoncodec.UnmarshalRead(bytes)
+	runQuery, err := jsoncodec.UnmarshalRead(bytes)
 	if err != nil {
 		die("Failed parsing input json file '%s'.\n\n%s", inputFile, err.Error())
 	}
 
-	overrideArgsWithFlags(read.Arguments)
-	inputArgs, err := jsoncodec.UnmarshalArgs(read.Arguments, getTestKeyFromFile)
+	// override contract name
+	if *flagContractName != "" {
+		runQuery.ContractName = *flagContractName
+	}
+
+	overrideArgsWithFlags(runQuery.Arguments)
+	inputArgs, err := jsoncodec.UnmarshalArgs(runQuery.Arguments, getTestKeyFromFile)
 	if err != nil {
 		die(err.Error())
 	}
 
 	client := createOrbsClient()
-	payload, err := client.CreateCallMethodPayload(signer.PublicKey, read.ContractName, read.MethodName, inputArgs...)
+	payload, err := client.CreateCallMethodPayload(signer.PublicKey, runQuery.ContractName, runQuery.MethodName, inputArgs...)
 	if err != nil {
 		die("Could not encode payload of the message about to be sent to Gamma server.\n\n%s", err.Error())
 	}
@@ -121,14 +131,14 @@ func commandRead(requiredOptions []string) {
 	if response != nil {
 		output, err := jsoncodec.MarshalReadResponse(response)
 		if err != nil {
-			die("Could not encode read response to json.\n\n%s", err.Error())
+			die("Could not encode run-query response to json.\n\n%s", err.Error())
 		}
 
 		log("%s\n", string(output))
 	}
 
 	if clientErr != nil {
-		die("Request read failed on Gamma server.\n\n%s", clientErr.Error())
+		die("Request run-query failed on Gamma server.\n\n%s", clientErr.Error())
 	}
 }
 

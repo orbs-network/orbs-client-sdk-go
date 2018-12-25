@@ -16,7 +16,7 @@ func TestRestart(t *testing.T) {
 	require.NoError(t, err, "stop Gamma server should succeed")
 
 	_, err = cli.Run("stop-local")
-	require.Error(t, err, "second stop Gamma server should fail")
+	require.NoError(t, err, "second stop Gamma server should succeed")
 
 	_, err = cli.Run("start-local")
 	require.NoError(t, err, "start Gamma server should succeed")

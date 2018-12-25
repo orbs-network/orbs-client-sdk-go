@@ -69,7 +69,8 @@ func commandStopLocal(requiredOptions []string) {
 
 	out, err := exec.Command("docker", "stop", CONTAINER_NAME).CombinedOutput()
 	if err != nil {
-		die("Could not stop docker container.\n\n%s", out)
+		log("Gamma server is already stopped.\n")
+		exit()
 	}
 
 	out, err = exec.Command("docker", "rm", "-f", CONTAINER_NAME).CombinedOutput()

@@ -5,9 +5,13 @@ import (
 	"github.com/orbs-network/orbs-client-sdk-go/codec"
 	"github.com/orbs-network/orbs-client-sdk-go/gammacli/jsoncodec"
 	"github.com/orbs-network/orbs-client-sdk-go/orbsclient"
+	"github.com/pkg/errors"
 	"io/ioutil"
+	"net"
+	"net/url"
 	"path"
 	"strings"
+	"syscall"
 )
 
 const DEPLOY_SYSTEM_CONTRACT_NAME = "_Deployments"
@@ -33,19 +37,23 @@ func commandDeploy(requiredOptions []string) {
 	client := createOrbsClient()
 	payload, txId, err := client.CreateSendTransactionPayload(signer.PublicKey, signer.PrivateKey, DEPLOY_SYSTEM_CONTRACT_NAME, DEPLOY_SYSTEM_METHOD_NAME, string(*flagContractName), uint32(processorType), []byte(code))
 	if err != nil {
-		die("Could not encode payload of the message about to be sent to Gamma server.\n\n%s", err.Error())
-	}
-	response, err := client.SendTransaction(payload)
-	if err != nil {
-		die("Failed sending transaction request to Gamma server.\n\n%s", err.Error())
+		die("Could not encode payload of the message about to be sent to server.\n\n%s", err.Error())
 	}
 
-	output, err := jsoncodec.MarshalSendTxResponse(response, txId)
-	if err != nil {
-		die("Could not encode response to json.\n\n%s", err.Error())
+	response, clientErr := client.SendTransaction(payload)
+	handleNoConnectionGracefully(clientErr, client)
+	if response != nil {
+		output, err := jsoncodec.MarshalSendTxResponse(response, txId)
+		if err != nil {
+			die("Could not encode send-tx response to json.\n\n%s", err.Error())
+		}
+
+		log("%s\n", string(output))
 	}
 
-	log("%s\n", string(output))
+	if clientErr != nil {
+		die("Request transaction failed on server.\n\n%s", clientErr.Error())
+	}
 }
 
 func commandSendTx(requiredOptions []string) {
@@ -77,10 +85,11 @@ func commandSendTx(requiredOptions []string) {
 	client := createOrbsClient()
 	payload, txId, err := client.CreateSendTransactionPayload(signer.PublicKey, signer.PrivateKey, sendTx.ContractName, sendTx.MethodName, inputArgs...)
 	if err != nil {
-		die("Could not encode payload of the message about to be sent to Gamma server.\n\n%s", err.Error())
+		die("Could not encode payload of the message about to be sent to server.\n\n%s", err.Error())
 	}
 
 	response, clientErr := client.SendTransaction(payload)
+	handleNoConnectionGracefully(clientErr, client)
 	if response != nil {
 		output, err := jsoncodec.MarshalSendTxResponse(response, txId)
 		if err != nil {
@@ -91,7 +100,7 @@ func commandSendTx(requiredOptions []string) {
 	}
 
 	if clientErr != nil {
-		die("Request send-tx failed on Gamma server.\n\n%s", clientErr.Error())
+		die("Request send-tx failed on server.\n\n%s", clientErr.Error())
 	}
 }
 
@@ -124,10 +133,11 @@ func commandRunQuery(requiredOptions []string) {
 	client := createOrbsClient()
 	payload, err := client.CreateCallMethodPayload(signer.PublicKey, runQuery.ContractName, runQuery.MethodName, inputArgs...)
 	if err != nil {
-		die("Could not encode payload of the message about to be sent to Gamma server.\n\n%s", err.Error())
+		die("Could not encode payload of the message about to be sent to server.\n\n%s", err.Error())
 	}
 
 	response, clientErr := client.CallMethod(payload)
+	handleNoConnectionGracefully(clientErr, client)
 	if response != nil {
 		output, err := jsoncodec.MarshalReadResponse(response)
 		if err != nil {
@@ -138,7 +148,7 @@ func commandRunQuery(requiredOptions []string) {
 	}
 
 	if clientErr != nil {
-		die("Request run-query failed on Gamma server.\n\n%s", clientErr.Error())
+		die("Request run-query failed on server.\n\n%s", clientErr.Error())
 	}
 }
 
@@ -148,10 +158,11 @@ func commandTxStatus(requiredOptions []string) {
 	client := createOrbsClient()
 	payload, err := client.CreateGetTransactionStatusPayload(txId)
 	if err != nil {
-		die("Could not encode payload of the message about to be sent to Gamma server.\n\n%s", err.Error())
+		die("Could not encode payload of the message about to be sent to server.\n\n%s", err.Error())
 	}
 
 	response, clientErr := client.GetTransactionStatus(payload)
+	handleNoConnectionGracefully(clientErr, client)
 	if response != nil {
 		output, err := jsoncodec.MarshalTxStatusResponse(response)
 		if err != nil {
@@ -162,7 +173,7 @@ func commandTxStatus(requiredOptions []string) {
 	}
 
 	if clientErr != nil {
-		die("Request status failed on Gamma server.\n\n%s", clientErr.Error())
+		die("Request status failed on server.\n\n%s", clientErr.Error())
 	}
 }
 
@@ -172,10 +183,11 @@ func commandTxProof(requiredOptions []string) {
 	client := createOrbsClient()
 	payload, err := client.CreateGetTransactionReceiptProofPayload(txId)
 	if err != nil {
-		die("Could not encode payload of the message about to be sent to Gamma server.\n\n%s", err.Error())
+		die("Could not encode payload of the message about to be sent to server.\n\n%s", err.Error())
 	}
 
 	response, clientErr := client.GetTransactionReceiptProof(payload)
+	handleNoConnectionGracefully(clientErr, client)
 	if response != nil {
 		output, err := jsoncodec.MarshalTxProofResponse(response)
 		if err != nil {
@@ -186,7 +198,7 @@ func commandTxProof(requiredOptions []string) {
 	}
 
 	if clientErr != nil {
-		die("Request status failed on Gamma server.\n\n%s", clientErr.Error())
+		die("Request status failed on server.\n\n%s", clientErr.Error())
 	}
 }
 
@@ -216,6 +228,32 @@ func getProcessorTypeFromFilename(filename string) uint32 {
 	}
 	die("Unsupported code file type.\n\nSupported code file extensions are: .go .js")
 	return 0
+}
+
+// TODO: this needs to be simplified
+func handleNoConnectionGracefully(err error, client *orbsclient.OrbsClient) {
+	msg := fmt.Sprintf("Cannot connect to server at endpoint %s\n\nPlease check that:\n - The server is started and running.\n - The server is accessible over the network.\n - The endpoint is properly configured if a config file is used.", client.Endpoint)
+	switch err := errors.Cause(err).(type) {
+	case *url.Error:
+		die(msg)
+	case *net.OpError:
+		if err.Op == "dial" || err.Op == "read" {
+			die(msg)
+		}
+	case net.Error:
+		if err.Timeout() {
+			die(msg)
+		}
+	case syscall.Errno:
+		if err == syscall.ECONNREFUSED {
+			die(msg)
+		}
+	default:
+		if err == orbsclient.NoConnectionError {
+			die(msg)
+		}
+		return
+	}
 }
 
 func getFilenameWithoutExtension(filename string) string {

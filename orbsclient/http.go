@@ -114,5 +114,13 @@ func (c *OrbsClient) sendHttpPost(relativeUrl string, payload []byte) (*http.Res
 		return nil, buf, errors.Wrap(err, "failed reading http response")
 	}
 
+	// TODO: streamline these errors
+	if res.StatusCode == 404 {
+		return res, buf, errors.Wrap(NoConnectionError, "http 404 not found")
+	}
+
 	return res, buf, nil
 }
+
+// TODO: streamline these errors
+var NoConnectionError = errors.New("cannot connect to server")

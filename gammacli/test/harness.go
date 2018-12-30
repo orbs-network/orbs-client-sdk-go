@@ -36,7 +36,8 @@ func compileGammaCli() string {
 	}
 
 	binaryOutputPath := tempDir + "/gamma-cli"
-	cmd := exec.Command("go", "build", "-o", binaryOutputPath, ".")
+	goCmd := path.Join(runtime.GOROOT(), "bin", "go")
+	cmd := exec.Command(goCmd, "build", "-o", binaryOutputPath, ".")
 	cmd.Dir = path.Join(getCurrentSourceFileDirPath(), "..")
 	out, err := cmd.CombinedOutput()
 	if err != nil {

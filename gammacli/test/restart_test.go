@@ -2,6 +2,7 @@ package test
 
 import (
 	"github.com/stretchr/testify/require"
+	"strings"
 	"testing"
 )
 
@@ -20,4 +21,17 @@ func TestRestart(t *testing.T) {
 
 	_, err = cli.Run("start-local")
 	require.NoError(t, err, "start Gamma server should succeed")
+}
+
+func TestStartedButNotReadyMessage(t *testing.T) {
+	cli := GammaCli()
+	defer cli.StopGammaServer()
+
+	_, err := cli.Run("start-local") // without -wait
+	require.NoError(t, err, "start Gamma server should succeed")
+
+	out, err := cli.Run("send-tx", "transfer.json")
+	t.Log(out)
+
+	require.True(t, strings.Contains(out, `may need a second to initialize`))
 }

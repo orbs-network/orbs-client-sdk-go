@@ -232,7 +232,7 @@ func getProcessorTypeFromFilename(filename string) uint32 {
 
 // TODO: this needs to be simplified
 func handleNoConnectionGracefully(err error, client *orbsclient.OrbsClient) {
-	msg := fmt.Sprintf("Cannot connect to server at endpoint %s\n\nPlease check that:\n - The server is started and running.\n - The server is accessible over the network.\n - The endpoint is properly configured if a config file is used.", client.Endpoint)
+	msg := fmt.Sprintf("Cannot connect to server at endpoint %s\n\nPlease check that:\n - The server is started and running (if just started, may need a second to initialize).\n - The server is accessible over the network.\n - The endpoint is properly configured if a config file is used.", client.Endpoint)
 	switch err := errors.Cause(err).(type) {
 	case *url.Error:
 		die(msg)

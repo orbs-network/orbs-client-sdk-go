@@ -34,13 +34,13 @@ func (r *SendTransactionRequest) UnmarshalJSON(data []byte) error {
 		panic(err)
 	}
 	r.VirtualChainId = uint32(virtualChainId)
-	r.InputArguments = jsonUnmarshalMethodArguments(aux.InputArguments, aux.InputArgumentsTypes)
+	r.InputArguments = jsonUnmarshalArguments(aux.InputArguments, aux.InputArgumentsTypes)
 	return nil
 }
 
 func (r *SendTransactionResponse) MarshalJSON() ([]byte, error) {
 	type OtherFields SendTransactionResponse
-	args, argTypes := jsonMarshalMethodArguments(r.OutputArguments)
+	args, argTypes := jsonMarshalArguments(r.OutputArguments)
 	return json.Marshal(&struct {
 		BlockHeight          string
 		BlockTimestamp       string
@@ -82,13 +82,13 @@ func (r *CallMethodRequest) UnmarshalJSON(data []byte) error {
 		panic(err)
 	}
 	r.VirtualChainId = uint32(virtualChainId)
-	r.InputArguments = jsonUnmarshalMethodArguments(aux.InputArguments, aux.InputArgumentsTypes)
+	r.InputArguments = jsonUnmarshalArguments(aux.InputArguments, aux.InputArgumentsTypes)
 	return nil
 }
 
 func (r *CallMethodResponse) MarshalJSON() ([]byte, error) {
 	type OtherFields CallMethodResponse
-	args, argTypes := jsonMarshalMethodArguments(r.OutputArguments)
+	args, argTypes := jsonMarshalArguments(r.OutputArguments)
 	return json.Marshal(&struct {
 		BlockHeight          string
 		BlockTimestamp       string
@@ -133,7 +133,7 @@ func (r *GetTransactionStatusRequest) UnmarshalJSON(data []byte) error {
 
 func (r *GetTransactionStatusResponse) MarshalJSON() ([]byte, error) {
 	type OtherFields GetTransactionStatusResponse
-	args, argTypes := jsonMarshalMethodArguments(r.OutputArguments)
+	args, argTypes := jsonMarshalArguments(r.OutputArguments)
 	return json.Marshal(&struct {
 		BlockHeight          string
 		BlockTimestamp       string
@@ -189,7 +189,7 @@ func (r *GetTransactionReceiptProofResponse) MarshalJSON() ([]byte, error) {
 	})
 }
 
-func jsonUnmarshalMethodArguments(arguments []string, argumentsTypes []string) []interface{} {
+func jsonUnmarshalArguments(arguments []string, argumentsTypes []string) []interface{} {
 	res := []interface{}{}
 	for index, arg := range arguments {
 		if len(argumentsTypes) > index {
@@ -224,7 +224,7 @@ func jsonUnmarshalMethodArguments(arguments []string, argumentsTypes []string) [
 	return res
 }
 
-func jsonMarshalMethodArguments(arguments []interface{}) ([]string, []string) {
+func jsonMarshalArguments(arguments []interface{}) ([]string, []string) {
 	res := []string{}
 	resTypes := []string{}
 	for _, arg := range arguments {
@@ -258,7 +258,7 @@ type jsonEvent struct {
 func jsonMarshalEvents(events []*Event) []*jsonEvent {
 	res := []*jsonEvent{}
 	for _, event := range events {
-		args, argTypes := jsonMarshalMethodArguments(event.Arguments)
+		args, argTypes := jsonMarshalArguments(event.Arguments)
 		res = append(res, &jsonEvent{
 			ContractName:   event.ContractName,
 			EventName:      event.EventName,
@@ -275,7 +275,7 @@ func jsonUnmarshalEvents(events []*jsonEvent) []*Event {
 		res = append(res, &Event{
 			ContractName: event.ContractName,
 			EventName:    event.EventName,
-			Arguments:    jsonUnmarshalMethodArguments(event.Arguments, event.ArgumentsTypes),
+			Arguments:    jsonUnmarshalArguments(event.Arguments, event.ArgumentsTypes),
 		})
 	}
 	return res

@@ -39,7 +39,7 @@ func EncodeCallMethodRequest(req *CallMethodRequest) ([]byte, error) {
 	}
 
 	// encode method arguments
-	inputArgumentArray, err := PackedMethodArgumentsEncode(req.InputArguments)
+	inputArgumentArray, err := PackedArgumentsEncode(req.InputArguments)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +93,7 @@ func DecodeCallMethodResponse(buf []byte) (*CallMethodResponse, error) {
 	}
 
 	// decode method arguments
-	outputArgumentArray, err := PackedMethodArgumentsDecode(res.RawOutputArgumentArrayWithHeader())
+	outputArgumentArray, err := PackedArgumentsDecode(res.RawOutputArgumentArrayWithHeader())
 	if err != nil {
 		return nil, err
 	}

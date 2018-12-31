@@ -18,9 +18,9 @@ func main() {
 
 	h1, _ := hex.DecodeString("cf80cd8aed482d5d1527d7dc72fceff84e6326592848447d2dc0b0e87dfc9a90")
 
-	a1, _ := codec.PackedMethodArgumentsEncode([]interface{}{uint32(1), uint64(2), "hello", []byte{0x01, 0x02, 0x03}})
-	a2, _ := codec.PackedMethodArgumentsEncode([]interface{}{})
-	a3, _ := codec.PackedMethodArgumentsEncode([]interface{}{uint64(math.MaxUint64 - 1000)})
+	a1, _ := codec.PackedArgumentsEncode([]interface{}{uint32(1), uint64(2), "hello", []byte{0x01, 0x02, 0x03}})
+	a2, _ := codec.PackedArgumentsEncode([]interface{}{})
+	a3, _ := codec.PackedArgumentsEncode([]interface{}{uint64(math.MaxUint64 - 1000)})
 
 	e1 := codec.PackedEventsEncode([]*protocol.EventBuilder{
 		{ContractName: "Contract1", EventName: "Event1", OutputArgumentArray: a1},

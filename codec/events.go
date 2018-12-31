@@ -22,7 +22,7 @@ func PackedEventsDecode(buf []byte) (res []*Event, err error) {
 	index := 0
 	for i := eventsArray.EventsIterator(); i.HasNext(); {
 		event := i.NextEvents()
-		args, err := PackedMethodArgumentsDecode(event.RawOutputArgumentArrayWithHeader())
+		args, err := PackedArgumentsDecode(event.RawOutputArgumentArrayWithHeader())
 		if err != nil {
 			return nil, errors.Wrapf(err, "received event %d has invalid arguments", index)
 		}

@@ -2,7 +2,7 @@ package orbsclient
 
 import (
 	"github.com/orbs-network/orbs-client-sdk-go/crypto/base58"
-	"github.com/orbs-network/orbs-client-sdk-go/crypto/hash"
+	"github.com/orbs-network/orbs-client-sdk-go/crypto/digest"
 	"github.com/orbs-network/orbs-client-sdk-go/crypto/keys"
 )
 
@@ -18,7 +18,12 @@ func CreateAccount() (*OrbsAccount, error) {
 	if err != nil {
 		return nil, err
 	}
-	rawAddress := hash.CalcRipemd160Sha256(keyPair.PublicKey())
+
+	rawAddress, err := digest.CalcClientAddressOfEd25519PublicKey(keyPair.PublicKey())
+	if err != nil {
+		return nil, err
+	}
+
 	return &OrbsAccount{
 		PublicKey:  keyPair.PublicKey(),
 		PrivateKey: keyPair.PrivateKey(),

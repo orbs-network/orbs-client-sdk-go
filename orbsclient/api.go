@@ -124,9 +124,16 @@ func (c *OrbsClient) sendHttpPost(relativeUrl string, payload []byte) (*http.Res
 		return nil, buf, errors.Wrap(err, "failed reading http response")
 	}
 
-	// TODO: streamline these errors
-	if res.StatusCode == 404 {
-		return res, buf, errors.Wrap(NoConnectionError, "http 404 not found")
+	// check if we have the content type response we expect
+	if res.Header.Get("Content-Type") != CONTENT_TYPE {
+
+		// handle real 404 (incorrect endpoint) gracefully
+		if res.StatusCode == 404 {
+			// TODO: streamline these errors
+			return res, buf, errors.Wrap(NoConnectionError, "http 404 not found")
+		}
+
+		return nil, buf, errors.Errorf("http request failed: %s", string(buf))
 	}
 
 	return res, buf, nil

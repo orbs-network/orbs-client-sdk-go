@@ -35,7 +35,8 @@ func commandDeploy(requiredOptions []string) {
 	signer := getTestKeyFromFile(*flagSigner)
 
 	client := createOrbsClient()
-	payload, txId, err := client.CreateSendTransactionPayload(signer.PublicKey, signer.PrivateKey, DEPLOY_SYSTEM_CONTRACT_NAME, DEPLOY_SYSTEM_METHOD_NAME, string(*flagContractName), uint32(processorType), []byte(code))
+
+	payload, txId, err := client.CreateTransaction(signer.PublicKey, signer.PrivateKey, DEPLOY_SYSTEM_CONTRACT_NAME, DEPLOY_SYSTEM_METHOD_NAME, string(*flagContractName), uint32(processorType), []byte(code))
 	if err != nil {
 		die("Could not encode payload of the message about to be sent to server.\n\n%s", err.Error())
 	}
@@ -83,7 +84,8 @@ func commandSendTx(requiredOptions []string) {
 	}
 
 	client := createOrbsClient()
-	payload, txId, err := client.CreateSendTransactionPayload(signer.PublicKey, signer.PrivateKey, sendTx.ContractName, sendTx.MethodName, inputArgs...)
+
+	payload, txId, err := client.CreateTransaction(signer.PublicKey, signer.PrivateKey, sendTx.ContractName, sendTx.MethodName, inputArgs...)
 	if err != nil {
 		die("Could not encode payload of the message about to be sent to server.\n\n%s", err.Error())
 	}
@@ -131,12 +133,13 @@ func commandRunQuery(requiredOptions []string) {
 	}
 
 	client := createOrbsClient()
-	payload, err := client.CreateCallMethodPayload(signer.PublicKey, runQuery.ContractName, runQuery.MethodName, inputArgs...)
+
+	payload, err := client.CreateQuery(signer.PublicKey, runQuery.ContractName, runQuery.MethodName, inputArgs...)
 	if err != nil {
 		die("Could not encode payload of the message about to be sent to server.\n\n%s", err.Error())
 	}
 
-	response, clientErr := client.CallMethod(payload)
+	response, clientErr := client.SendQuery(payload)
 	handleNoConnectionGracefully(clientErr, client)
 	if response != nil {
 		output, err := jsoncodec.MarshalReadResponse(response)
@@ -156,12 +159,8 @@ func commandTxStatus(requiredOptions []string) {
 	txId := requiredOptions[0]
 
 	client := createOrbsClient()
-	payload, err := client.CreateGetTransactionStatusPayload(txId)
-	if err != nil {
-		die("Could not encode payload of the message about to be sent to server.\n\n%s", err.Error())
-	}
 
-	response, clientErr := client.GetTransactionStatus(payload)
+	response, clientErr := client.GetTransactionStatus(txId)
 	handleNoConnectionGracefully(clientErr, client)
 	if response != nil {
 		output, err := jsoncodec.MarshalTxStatusResponse(response)
@@ -181,12 +180,8 @@ func commandTxProof(requiredOptions []string) {
 	txId := requiredOptions[0]
 
 	client := createOrbsClient()
-	payload, err := client.CreateGetTransactionReceiptProofPayload(txId)
-	if err != nil {
-		die("Could not encode payload of the message about to be sent to server.\n\n%s", err.Error())
-	}
 
-	response, clientErr := client.GetTransactionReceiptProof(payload)
+	response, clientErr := client.GetTransactionReceiptProof(txId)
 	handleNoConnectionGracefully(clientErr, client)
 	if response != nil {
 		output, err := jsoncodec.MarshalTxProofResponse(response)

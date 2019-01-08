@@ -10,17 +10,21 @@ import (
 func MarshalTxProofResponse(r *codec.GetTransactionReceiptProofResponse) ([]byte, error) {
 	return json.MarshalIndent(&struct {
 		RequestStatus     codec.RequestStatus
-		PackedProof       string
+		ExecutionResult   codec.ExecutionResult
+		OutputArguments   []*Arg
+		OutputEvents      []*Event
 		TransactionStatus codec.TransactionStatus
 		BlockHeight       string
 		BlockTimestamp    string
-		PackedReceipt     string
+		PackedProof       string
 	}{
 		RequestStatus:     r.RequestStatus,
-		PackedProof:       hex.EncodeToString(r.PackedProof),
+		ExecutionResult:   r.ExecutionResult,
+		OutputArguments:   MarshalArgs(r.OutputArguments),
+		OutputEvents:      MarshalEvents(r.OutputEvents),
 		TransactionStatus: r.TransactionStatus,
 		BlockHeight:       strconv.FormatUint(r.BlockHeight, 10),
 		BlockTimestamp:    r.BlockTimestamp.UTC().Format(codec.ISO_DATE_FORMAT),
-		PackedReceipt:     hex.EncodeToString(r.PackedReceipt),
+		PackedProof:       hex.EncodeToString(r.PackedProof),
 	}, "", "  ")
 }

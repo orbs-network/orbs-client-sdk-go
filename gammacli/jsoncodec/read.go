@@ -18,7 +18,7 @@ func UnmarshalRead(bytes []byte) (*Read, error) {
 	return read, err
 }
 
-func MarshalReadResponse(r *codec.CallMethodResponse) ([]byte, error) {
+func MarshalReadResponse(r *codec.RunQueryResponse) ([]byte, error) {
 	return json.MarshalIndent(&struct {
 		RequestStatus   codec.RequestStatus
 		ExecutionResult codec.ExecutionResult

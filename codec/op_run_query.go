@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-type CallMethodRequest struct {
+type RunQueryRequest struct {
 	ProtocolVersion uint32
 	VirtualChainId  uint32
 	Timestamp       time.Time
@@ -20,7 +20,7 @@ type CallMethodRequest struct {
 	InputArguments  []interface{}
 }
 
-type CallMethodResponse struct {
+type RunQueryResponse struct {
 	RequestStatus   RequestStatus
 	ExecutionResult ExecutionResult
 	OutputArguments []interface{}
@@ -29,7 +29,7 @@ type CallMethodResponse struct {
 	BlockTimestamp  time.Time
 }
 
-func EncodeCallMethodRequest(req *CallMethodRequest) ([]byte, error) {
+func EncodeRunQueryRequest(req *RunQueryRequest) ([]byte, error) {
 	// validate
 	if req.ProtocolVersion != 1 {
 		return nil, errors.Errorf("expected ProtocolVersion 1, %d given", req.ProtocolVersion)
@@ -51,21 +51,23 @@ func EncodeCallMethodRequest(req *CallMethodRequest) ([]byte, error) {
 	}
 
 	// encode request
-	res := (&client.CallMethodRequestBuilder{
-		Transaction: &protocol.TransactionBuilder{
-			ProtocolVersion: primitives.ProtocolVersion(req.ProtocolVersion),
-			VirtualChainId:  primitives.VirtualChainId(req.VirtualChainId),
-			Timestamp:       primitives.TimestampNano(req.Timestamp.UnixNano()),
-			Signer: &protocol.SignerBuilder{
-				Scheme: protocol.SIGNER_SCHEME_EDDSA,
-				Eddsa: &protocol.EdDSA01SignerBuilder{
-					NetworkType:     networkType,
-					SignerPublicKey: primitives.Ed25519PublicKey(req.PublicKey),
+	res := (&client.RunQueryRequestBuilder{
+		SignedQuery: &protocol.SignedQueryBuilder{
+			Query: &protocol.QueryBuilder{
+				ProtocolVersion: primitives.ProtocolVersion(req.ProtocolVersion),
+				VirtualChainId:  primitives.VirtualChainId(req.VirtualChainId),
+				Timestamp:       primitives.TimestampNano(req.Timestamp.UnixNano()),
+				Signer: &protocol.SignerBuilder{
+					Scheme: protocol.SIGNER_SCHEME_EDDSA,
+					Eddsa: &protocol.EdDSA01SignerBuilder{
+						NetworkType:     networkType,
+						SignerPublicKey: primitives.Ed25519PublicKey(req.PublicKey),
+					},
 				},
+				ContractName:       primitives.ContractName(req.ContractName),
+				MethodName:         primitives.MethodName(req.MethodName),
+				InputArgumentArray: inputArgumentArray,
 			},
-			ContractName:       primitives.ContractName(req.ContractName),
-			MethodName:         primitives.MethodName(req.MethodName),
-			InputArgumentArray: inputArgumentArray,
 		},
 	}).Build()
 
@@ -73,44 +75,44 @@ func EncodeCallMethodRequest(req *CallMethodRequest) ([]byte, error) {
 	return res.Raw(), nil
 }
 
-func DecodeCallMethodResponse(buf []byte) (*CallMethodResponse, error) {
+func DecodeRunQueryResponse(buf []byte) (*RunQueryResponse, error) {
 	// decode response
-	res := client.CallMethodResponseReader(buf)
+	res := client.RunQueryResponseReader(buf)
 	if !res.IsValid() {
 		return nil, errors.New("response is corrupt and cannot be decoded")
 	}
 
 	// decode request status
-	requestStatus, err := requestStatusDecode(res.RequestStatus())
+	requestStatus, err := requestStatusDecode(res.RequestResult().RequestStatus())
 	if err != nil {
 		return nil, err
 	}
 
 	// decode execution result
-	executionResult, err := executionResultDecode(res.CallMethodResult())
+	executionResult, err := executionResultDecode(res.QueryResult().ExecutionResult())
 	if err != nil {
 		return nil, err
 	}
 
 	// decode method arguments
-	outputArgumentArray, err := PackedArgumentsDecode(res.RawOutputArgumentArrayWithHeader())
+	outputArgumentArray, err := PackedArgumentsDecode(res.QueryResult().RawOutputArgumentArrayWithHeader())
 	if err != nil {
 		return nil, err
 	}
 
 	// decode events
-	outputEventArray, err := PackedEventsDecode(res.RawOutputEventsArrayWithHeader())
+	outputEventArray, err := PackedEventsDecode(res.QueryResult().RawOutputEventsArrayWithHeader())
 	if err != nil {
 		return nil, err
 	}
 
 	// return
-	return &CallMethodResponse{
+	return &RunQueryResponse{
 		RequestStatus:   requestStatus,
 		ExecutionResult: executionResult,
 		OutputArguments: outputArgumentArray,
 		OutputEvents:    outputEventArray,
-		BlockHeight:     uint64(res.BlockHeight()),
-		BlockTimestamp:  time.Unix(0, int64(res.BlockTimestamp())),
+		BlockHeight:     uint64(res.RequestResult().BlockHeight()),
+		BlockTimestamp:  time.Unix(0, int64(res.RequestResult().BlockTimestamp())),
 	}, nil
 }

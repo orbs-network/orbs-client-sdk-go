@@ -15,13 +15,13 @@ import (
 type ScenarioInput struct {
 	Test                               string
 	SendTransactionRequest             *codec.SendTransactionRequest
-	CallMethodRequest                  *codec.CallMethodRequest
+	RunQueryRequest                    *codec.RunQueryRequest
 	GetTransactionStatusRequest        *codec.GetTransactionStatusRequest
 	GetTransactionReceiptProofRequest  *codec.GetTransactionReceiptProofRequest
 	PrivateKey                         []byte
 	InputArgumentsTypes                []string
 	SendTransactionResponse            []byte
-	CallMethodResponse                 []byte
+	RunQueryResponse                   []byte
 	GetTransactionStatusResponse       []byte
 	GetTransactionReceiptProofResponse []byte
 }
@@ -29,12 +29,12 @@ type ScenarioInput struct {
 type ScenarioOutput struct {
 	Test                               string
 	SendTransactionRequest             []byte                                    `json:",omitempty"`
-	CallMethodRequest                  []byte                                    `json:",omitempty"`
+	RunQueryRequest                    []byte                                    `json:",omitempty"`
 	GetTransactionStatusRequest        []byte                                    `json:",omitempty"`
 	GetTransactionReceiptProofRequest  []byte                                    `json:",omitempty"`
 	TxId                               []byte                                    `json:",omitempty"`
 	SendTransactionResponse            *codec.SendTransactionResponse            `json:",omitempty"`
-	CallMethodResponse                 *codec.CallMethodResponse                 `json:",omitempty"`
+	RunQueryResponse                   *codec.RunQueryResponse                   `json:",omitempty"`
 	GetTransactionStatusResponse       *codec.GetTransactionStatusResponse       `json:",omitempty"`
 	GetTransactionReceiptProofResponse *codec.GetTransactionReceiptProofResponse `json:",omitempty"`
 }
@@ -93,13 +93,13 @@ func generateOutput(scenarioInput *ScenarioInput) (*ScenarioOutput, error) {
 		return &ScenarioOutput{Test: scenarioInput.Test, SendTransactionRequest: encodedBytes, TxId: txId}, nil
 	}
 
-	// CallMethodRequest
-	if scenarioInput.CallMethodRequest != nil {
-		encodedBytes, err := codec.EncodeCallMethodRequest(scenarioInput.CallMethodRequest)
+	// RunQueryRequest
+	if scenarioInput.RunQueryRequest != nil {
+		encodedBytes, err := codec.EncodeRunQueryRequest(scenarioInput.RunQueryRequest)
 		if err != nil {
 			return nil, err
 		}
-		return &ScenarioOutput{Test: scenarioInput.Test, CallMethodRequest: encodedBytes}, nil
+		return &ScenarioOutput{Test: scenarioInput.Test, RunQueryRequest: encodedBytes}, nil
 	}
 
 	// GetTransactionStatusRequest
@@ -129,13 +129,13 @@ func generateOutput(scenarioInput *ScenarioInput) (*ScenarioOutput, error) {
 		return &ScenarioOutput{Test: scenarioInput.Test, SendTransactionResponse: res}, nil
 	}
 
-	// CallMethodResponse
-	if scenarioInput.CallMethodResponse != nil {
-		res, err := codec.DecodeCallMethodResponse(scenarioInput.CallMethodResponse)
+	// RunQueryResponse
+	if scenarioInput.RunQueryResponse != nil {
+		res, err := codec.DecodeRunQueryResponse(scenarioInput.RunQueryResponse)
 		if err != nil {
 			return nil, err
 		}
-		return &ScenarioOutput{Test: scenarioInput.Test, CallMethodResponse: res}, nil
+		return &ScenarioOutput{Test: scenarioInput.Test, RunQueryResponse: res}, nil
 	}
 
 	// GetTransactionStatusResponse

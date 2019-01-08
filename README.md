@@ -21,31 +21,30 @@
 3. Send a transaction:
 
     ```go
-    payload, txId, err := client.CreateSendTransactionPayload(
+    tx, txId, err := client.CreateTransaction(
         sender.PublicKey,
         sender.PrivateKey,
         "BenchmarkToken",
         "transfer",
-        uint64(10), receiver.RawAddress)
-    response, err := client.SendTransaction(payload)
+        uint64(10), receiver.AddressAsBytes())
+    response, err := client.SendTransaction(tx)
     ```
     
 4. Check the transaction status:
 
     ```go
-    payload, err = client.CreateGetTransactionStatusPayload(txId)
-    response, err := client.GetTransactionStatus(payload)
+    response, err := client.GetTransactionStatus(txId)
     ```
     
 5. Call a smart contract method:
 
     ```go
-    payload, err = client.CreateCallMethodPayload(
+    query, err = client.CreateQuery(
         receiver.PublicKey,
         "BenchmarkToken",
         "getBalance",
-        receiver.RawAddress)
-    response, err := client.CallMethod(payload)
+        receiver.AddressAsBytes())
+    response, err := client.SendQuery(query)
     ```
 
 ## Installation

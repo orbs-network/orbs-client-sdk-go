@@ -23,7 +23,7 @@ func TestSimpleTransfer(t *testing.T) {
 	txId := extractTxIdFromSendTxOutput(out)
 	t.Log(txId)
 
-	out, err = cli.Run("get-status", txId)
+	out, err = cli.Run("tx-status", txId)
 	t.Log(out)
 	require.NoError(t, err, "get tx status should succeed")
 	require.True(t, strings.Contains(out, `"RequestStatus": "COMPLETED"`))

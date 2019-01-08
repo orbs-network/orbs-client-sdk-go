@@ -2,7 +2,6 @@ package jsoncodec
 
 import (
 	"encoding/hex"
-	"github.com/orbs-network/orbs-client-sdk-go/crypto/base58"
 	"github.com/pkg/errors"
 	"strconv"
 )
@@ -12,7 +11,7 @@ type Arg struct {
 	Value string
 }
 
-func UnmarshalArgs(args []*Arg, getTestKeyFromFile func(string) *Key) ([]interface{}, error) {
+func UnmarshalArgs(args []*Arg, getTestKeyFromFile func(string) *RawKey) ([]interface{}, error) {
 	res := []interface{}{}
 	for i, arg := range args {
 		switch arg.Type {
@@ -38,11 +37,7 @@ func UnmarshalArgs(args []*Arg, getTestKeyFromFile func(string) *Key) ([]interfa
 			res = append(res, []byte(val))
 		case "gamma:keys-file-address":
 			key := getTestKeyFromFile(arg.Value)
-			rawAddress, err := base58.Decode([]byte(key.Address))
-			if err != nil {
-				return nil, errors.Errorf("Value of argument %d should be a string containing the id of the key from key file\n\nCurrent value: '%s'", i, arg.Value)
-			}
-			res = append(res, []byte(rawAddress))
+			res = append(res, []byte(key.Address))
 		default:
 			supported := "Supported types are: uint32 uint64 string bytes gamma:keys-file-address"
 			return nil, errors.Errorf("Type of argument %d '%s' is unsupported\n\n%s", i, arg.Type, supported)

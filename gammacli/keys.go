@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/orbs-network/orbs-client-sdk-go/crypto/encoding"
 	"github.com/orbs-network/orbs-client-sdk-go/gammacli/jsoncodec"
 	"github.com/orbs-network/orbs-client-sdk-go/orbsclient"
 	"io/ioutil"
@@ -16,8 +17,8 @@ func commandGenerateTestKeys(requiredOptions []string) {
 		}
 		user := fmt.Sprintf("user%d", i+1)
 		keys[user] = &jsoncodec.Key{
-			PrivateKey: account.PrivateKey,
-			PublicKey:  account.PublicKey,
+			PrivateKey: encoding.EncodeHex(account.PrivateKey),
+			PublicKey:  encoding.EncodeHex(account.PublicKey),
 			Address:    account.Address,
 		}
 	}
@@ -43,7 +44,7 @@ func commandGenerateTestKeys(requiredOptions []string) {
 	log("10 new test keys written successfully to '%s'.\n", filename)
 }
 
-func getTestKeyFromFile(id string) *jsoncodec.Key {
+func getTestKeyFromFile(id string) *jsoncodec.RawKey {
 	if !doesFileExist(*flagKeyFile) {
 		commandGenerateTestKeys(nil)
 	}
@@ -63,5 +64,26 @@ func getTestKeyFromFile(id string) *jsoncodec.Key {
 		die("Key with id '%s' not found in key file '%s'.", id, *flagKeyFile)
 	}
 
-	return key
+	privateKey, err := encoding.DecodeHex(key.PrivateKey)
+	if err != nil {
+		die("Could not parse hex string '%s'.\n\n%s", privateKey, err.Error())
+	}
+
+	publicKey, err := encoding.DecodeHex(key.PublicKey)
+	if err != nil {
+		die("Could not parse hex string '%s'.\n\n%s", publicKey, err.Error())
+	}
+
+	address, err := encoding.DecodeHex(key.Address)
+	if err != nil {
+		die("Could not parse hex string '%s'.\n\n%s", address, err.Error())
+	}
+
+	res := &jsoncodec.RawKey{
+		PrivateKey: privateKey,
+		PublicKey:  publicKey,
+		Address:    address,
+	}
+
+	return res
 }

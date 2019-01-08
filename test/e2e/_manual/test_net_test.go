@@ -9,13 +9,13 @@ import (
 
 func TestTransferFundsAndGetBalance(t *testing.T) {
 	client := orbsclient.NewOrbsClient("http://us-east-1.global.nodes.staging.orbs-test.com:80", 42, codec.NETWORK_TYPE_TEST_NET)
-	sender, err1:= orbsclient.CreateAccount()
-	receiver, err2:= orbsclient.CreateAccount()
+	sender, err1 := orbsclient.CreateAccount()
+	receiver, err2 := orbsclient.CreateAccount()
 
 	require.NoError(t, err1)
 	require.NoError(t, err2)
 
-	transferTxPayload, txId, err := client.CreateSendTransactionPayload(
+	transferTxPayload, txId, err := client.CreateTransaction(
 		sender.PublicKey,
 		sender.PrivateKey,
 		"BenchmarkToken",
@@ -40,16 +40,15 @@ func TestTransferFundsAndGetBalance(t *testing.T) {
 	require.Equal(t, codec.EXECUTION_RESULT_ERROR_SMART_CONTRACT, getStatusResponse.ExecutionResult)
 	require.Equal(t, codec.TRANSACTION_STATUS_COMMITTED, getStatusResponse.TransactionStatus)
 
-	getReceiverBalancePayload, err := client.CreateCallMethodPayload(
+	getReceiverBalancePayload, err := client.CreateRunQueryPayload(
 		sender.PublicKey,
 		"BenchmarkToken",
 		"getBalance",
 		sender.RawAddress)
-	getReceiverBalanceResponse, err := client.CallMethod(getReceiverBalancePayload)
+	getReceiverBalanceResponse, err := client.RunQuery(getReceiverBalancePayload)
 
 	require.NoError(t, err)
 	require.Equal(t, codec.REQUEST_STATUS_COMPLETED, getReceiverBalanceResponse.RequestStatus)
 	require.Equal(t, codec.EXECUTION_RESULT_SUCCESS, getReceiverBalanceResponse.ExecutionResult)
 	require.Equal(t, uint64(0), getReceiverBalanceResponse.OutputArguments[0])
 }
-

@@ -42,10 +42,12 @@ func EncodeGetTransactionStatusRequest(req *GetTransactionStatusRequest) ([]byte
 
 	// encode request
 	res := (&client.GetTransactionStatusRequestBuilder{
-		ProtocolVersion:      primitives.ProtocolVersion(req.ProtocolVersion),
-		VirtualChainId:       primitives.VirtualChainId(req.VirtualChainId),
-		TransactionTimestamp: txTimestamp,
-		Txhash:               primitives.Sha256(txHash),
+		TransactionRef: &client.TransactionRefBuilder{
+			ProtocolVersion:      primitives.ProtocolVersion(req.ProtocolVersion),
+			VirtualChainId:       primitives.VirtualChainId(req.VirtualChainId),
+			TransactionTimestamp: txTimestamp,
+			Txhash:               primitives.Sha256(txHash),
+		},
 	}).Build()
 
 	// return
@@ -60,7 +62,7 @@ func DecodeGetTransactionStatusResponse(buf []byte) (*GetTransactionStatusRespon
 	}
 
 	// decode request status
-	requestStatus, err := requestStatusDecode(res.RequestStatus())
+	requestStatus, err := requestStatusDecode(res.RequestResult().RequestStatus())
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +99,7 @@ func DecodeGetTransactionStatusResponse(buf []byte) (*GetTransactionStatusRespon
 		OutputArguments:   outputArgumentArray,
 		OutputEvents:      outputEventArray,
 		TransactionStatus: transactionStatus,
-		BlockHeight:       uint64(res.BlockHeight()),
-		BlockTimestamp:    time.Unix(0, int64(res.BlockTimestamp())),
+		BlockHeight:       uint64(res.RequestResult().BlockHeight()),
+		BlockTimestamp:    time.Unix(0, int64(res.RequestResult().BlockTimestamp())),
 	}, nil
 }

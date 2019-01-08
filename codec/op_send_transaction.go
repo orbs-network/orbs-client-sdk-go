@@ -99,7 +99,7 @@ func DecodeSendTransactionResponse(buf []byte) (*SendTransactionResponse, error)
 	}
 
 	// decode request status
-	requestStatus, err := requestStatusDecode(res.RequestStatus())
+	requestStatus, err := requestStatusDecode(res.RequestResult().RequestStatus())
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +136,7 @@ func DecodeSendTransactionResponse(buf []byte) (*SendTransactionResponse, error)
 		OutputArguments:   outputArgumentArray,
 		OutputEvents:      outputEventArray,
 		TransactionStatus: transactionStatus,
-		BlockHeight:       uint64(res.BlockHeight()),
-		BlockTimestamp:    time.Unix(0, int64(res.BlockTimestamp())),
+		BlockHeight:       uint64(res.RequestResult().BlockHeight()),
+		BlockTimestamp:    time.Unix(0, int64(res.RequestResult().BlockTimestamp())),
 	}, nil
 }

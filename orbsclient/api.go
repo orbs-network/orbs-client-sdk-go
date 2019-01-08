@@ -11,13 +11,13 @@ import (
 const CONTENT_TYPE = "application/membuffers"
 const (
 	SEND_TRANSACTION_URL              = "/api/v1/send-transaction"
-	CALL_METHOD_URL                   = "/api/v1/call-method"
+	CALL_METHOD_URL                   = "/api/v1/run-query"
 	GET_TRANSACTION_STATUS_URL        = "/api/v1/get-transaction-status"
 	GET_TRANSACTION_RECEIPT_PROOF_URL = "/api/v1/get-transaction-receipt-proof"
 )
 
-func (c *OrbsClient) SendTransaction(payload []byte) (response *codec.SendTransactionResponse, err error) {
-	res, buf, err := c.sendHttpPost(SEND_TRANSACTION_URL, payload)
+func (c *OrbsClient) SendTransaction(rawTransaction []byte) (response *codec.SendTransactionResponse, err error) {
+	res, buf, err := c.sendHttpPost(SEND_TRANSACTION_URL, rawTransaction)
 	if err != nil {
 		return
 	}
@@ -36,15 +36,15 @@ func (c *OrbsClient) SendTransaction(payload []byte) (response *codec.SendTransa
 	return
 }
 
-func (c *OrbsClient) CallMethod(payload []byte) (response *codec.CallMethodResponse, err error) {
-	res, buf, err := c.sendHttpPost(CALL_METHOD_URL, payload)
+func (c *OrbsClient) SendQuery(rawQuery []byte) (response *codec.RunQueryResponse, err error) {
+	res, buf, err := c.sendHttpPost(CALL_METHOD_URL, rawQuery)
 	if err != nil {
 		return
 	}
 
 	// TODO: improve handling of errors according to content-type header (if text/plain then don't parse response)
 
-	response, err = codec.DecodeCallMethodResponse(buf)
+	response, err = codec.DecodeRunQueryResponse(buf)
 	if err != nil {
 		err = errors.Wrap(err, "failed decoding response")
 		return
@@ -58,7 +58,12 @@ func (c *OrbsClient) CallMethod(payload []byte) (response *codec.CallMethodRespo
 	return
 }
 
-func (c *OrbsClient) GetTransactionStatus(payload []byte) (response *codec.GetTransactionStatusResponse, err error) {
+func (c *OrbsClient) GetTransactionStatus(txId string) (response *codec.GetTransactionStatusResponse, err error) {
+	payload, err := c.createGetTransactionStatusPayload(txId)
+	if err != nil {
+		return
+	}
+
 	res, buf, err := c.sendHttpPost(GET_TRANSACTION_STATUS_URL, payload)
 	if err != nil {
 		return
@@ -78,7 +83,12 @@ func (c *OrbsClient) GetTransactionStatus(payload []byte) (response *codec.GetTr
 	return
 }
 
-func (c *OrbsClient) GetTransactionReceiptProof(payload []byte) (response *codec.GetTransactionReceiptProofResponse, err error) {
+func (c *OrbsClient) GetTransactionReceiptProof(txId string) (response *codec.GetTransactionReceiptProofResponse, err error) {
+	payload, err := c.createGetTransactionReceiptProofPayload(txId)
+	if err != nil {
+		return
+	}
+
 	res, buf, err := c.sendHttpPost(GET_TRANSACTION_RECEIPT_PROOF_URL, payload)
 	if err != nil {
 		return

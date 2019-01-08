@@ -58,8 +58,8 @@ func (r *SendTransactionResponse) MarshalJSON() ([]byte, error) {
 	})
 }
 
-func (r *CallMethodRequest) UnmarshalJSON(data []byte) error {
-	type OtherFields CallMethodRequest
+func (r *RunQueryRequest) UnmarshalJSON(data []byte) error {
+	type OtherFields RunQueryRequest
 	aux := &struct {
 		ProtocolVersion     string
 		VirtualChainId      string
@@ -86,8 +86,8 @@ func (r *CallMethodRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (r *CallMethodResponse) MarshalJSON() ([]byte, error) {
-	type OtherFields CallMethodResponse
+func (r *RunQueryResponse) MarshalJSON() ([]byte, error) {
+	type OtherFields RunQueryResponse
 	args, argTypes := jsonMarshalArguments(r.OutputArguments)
 	return json.Marshal(&struct {
 		BlockHeight          string
@@ -178,14 +178,21 @@ func (r *GetTransactionReceiptProofRequest) UnmarshalJSON(data []byte) error {
 
 func (r *GetTransactionReceiptProofResponse) MarshalJSON() ([]byte, error) {
 	type OtherFields GetTransactionReceiptProofResponse
+	args, argTypes := jsonMarshalArguments(r.OutputArguments)
 	return json.Marshal(&struct {
-		BlockHeight    string
-		BlockTimestamp string
+		BlockHeight          string
+		BlockTimestamp       string
+		OutputArguments      []string
+		OutputArgumentsTypes []string
+		OutputEvents         []*jsonEvent
 		*OtherFields
 	}{
-		BlockHeight:    strconv.FormatUint(r.BlockHeight, 10),
-		BlockTimestamp: r.BlockTimestamp.UTC().Format(ISO_DATE_FORMAT),
-		OtherFields:    (*OtherFields)(r),
+		BlockHeight:          strconv.FormatUint(r.BlockHeight, 10),
+		BlockTimestamp:       r.BlockTimestamp.UTC().Format(ISO_DATE_FORMAT),
+		OutputArguments:      args,
+		OutputArgumentsTypes: argTypes,
+		OutputEvents:         jsonMarshalEvents(r.OutputEvents),
+		OtherFields:          (*OtherFields)(r),
 	})
 }
 

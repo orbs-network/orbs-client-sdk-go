@@ -46,11 +46,11 @@
   },
   {
     "Test": "cm_req_1",
-    "CallMethodRequest": "qwAAAAEAAACnhwAAAIBBAU6eSRYwAAAAAAAAACgAAABUAAAAIAAAAN/AbFviSmet7oCzWrTxR7saNcVf+F7aafQO+Ce93sFzCgAAAFN1cGVyVG9rZW4AAA4AAABjaGVja1NvbWV0aGluZwAAPwAAAAgAAAAAAAAAAQAAAAwAAAABAAAAUOn//////38NAAAAAgAAAAUAAABoZWxsbwAAAAsAAAADAAAAAwAAAAECAw=="
+    "RunQueryRequest": "tAAAAKsAAAABAAAAp4cAAACAQQFOnkkWMAAAAAAAAAAoAAAAVAAAACAAAADfwGxb4kpnre6As1q08Ue7GjXFX/he2mn0Dvgnvd7BcwoAAABTdXBlclRva2VuAAAOAAAAY2hlY2tTb21ldGhpbmcAAD8AAAAIAAAAAAAAAAEAAAAMAAAAAQAAAFDp//////9/DQAAAAIAAAAFAAAAaGVsbG8AAAALAAAAAwAAAAMAAAABAgMAAAAAAA=="
   },
   {
     "Test": "cm_res_1",
-    "CallMethodResponse": {
+    "RunQueryResponse": {
       "BlockHeight": "87438",
       "BlockTimestamp": "2010-11-21T10:00:00.000Z",
       "OutputArguments": [],
@@ -79,13 +79,13 @@
           "ArgumentsTypes": []
         }
       ],
-      "RequestStatus": "NOT_FOUND",
+      "RequestStatus": "BAD_REQUEST",
       "ExecutionResult": "SUCCESS"
     }
   },
   {
     "Test": "gt_req_1",
-    "GetTransactionStatusRequest": "AQAAAMgAAAAAgEEBTp5JFiAAAAByajFx2NNzrlg88uyatTEc8vt2dkxqo0asDHiltqxVVQ=="
+    "GetTransactionStatusRequest": "NAAAAAEAAADIAAAAAIBBAU6eSRYgAAAAcmoxcdjTc65YPPLsmrUxHPL7dnZMaqNGrAx4pbasVVU="
   },
   {
     "Test": "gt_res_1",
@@ -99,7 +99,7 @@
         "uint64"
       ],
       "OutputEvents": [],
-      "RequestStatus": "REJECTED",
+      "RequestStatus": "BAD_REQUEST",
       "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA=",
       "ExecutionResult": "ERROR_INPUT",
       "TransactionStatus": "REJECTED_UNKNOWN_SIGNER_SCHEME"
@@ -107,17 +107,25 @@
   },
   {
     "Test": "gp_req_1",
-    "GetTransactionReceiptProofRequest": "AQAAADQRAAAAgEEBTp5JFiAAAAByakFx2NNzrlg88uyatTEc8vt2dkxqo0asDHiltqxVVQ=="
+    "GetTransactionReceiptProofRequest": "NAAAAAEAAAA0EQAAAIBBAU6eSRYgAAAAcmpBcdjTc65YPPLsmrUxHPL7dnZMaqNGrAx4pbasVVU="
   },
   {
     "Test": "gp_res_1",
     "GetTransactionReceiptProofResponse": {
       "BlockHeight": "88081",
       "BlockTimestamp": "2020-11-21T20:00:00.000Z",
+      "OutputArguments": [
+        "18446744073709550615"
+      ],
+      "OutputArgumentsTypes": [
+        "uint64"
+      ],
+      "OutputEvents": [],
       "RequestStatus": "IN_PROCESS",
-      "PackedProof": "M0RVZneImQ==",
+      "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA=",
+      "ExecutionResult": "ERROR_UNEXPECTED",
       "TransactionStatus": "NO_RECORD_FOUND",
-      "PackedReceipt": "qrvM3e4="
+      "PackedProof": "M0RVZneImQ=="
     }
   }
 ]

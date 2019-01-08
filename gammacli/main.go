@@ -72,10 +72,10 @@ var commands = map[string]*command{
 		sort:            5,
 		requiredOptions: []string{"<INPUT_FILE> - path of JSON file with query details"},
 	},
-	"get-status": {
+	"tx-status": {
 		desc:            "get the current status of a sent transaction with txid <TX_ID> (from send-tx response)",
 		args:            "<TX_ID>",
-		example:         "gamma-cli get-status nXAmGL2peGvXkrDxC2cFaZwhykfMGFGj1DUJ9eDFRdSnNgCpQ69MQz",
+		example:         "gamma-cli tx-status nXAmGL2peGvXkrDxC2cFaZwhykfMGFGj1DUJ9eDFRdSnNgCpQ69MQz",
 		handler:         commandTxStatus,
 		sort:            6,
 		requiredOptions: []string{"<TX_ID> - txid of previously sent transaction, from send-tx response"},

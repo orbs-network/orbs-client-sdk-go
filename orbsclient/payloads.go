@@ -2,11 +2,11 @@ package orbsclient
 
 import (
 	"github.com/orbs-network/orbs-client-sdk-go/codec"
-	"github.com/orbs-network/orbs-client-sdk-go/crypto/base58"
+	"github.com/orbs-network/orbs-network-go/crypto/encoding"
 	"time"
 )
 
-func (c *OrbsClient) CreateSendTransactionPayload(publicKey []byte, privateKey []byte, contractName string, methodName string, inputArguments ...interface{}) (payload []byte, txId string, err error) {
+func (c *OrbsClient) CreateTransaction(publicKey []byte, privateKey []byte, contractName string, methodName string, inputArguments ...interface{}) (rawTransaction []byte, txId string, err error) {
 	req, rawTxId, err := codec.EncodeSendTransactionRequest(&codec.SendTransactionRequest{
 		ProtocolVersion: PROTOCOL_VERSION,
 		VirtualChainId:  c.VirtualChainId,
@@ -20,11 +20,11 @@ func (c *OrbsClient) CreateSendTransactionPayload(publicKey []byte, privateKey [
 	if err != nil {
 		return nil, "", err
 	}
-	return req, string(base58.Encode(rawTxId)), nil
+	return req, encoding.EncodeHex(rawTxId), nil
 }
 
-func (c *OrbsClient) CreateCallMethodPayload(publicKey []byte, contractName string, methodName string, inputArguments ...interface{}) (payload []byte, err error) {
-	return codec.EncodeCallMethodRequest(&codec.CallMethodRequest{
+func (c *OrbsClient) CreateQuery(publicKey []byte, contractName string, methodName string, inputArguments ...interface{}) (rawQuery []byte, err error) {
+	return codec.EncodeRunQueryRequest(&codec.RunQueryRequest{
 		ProtocolVersion: PROTOCOL_VERSION,
 		VirtualChainId:  c.VirtualChainId,
 		Timestamp:       time.Now(),
@@ -36,8 +36,8 @@ func (c *OrbsClient) CreateCallMethodPayload(publicKey []byte, contractName stri
 	})
 }
 
-func (c *OrbsClient) CreateGetTransactionStatusPayload(txId string) (payload []byte, err error) {
-	rawTxId, err := base58.Decode([]byte(txId))
+func (c *OrbsClient) createGetTransactionStatusPayload(txId string) (payload []byte, err error) {
+	rawTxId, err := encoding.DecodeHex(txId)
 	if err != nil {
 		return nil, err
 	}
@@ -48,8 +48,8 @@ func (c *OrbsClient) CreateGetTransactionStatusPayload(txId string) (payload []b
 	})
 }
 
-func (c *OrbsClient) CreateGetTransactionReceiptProofPayload(txId string) (payload []byte, err error) {
-	rawTxId, err := base58.Decode([]byte(txId))
+func (c *OrbsClient) createGetTransactionReceiptProofPayload(txId string) (payload []byte, err error) {
+	rawTxId, err := encoding.DecodeHex(txId)
 	if err != nil {
 		return nil, err
 	}

@@ -15,12 +15,12 @@ func isDockerReadyAndListening() bool {
 	signer := getTestKeyFromFile(*flagSigner)
 
 	client := createOrbsClient()
-	payload, err := client.CreateCallMethodPayload(signer.PublicKey, DEPLOY_SYSTEM_CONTRACT_NAME, DEPLOY_GET_INFO_SYSTEM_METHOD_NAME, DEPLOY_SYSTEM_CONTRACT_NAME)
+	payload, err := client.CreateQuery(signer.PublicKey, DEPLOY_SYSTEM_CONTRACT_NAME, DEPLOY_GET_INFO_SYSTEM_METHOD_NAME, DEPLOY_SYSTEM_CONTRACT_NAME)
 	if err != nil {
 		die("Could not encode payload of the message about to be sent to server.\n\n%s", err.Error())
 	}
 
-	response, err := client.CallMethod(payload)
+	response, err := client.SendQuery(payload)
 	if err != nil {
 		return false
 	}

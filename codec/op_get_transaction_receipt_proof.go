@@ -16,11 +16,14 @@ type GetTransactionReceiptProofRequest struct {
 
 type GetTransactionReceiptProofResponse struct {
 	RequestStatus     RequestStatus
-	PackedProof       []byte
+	TxHash            []byte
+	ExecutionResult   ExecutionResult
+	OutputArguments   []interface{}
+	OutputEvents      []*Event
 	TransactionStatus TransactionStatus
 	BlockHeight       uint64
 	BlockTimestamp    time.Time
-	PackedReceipt     []byte
+	PackedProof       []byte
 }
 
 func EncodeGetTransactionReceiptProofRequest(req *GetTransactionReceiptProofRequest) ([]byte, error) {
@@ -40,10 +43,12 @@ func EncodeGetTransactionReceiptProofRequest(req *GetTransactionReceiptProofRequ
 
 	// encode request
 	res := (&client.GetTransactionReceiptProofRequestBuilder{
-		ProtocolVersion:      primitives.ProtocolVersion(req.ProtocolVersion),
-		VirtualChainId:       primitives.VirtualChainId(req.VirtualChainId),
-		TransactionTimestamp: txTimestamp,
-		Txhash:               primitives.Sha256(txHash),
+		TransactionRef: &client.TransactionRefBuilder{
+			ProtocolVersion:      primitives.ProtocolVersion(req.ProtocolVersion),
+			VirtualChainId:       primitives.VirtualChainId(req.VirtualChainId),
+			TransactionTimestamp: txTimestamp,
+			Txhash:               primitives.Sha256(txHash),
+		},
 	}).Build()
 
 	// return
@@ -58,7 +63,25 @@ func DecodeGetTransactionReceiptProofResponse(buf []byte) (*GetTransactionReceip
 	}
 
 	// decode request status
-	requestStatus, err := requestStatusDecode(res.RequestStatus())
+	requestStatus, err := requestStatusDecode(res.RequestResult().RequestStatus())
+	if err != nil {
+		return nil, err
+	}
+
+	// decode execution result
+	executionResult, err := executionResultDecode(res.TransactionReceipt().ExecutionResult())
+	if err != nil {
+		return nil, err
+	}
+
+	// decode method arguments
+	outputArgumentArray, err := PackedArgumentsDecode(res.TransactionReceipt().RawOutputArgumentArrayWithHeader())
+	if err != nil {
+		return nil, err
+	}
+
+	// decode events
+	outputEventArray, err := PackedEventsDecode(res.TransactionReceipt().RawOutputEventsArrayWithHeader())
 	if err != nil {
 		return nil, err
 	}
@@ -72,10 +95,13 @@ func DecodeGetTransactionReceiptProofResponse(buf []byte) (*GetTransactionReceip
 	// return
 	return &GetTransactionReceiptProofResponse{
 		RequestStatus:     requestStatus,
-		PackedProof:       res.PackedProof(),
+		TxHash:            res.TransactionReceipt().Txhash(),
+		ExecutionResult:   executionResult,
+		OutputArguments:   outputArgumentArray,
+		OutputEvents:      outputEventArray,
 		TransactionStatus: transactionStatus,
-		BlockHeight:       uint64(res.BlockHeight()),
-		BlockTimestamp:    time.Unix(0, int64(res.BlockTimestamp())),
-		PackedReceipt:     res.PackedReceipt(),
+		BlockHeight:       uint64(res.RequestResult().BlockHeight()),
+		BlockTimestamp:    time.Unix(0, int64(res.RequestResult().BlockTimestamp())),
+		PackedProof:       res.PackedProof(),
 	}, nil
 }

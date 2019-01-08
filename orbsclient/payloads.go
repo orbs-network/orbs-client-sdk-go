@@ -2,7 +2,7 @@ package orbsclient
 
 import (
 	"github.com/orbs-network/orbs-client-sdk-go/codec"
-	"github.com/orbs-network/orbs-network-go/crypto/encoding"
+	"github.com/orbs-network/orbs-client-sdk-go/crypto/encoding"
 	"time"
 )
 

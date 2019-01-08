@@ -2,7 +2,7 @@ package e2e
 
 import (
 	"github.com/orbs-network/orbs-client-sdk-go/codec"
-	"github.com/orbs-network/orbs-client-sdk-go/orbsclient"
+	"github.com/orbs-network/orbs-client-sdk-go/orbs"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
@@ -12,16 +12,16 @@ func TestSimpleTransfer(t *testing.T) {
 	defer h.shutdown()
 
 	// create sender account
-	sender, err := orbsclient.CreateAccount()
+	sender, err := orbs.CreateAccount()
 	require.NoError(t, err)
 
 	// create receiver account
-	receiver, err := orbsclient.CreateAccount()
+	receiver, err := orbs.CreateAccount()
 	require.NoError(t, err)
 
 	// create client
 	endpoint := getEndpoint()
-	client := orbsclient.NewOrbsClient(endpoint, VIRTUAL_CHAIN_ID, codec.NETWORK_TYPE_TEST_NET)
+	client := orbs.NewClient(endpoint, VIRTUAL_CHAIN_ID, codec.NETWORK_TYPE_TEST_NET)
 
 	// create transfer transaction
 	tx, txId, err := client.CreateTransaction(

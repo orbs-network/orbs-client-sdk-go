@@ -2,15 +2,15 @@ package _manual
 
 import (
 	"github.com/orbs-network/orbs-client-sdk-go/codec"
-	"github.com/orbs-network/orbs-client-sdk-go/orbsclient"
+	"github.com/orbs-network/orbs-client-sdk-go/orbs"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
 
 func TestTransferFundsAndGetBalance(t *testing.T) {
-	client := orbsclient.NewOrbsClient("http://us-east-1.global.nodes.staging.orbs-test.com:80", 42, codec.NETWORK_TYPE_TEST_NET)
-	sender, err1 := orbsclient.CreateAccount()
-	receiver, err2 := orbsclient.CreateAccount()
+	client := orbs.NewClient("http://us-east-1.global.nodes.staging.orbs-test.com:80", 42, codec.NETWORK_TYPE_TEST_NET)
+	sender, err1 := orbs.CreateAccount()
+	receiver, err2 := orbs.CreateAccount()
 
 	require.NoError(t, err1)
 	require.NoError(t, err2)

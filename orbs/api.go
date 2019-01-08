@@ -1,4 +1,4 @@
-package orbsclient
+package orbs
 
 import (
 	"bytes"

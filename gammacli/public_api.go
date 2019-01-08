@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/orbs-network/orbs-client-sdk-go/codec"
 	"github.com/orbs-network/orbs-client-sdk-go/gammacli/jsoncodec"
-	"github.com/orbs-network/orbs-client-sdk-go/orbsclient"
+	"github.com/orbs-network/orbs-client-sdk-go/orbs"
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"net"
@@ -197,7 +197,7 @@ func commandTxProof(requiredOptions []string) {
 	}
 }
 
-func createOrbsClient() *orbsclient.OrbsClient {
+func createOrbsClient() *orbs.OrbsClient {
 	env := getEnvironmentFromConfigFile(*flagEnv)
 	if len(env.Endpoints) == 0 {
 		die("Environment Endpoints key does not contain any endpoints.")
@@ -211,7 +211,7 @@ func createOrbsClient() *orbsclient.OrbsClient {
 		endpoint = fmt.Sprintf("http://localhost:%d", *flagPort)
 	}
 
-	return orbsclient.NewOrbsClient(endpoint, env.VirtualChain, codec.NETWORK_TYPE_TEST_NET)
+	return orbs.NewClient(endpoint, env.VirtualChain, codec.NETWORK_TYPE_TEST_NET)
 }
 
 func getProcessorTypeFromFilename(filename string) uint32 {
@@ -226,7 +226,7 @@ func getProcessorTypeFromFilename(filename string) uint32 {
 }
 
 // TODO: this needs to be simplified
-func handleNoConnectionGracefully(err error, client *orbsclient.OrbsClient) {
+func handleNoConnectionGracefully(err error, client *orbs.OrbsClient) {
 	msg := fmt.Sprintf("Cannot connect to server at endpoint %s\n\nPlease check that:\n - The server is started and running (if just started, may need a second to initialize).\n - The server is accessible over the network.\n - The endpoint is properly configured if a config file is used.", client.Endpoint)
 	switch err := errors.Cause(err).(type) {
 	case *url.Error:
@@ -244,7 +244,7 @@ func handleNoConnectionGracefully(err error, client *orbsclient.OrbsClient) {
 			die(msg)
 		}
 	default:
-		if err == orbsclient.NoConnectionError {
+		if err == orbs.NoConnectionError {
 			die(msg)
 		}
 		return

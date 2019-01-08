@@ -1,4 +1,4 @@
-package orbsclient
+package orbs
 
 import (
 	"github.com/orbs-network/orbs-client-sdk-go/codec"
@@ -12,7 +12,7 @@ type OrbsClient struct {
 	NetworkType    codec.NetworkType
 }
 
-func NewOrbsClient(endpoint string, virtualChainId uint32, networkType codec.NetworkType) *OrbsClient {
+func NewClient(endpoint string, virtualChainId uint32, networkType codec.NetworkType) *OrbsClient {
 	return &OrbsClient{
 		Endpoint:       endpoint,
 		VirtualChainId: virtualChainId,

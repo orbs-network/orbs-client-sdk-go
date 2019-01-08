@@ -7,15 +7,15 @@
 1. Create a few end user accounts:
 
     ```go
-    sender, err := orbsclient.CreateAccount()
-    receiver, err := orbsclient.CreateAccount()
+    sender, err := orbs.CreateAccount()
+    receiver, err := orbs.CreateAccount()
     ```
     
 2. Create a client instance:
 
     ```go
     const virtualChainId = 42
-    client := orbsclient.NewOrbsClient("http://node-endpoint.com", virtualChainId, codec.NETWORK_TYPE_TEST_NET)
+    client := orbs.NewClient("http://node-endpoint.com", virtualChainId, codec.NETWORK_TYPE_TEST_NET)
     ```
 
 3. Send a transaction:
@@ -62,7 +62,7 @@
 3. Import the client in your project: 
 
     ```go
-    import "github.com/orbs-network/orbs-client-sdk-go/orbsclient" 
+    import "github.com/orbs-network/orbs-client-sdk-go/orbs" 
     ```
 
 ## Test

@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"github.com/orbs-network/orbs-client-sdk-go/crypto/encoding"
 	"github.com/orbs-network/orbs-client-sdk-go/gammacli/jsoncodec"
-	"github.com/orbs-network/orbs-client-sdk-go/orbsclient"
+	"github.com/orbs-network/orbs-client-sdk-go/orbs"
 	"io/ioutil"
 )
 
 func commandGenerateTestKeys(requiredOptions []string) {
 	keys := make(map[string]*jsoncodec.Key)
 	for i := 0; i < 10; i++ {
-		account, err := orbsclient.CreateAccount()
+		account, err := orbs.CreateAccount()
 		if err != nil {
 			die("Could not create Orbs account.")
 		}

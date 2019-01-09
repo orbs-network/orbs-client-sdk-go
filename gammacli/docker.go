@@ -18,6 +18,8 @@ const DOCKER_REPO = "orbsnetwork/gamma"
 const DOCKER_RUN = "orbsnetwork/gamma:%s"
 const CONTAINER_NAME = "orbs-gamma-server"
 const DOCKER_REGISTRY_TAGS_URL = "https://registry.hub.docker.com/v2/repositories/orbsnetwork/gamma/tags/"
+const DOCKER_TAG_NOT_FOUND = "not found"
+const DOCKER_TAG_EXPERIMENTAL = "experimental"
 
 func commandStartLocal(requiredOptions []string) {
 	gammaVersion := verifyDockerInstalled()
@@ -97,8 +99,8 @@ func commandUpgradeServer(requiredOptions []string) {
 	currentTag := verifyDockerInstalled()
 	latestTag := getLatestDockerTag()
 
-	if cmpTags(latestTag, currentTag) <= 0 {
-		log("Current Gamma server version %s does not require upgrade.\n", currentTag)
+	if !*flagExperimental && cmpTags(latestTag, currentTag) <= 0 {
+		log("Current Gamma server stable version %s does not require upgrade.\n", currentTag)
 		exit()
 	}
 
@@ -120,8 +122,9 @@ func verifyDockerInstalled() string {
 		}
 	}
 
-	if strings.Count(string(out), "\n") > 1 {
-		return extractTagFromDockerImagesOutput(string(out))
+	existingTag := extractTagFromDockerImagesOutput(string(out))
+	if existingTag != DOCKER_TAG_NOT_FOUND {
+		return existingTag
 	}
 
 	latestTag := getLatestDockerTag()
@@ -149,16 +152,22 @@ func isDockerGammaRunning() bool {
 }
 
 func extractTagFromDockerImagesOutput(out string) string {
-	pattern := fmt.Sprintf(`%s\s+(\S+)`, regexp.QuoteMeta(DOCKER_REPO))
+	pattern := fmt.Sprintf(`%s\s+(v\S+)`, regexp.QuoteMeta(DOCKER_REPO))
+	if *flagExperimental {
+		pattern = fmt.Sprintf(`%s\s+(%s)`, regexp.QuoteMeta(DOCKER_REPO), regexp.QuoteMeta(DOCKER_TAG_EXPERIMENTAL))
+	}
 	re := regexp.MustCompile(pattern)
 	res := re.FindStringSubmatch(out)
 	if len(res) < 2 {
-		return "unknown"
+		return DOCKER_TAG_NOT_FOUND
 	}
 	return res[1]
 }
 
 func getLatestDockerTag() string {
+	if *flagExperimental {
+		return DOCKER_TAG_EXPERIMENTAL
+	}
 	resp, err := http.Get(DOCKER_REGISTRY_TAGS_URL)
 	if err != nil {
 		die("Cannot connect to docker registry to get image list.")

@@ -21,7 +21,8 @@ func TestHelp(t *testing.T) {
 
 func TestVersion(t *testing.T) {
 	out, err := GammaCli().Run("version")
+	t.Log(out)
 	require.NoError(t, err, "version should succeed")
 	require.True(t, strings.Contains(out, "version"))
-	t.Log(out)
+	require.False(t, strings.Contains(out, `version experimental (docker)`), "started Gamma server should not be experimental")
 }

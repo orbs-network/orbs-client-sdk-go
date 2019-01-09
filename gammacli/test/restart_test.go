@@ -10,8 +10,10 @@ func TestRestart(t *testing.T) {
 	cli := GammaCli()
 	defer cli.StopGammaServer()
 
-	_, err := cli.Run("start-local")
+	out, err := cli.Run("start-local")
+	t.Log(out)
 	require.NoError(t, err, "start Gamma server should succeed")
+	require.False(t, strings.Contains(out, `Orbs Gamma experimental personal blockchain`), "started Gamma server should not be experimental")
 
 	_, err = cli.Run("stop-local")
 	require.NoError(t, err, "stop Gamma server should succeed")

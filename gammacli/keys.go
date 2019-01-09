@@ -56,7 +56,7 @@ func getTestKeyFromFile(id string) *jsoncodec.RawKey {
 
 	keys, err := jsoncodec.UnmarshalKeys(bytes)
 	if err != nil {
-		die("Failed parsing keys json file '%s'.\n\n%s", *flagKeyFile, err.Error())
+		die("Failed parsing keys json file '%s'. Try deleting the key file to have it automatically recreated.\n\n%s", *flagKeyFile, err.Error())
 	}
 
 	key, found := keys[id]
@@ -66,17 +66,17 @@ func getTestKeyFromFile(id string) *jsoncodec.RawKey {
 
 	privateKey, err := encoding.DecodeHex(key.PrivateKey)
 	if err != nil {
-		die("Could not parse hex string '%s'.\n\n%s", privateKey, err.Error())
+		die("Could not parse hex string '%s'. Try deleting the key file '%s' to have it automatically recreated.\n\n%s", privateKey, *flagKeyFile, err.Error())
 	}
 
 	publicKey, err := encoding.DecodeHex(key.PublicKey)
 	if err != nil {
-		die("Could not parse hex string '%s'.\n\n%s", publicKey, err.Error())
+		die("Could not parse hex string '%s'. Try deleting the key file '%s' to have it automatically recreated.\n\n%s", publicKey, *flagKeyFile, err.Error())
 	}
 
 	address, err := encoding.DecodeHex(key.Address)
 	if err != nil {
-		die("Could not parse hex string '%s'.\n\n%s", address, err.Error())
+		die("Could not parse hex string '%s'. Try deleting the key file '%s' to have it automatically recreated.\n\n%s", address, *flagKeyFile, err.Error())
 	}
 
 	res := &jsoncodec.RawKey{

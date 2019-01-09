@@ -2,6 +2,7 @@ package jsoncodec
 
 import (
 	"encoding/hex"
+	"github.com/orbs-network/orbs-client-sdk-go/crypto/encoding"
 	"github.com/pkg/errors"
 	"strconv"
 )
@@ -30,9 +31,9 @@ func UnmarshalArgs(args []*Arg, getTestKeyFromFile func(string) *RawKey) ([]inte
 		case "string":
 			res = append(res, string(arg.Value))
 		case "bytes":
-			val, err := hex.DecodeString(arg.Value)
+			val, err := encoding.DecodeHex(arg.Value)
 			if err != nil {
-				return nil, errors.Errorf("Value of argument %d should be a string containing the bytes in hex\n\nCurrent value: '%s'", i, arg.Value)
+				return nil, errors.Errorf("Value of argument %d should be a string containing the bytes in hex\nHex decoder returned error: %s\n\nCurrent value: '%s'", i, err.Error(), arg.Value)
 			}
 			res = append(res, []byte(val))
 		case "gamma:keys-file-address":

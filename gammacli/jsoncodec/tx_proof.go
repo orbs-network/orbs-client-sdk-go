@@ -17,6 +17,7 @@ func MarshalTxProofResponse(r *codec.GetTransactionReceiptProofResponse) ([]byte
 		BlockHeight       string
 		BlockTimestamp    string
 		PackedProof       string
+		PackedReceipt     string
 	}{
 		RequestStatus:     r.RequestStatus,
 		ExecutionResult:   r.ExecutionResult,
@@ -25,6 +26,7 @@ func MarshalTxProofResponse(r *codec.GetTransactionReceiptProofResponse) ([]byte
 		TransactionStatus: r.TransactionStatus,
 		BlockHeight:       strconv.FormatUint(r.BlockHeight, 10),
 		BlockTimestamp:    r.BlockTimestamp.UTC().Format(codec.ISO_DATE_FORMAT),
-		PackedProof:       hex.EncodeToString(r.PackedProof),
+		PackedProof:       "0x" + hex.EncodeToString(r.PackedProof),
+		PackedReceipt:     "0x" + hex.EncodeToString(r.PackedReceipt),
 	}, "", "  ")
 }

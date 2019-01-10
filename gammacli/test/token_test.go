@@ -12,7 +12,7 @@ func TestSimpleTransfer(t *testing.T) {
 
 	out, err := cli.Run("run-query", "get-balance.json")
 	t.Log(out)
-	require.Error(t, err, "get balance should fail (not deployed)")
+	require.NoError(t, err, "get balance should not fail (although not deployed)")
 	require.True(t, strings.Contains(out, `"ExecutionResult": "ERROR_UNEXPECTED"`))
 
 	out, err = cli.Run("send-tx", "transfer.json")
@@ -32,7 +32,8 @@ func TestSimpleTransfer(t *testing.T) {
 	t.Log(out)
 	require.NoError(t, err, "get tx proof should succeed")
 	require.True(t, strings.Contains(out, `"RequestStatus": "COMPLETED"`))
-	require.True(t, strings.Contains(out, `"PackedProof"`))
+	require.True(t, strings.Contains(out, `"PackedProof": "0x`))
+	require.True(t, strings.Contains(out, `"PackedReceipt": "0x`))
 
 	out, err = cli.Run("send-tx", "transfer.json", "-arg1", "2")
 	t.Log(out)

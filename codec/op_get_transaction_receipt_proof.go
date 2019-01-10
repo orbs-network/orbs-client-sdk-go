@@ -24,6 +24,7 @@ type GetTransactionReceiptProofResponse struct {
 	BlockHeight       uint64
 	BlockTimestamp    time.Time
 	PackedProof       []byte
+	PackedReceipt     []byte
 }
 
 func EncodeGetTransactionReceiptProofRequest(req *GetTransactionReceiptProofRequest) ([]byte, error) {
@@ -103,5 +104,6 @@ func DecodeGetTransactionReceiptProofResponse(buf []byte) (*GetTransactionReceip
 		BlockHeight:       uint64(res.RequestResult().BlockHeight()),
 		BlockTimestamp:    time.Unix(0, int64(res.RequestResult().BlockTimestamp())),
 		PackedProof:       res.PackedProof(),
+		PackedReceipt:     res.TransactionReceipt().Raw(),
 	}, nil
 }

@@ -125,7 +125,8 @@
       "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA=",
       "ExecutionResult": "ERROR_UNEXPECTED",
       "TransactionStatus": "NO_RECORD_FOUND",
-      "PackedProof": "M0RVZneImQ=="
+      "PackedProof": "M0RVZneImQ==",
+      "PackedReceipt": "IAAAAM+AzYrtSC1dFSfX3HL87/hOYyZZKEhEfS3AsOh9/JqQBQAAABAAAAAMAAAAAQAAABf8////////AAAAAA=="
     }
   }
 ]

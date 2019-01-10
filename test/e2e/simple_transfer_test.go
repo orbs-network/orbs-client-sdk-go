@@ -53,6 +53,7 @@ func TestSimpleTransfer(t *testing.T) {
 	require.Equal(t, codec.EXECUTION_RESULT_SUCCESS, txProofResponse.ExecutionResult)
 	require.Equal(t, codec.TRANSACTION_STATUS_COMMITTED, txProofResponse.TransactionStatus)
 	require.True(t, len(txProofResponse.PackedProof) > 20)
+	require.True(t, len(txProofResponse.PackedReceipt) > 10)
 
 	// create balance query
 	query, err := client.CreateQuery(

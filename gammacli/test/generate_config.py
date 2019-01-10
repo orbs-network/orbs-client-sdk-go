@@ -15,7 +15,7 @@ def get_config(ip):
             "docker-experimental": {
                 "VirtualChain": 42,
                 "Endpoints": [get_endpoint(ip)],
-                "Experimental": true
+                "Experimental": True
             },
         }
     }

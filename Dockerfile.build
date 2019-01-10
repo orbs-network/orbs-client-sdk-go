@@ -10,9 +10,9 @@ RUN env
 
 RUN go env
 
-RUN ./gammacli/build.sh
+RUN cd gammacli && ./build.sh
 
-ENV GAMMA_CLI_PATH=/go/src/github.com/orbs-network/orbs-client-sdk-go/_bin/gamma-cli
+ENV GAMMA_CLI_PATH=/go/src/github.com/orbs-network/orbs-client-sdk-go/gammacli/_bin/gamma-cli
 
 ENV GAMMA_ENVIRONMENT=docker
 

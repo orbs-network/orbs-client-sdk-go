@@ -99,7 +99,7 @@ func commandUpgradeServer(requiredOptions []string) {
 	currentTag := verifyDockerInstalled()
 	latestTag := getLatestDockerTag()
 
-	if !*flagExperimental && cmpTags(latestTag, currentTag) <= 0 {
+	if !isExperimental() && cmpTags(latestTag, currentTag) <= 0 {
 		log("Current Gamma server stable version %s does not require upgrade.\n", currentTag)
 		exit()
 	}
@@ -153,7 +153,7 @@ func isDockerGammaRunning() bool {
 
 func extractTagFromDockerImagesOutput(out string) string {
 	pattern := fmt.Sprintf(`%s\s+(v\S+)`, regexp.QuoteMeta(DOCKER_REPO))
-	if *flagExperimental {
+	if isExperimental() {
 		pattern = fmt.Sprintf(`%s\s+(%s)`, regexp.QuoteMeta(DOCKER_REPO), regexp.QuoteMeta(DOCKER_TAG_EXPERIMENTAL))
 	}
 	re := regexp.MustCompile(pattern)
@@ -165,7 +165,7 @@ func extractTagFromDockerImagesOutput(out string) string {
 }
 
 func getLatestDockerTag() string {
-	if *flagExperimental {
+	if isExperimental() {
 		return DOCKER_TAG_EXPERIMENTAL
 	}
 	resp, err := http.Get(DOCKER_REGISTRY_TAGS_URL)
@@ -206,6 +206,17 @@ func extractLatestTagFromDockerHubResponse(responseBytes []byte) (string, error)
 		return "", errors.New("no valid tags found")
 	}
 	return maxTag, nil
+}
+
+func isExperimental() bool {
+	if *flagEnv == LOCAL_ENV_ID {
+		return false
+	}
+	if *flagEnv == EXPERIMENTAL_ENV_ID {
+		return true
+	}
+	// allow custom experimental configs (like for docker ci)
+	return getEnvironmentFromConfigFile(*flagEnv).Experimental
 }
 
 func cmpTags(t1, t2 string) int {

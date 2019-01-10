@@ -9,6 +9,7 @@ type ConfFile struct {
 type ConfEnv struct {
 	VirtualChain uint32
 	Endpoints    []string
+	Experimental bool
 }
 
 func UnmarshalConfFile(bytes []byte) (*ConfFile, error) {

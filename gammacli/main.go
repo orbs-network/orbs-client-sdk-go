@@ -11,6 +11,7 @@ const GAMMA_CLI_VERSION = "0.6.0"
 const CONFIG_FILENAME = "orbs-gamma-config.json"
 const TEST_KEYS_FILENAME = "orbs-test-keys.json"
 const LOCAL_ENV_ID = "local"
+const EXPERIMENTAL_ENV_ID = "experimental"
 
 type command struct {
 	desc            string
@@ -91,7 +92,7 @@ var commands = map[string]*command{
 	"upgrade-server": {
 		desc:            "upgrade to the latest stable version of Gamma server",
 		example:         "gamma-cli upgrade-server",
-		example2:        "gamma-cli upgrade-server -experimental",
+		example2:        "gamma-cli upgrade-server -env experimental",
 		handler:         commandUpgradeServer,
 		sort:            8,
 		requiredOptions: nil,
@@ -117,7 +118,6 @@ var (
 	flagConfigFile   = flag.String("config", CONFIG_FILENAME, "path to config file")
 	flagEnv          = flag.String("env", LOCAL_ENV_ID, "environment from config file containing server connection details")
 	flagWait         = flag.Bool("wait", false, "wait until Gamma server is ready and listening")
-	flagExperimental = flag.Bool("experimental", false, "use latest experimental version of Gamma server")
 
 	// args (hidden from help)
 	flagArg1 = flag.String("arg1", "", "")

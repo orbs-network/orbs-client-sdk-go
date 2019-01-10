@@ -18,7 +18,8 @@ var cachedGammaCliBinaryPath string
 var downloadedLatestGammaServer bool
 
 type gammaCli struct {
-	port string
+	port         string
+	experimental bool
 }
 
 func compileGammaCli() string {
@@ -56,11 +57,9 @@ func (g *gammaCli) Run(args ...string) (string, error) {
 		args = append(args, "-port", g.port)
 
 		// needed for dockerized tests in ci
-		if args[0] != "start-local" && args[0] != "stop-local" && args[0] != "upgrade-server" {
-			args = append(args, "-env", getGammaEnvironmentFromEnvVar())
-			pathToConfig := path.Join(os.Getenv("HOME"), ".orbs", CONFIG_FILENAME)
-			args = append(args, "-config", pathToConfig)
-		}
+		args = append(args, "-env", g.getGammaEnvironment())
+		pathToConfig := path.Join(os.Getenv("HOME"), ".orbs", CONFIG_FILENAME)
+		args = append(args, "-config", pathToConfig)
 	}
 	out, err := exec.Command(compileGammaCli(), args...).CombinedOutput()
 	return string(out), err
@@ -74,6 +73,11 @@ func GammaCliWithPort(port int) *gammaCli {
 	return &gammaCli{
 		port: fmt.Sprintf("%d", port),
 	}
+}
+
+func (g *gammaCli) WithExperimentalServer() *gammaCli {
+	g.experimental = true
+	return g
 }
 
 func (g *gammaCli) StartGammaServer() *gammaCli {
@@ -108,11 +112,17 @@ func (g *gammaCli) DownloadLatestGammaServer() *gammaCli {
 	return g
 }
 
-func getGammaEnvironmentFromEnvVar() string {
+func (g *gammaCli) getGammaEnvironment() string {
 	if env := os.Getenv("GAMMA_ENVIRONMENT"); env != "" {
+		if g.experimental {
+			return env + "-experimental"
+		}
 		return env
 	}
 
+	if g.experimental {
+		return "experimental"
+	}
 	return "local"
 }
 

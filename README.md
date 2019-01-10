@@ -96,10 +96,10 @@ The codec is the part that encodes and decodes protocol messages. The contract i
 
 To run the contract test in your own implementation, encode/decode the messages according to `input.json` and compare your results to `output.json`. You can generate the JSON files from code by running
 
-    ```sh
-    cd ./test/codec/
-    go run main.go
-    ``` 
+```sh
+cd ./test/codec/
+go run main.go
+``` 
 
 #### End to end test with Gamma server
 

@@ -5,6 +5,7 @@ import (
 	"github.com/orbs-network/orbs-client-sdk-go/crypto/encoding"
 	"github.com/pkg/errors"
 	"strconv"
+	"strings"
 )
 
 type Arg struct {
@@ -31,6 +32,12 @@ func UnmarshalArgs(args []*Arg, getTestKeyFromFile func(string) *RawKey) ([]inte
 		case "string":
 			res = append(res, string(arg.Value))
 		case "bytes":
+			val, err := simpleDecodeHex(arg.Value)
+			if err != nil {
+				return nil, errors.Errorf("Value of argument %d should be a string containing the bytes in hex\nHex decoder returned error: %s\n\nCurrent value: '%s'", i, err.Error(), arg.Value)
+			}
+			res = append(res, []byte(val))
+		case "gamma:address":
 			val, err := encoding.DecodeHex(arg.Value)
 			if err != nil {
 				return nil, errors.Errorf("Value of argument %d should be a string containing the bytes in hex\nHex decoder returned error: %s\n\nCurrent value: '%s'", i, err.Error(), arg.Value)
@@ -58,10 +65,17 @@ func MarshalArgs(arguments []interface{}) []*Arg {
 		case string:
 			res = append(res, &Arg{"string", arg.(string)})
 		case []byte:
-			res = append(res, &Arg{"bytes", hex.EncodeToString(arg.([]byte))})
+			res = append(res, &Arg{"bytes", "0x" + hex.EncodeToString(arg.([]byte))})
 		default:
 			panic("unsupported type in json marshal of method arguments")
 		}
 	}
 	return res
+}
+
+func simpleDecodeHex(value string) ([]byte, error) {
+	if strings.HasPrefix("0x", value) {
+		value = value[2:]
+	}
+	return hex.DecodeString(value)
 }

@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-const CONTENT_TYPE = "application/membuffers"
+const CONTENT_TYPE_MEMBUFFERS = "application/membuffers"
 const (
 	SEND_TRANSACTION_URL              = "/api/v1/send-transaction"
 	CALL_METHOD_URL                   = "/api/v1/run-query"
@@ -29,7 +29,7 @@ func (c *OrbsClient) SendTransaction(rawTransaction []byte) (response *codec.Sen
 	}
 
 	if res.StatusCode != http.StatusOK {
-		err = errors.Errorf("http status code %d: %s", res.StatusCode, res.Status)
+		err = errors.Errorf("http status %s", res.Status)
 		return
 	}
 
@@ -51,7 +51,7 @@ func (c *OrbsClient) SendQuery(rawQuery []byte) (response *codec.RunQueryRespons
 	}
 
 	if res.StatusCode != http.StatusOK {
-		err = errors.Errorf("http status code %d (%s)", res.StatusCode, res.Status)
+		err = errors.Errorf("http status %s", res.Status)
 		return
 	}
 
@@ -76,7 +76,7 @@ func (c *OrbsClient) GetTransactionStatus(txId string) (response *codec.GetTrans
 	}
 
 	if res.StatusCode != http.StatusOK {
-		err = errors.Errorf("http status code %d: %s", res.StatusCode, res.Status)
+		err = errors.Errorf("http status %s", res.Status)
 		return
 	}
 
@@ -101,7 +101,7 @@ func (c *OrbsClient) GetTransactionReceiptProof(txId string) (response *codec.Ge
 	}
 
 	if res.StatusCode != http.StatusOK {
-		err = errors.Errorf("http status code %d: %s", res.StatusCode, res.Status)
+		err = errors.Errorf("http status %s", res.Status)
 		return
 	}
 
@@ -113,7 +113,7 @@ func (c *OrbsClient) sendHttpPost(relativeUrl string, payload []byte) (*http.Res
 		return nil, nil, errors.New("payload sent by http is empty")
 	}
 
-	res, err := http.Post(c.Endpoint+relativeUrl, CONTENT_TYPE, bytes.NewReader(payload))
+	res, err := http.Post(c.Endpoint+relativeUrl, CONTENT_TYPE_MEMBUFFERS, bytes.NewReader(payload))
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "failed sending http post")
 	}
@@ -125,7 +125,8 @@ func (c *OrbsClient) sendHttpPost(relativeUrl string, payload []byte) (*http.Res
 	}
 
 	// check if we have the content type response we expect
-	if res.Header.Get("Content-Type") != CONTENT_TYPE {
+	contentType := res.Header.Get("Content-Type")
+	if contentType != CONTENT_TYPE_MEMBUFFERS {
 
 		// handle real 404 (incorrect endpoint) gracefully
 		if res.StatusCode == 404 {
@@ -133,7 +134,11 @@ func (c *OrbsClient) sendHttpPost(relativeUrl string, payload []byte) (*http.Res
 			return res, buf, errors.Wrap(NoConnectionError, "http 404 not found")
 		}
 
-		return nil, buf, errors.Errorf("http request failed: %s", string(buf))
+		if contentType == "text/plain" || contentType == "application/json" {
+			return nil, buf, errors.Errorf("http request failed: %s", string(buf))
+		} else {
+			return nil, buf, errors.Errorf("http request failed with Content-Type '%s': %x", contentType, buf)
+		}
 	}
 
 	return res, buf, nil

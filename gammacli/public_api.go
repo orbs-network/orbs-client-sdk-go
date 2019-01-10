@@ -50,6 +50,7 @@ func commandDeploy(requiredOptions []string) {
 		}
 
 		log("%s\n", string(output))
+		exit()
 	}
 
 	if clientErr != nil {
@@ -99,6 +100,7 @@ func commandSendTx(requiredOptions []string) {
 		}
 
 		log("%s\n", string(output))
+		exit()
 	}
 
 	if clientErr != nil {
@@ -148,6 +150,7 @@ func commandRunQuery(requiredOptions []string) {
 		}
 
 		log("%s\n", string(output))
+		exit()
 	}
 
 	if clientErr != nil {
@@ -169,6 +172,7 @@ func commandTxStatus(requiredOptions []string) {
 		}
 
 		log("%s\n", string(output))
+		exit()
 	}
 
 	if clientErr != nil {
@@ -190,6 +194,7 @@ func commandTxProof(requiredOptions []string) {
 		}
 
 		log("%s\n", string(output))
+		exit()
 	}
 
 	if clientErr != nil {

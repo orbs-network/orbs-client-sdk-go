@@ -34,6 +34,7 @@ func TestSimpleTransfer(t *testing.T) {
 
 	// send the transaction
 	transferResponse, err := client.SendTransaction(tx)
+	t.Logf("%+v", transferResponse)
 	require.NoError(t, err)
 	require.Equal(t, codec.REQUEST_STATUS_COMPLETED, transferResponse.RequestStatus)
 	require.Equal(t, codec.EXECUTION_RESULT_SUCCESS, transferResponse.ExecutionResult)
@@ -41,6 +42,7 @@ func TestSimpleTransfer(t *testing.T) {
 
 	// check the transaction status
 	statusResponse, err := client.GetTransactionStatus(txId)
+	t.Logf("%+v", statusResponse)
 	require.NoError(t, err)
 	require.Equal(t, codec.REQUEST_STATUS_COMPLETED, statusResponse.RequestStatus)
 	require.Equal(t, codec.EXECUTION_RESULT_SUCCESS, statusResponse.ExecutionResult)
@@ -48,6 +50,7 @@ func TestSimpleTransfer(t *testing.T) {
 
 	// check the transaction status receipt proof
 	txProofResponse, err := client.GetTransactionReceiptProof(txId)
+	t.Logf("%+v", txProofResponse)
 	require.NoError(t, err)
 	require.Equal(t, codec.REQUEST_STATUS_COMPLETED, txProofResponse.RequestStatus)
 	require.Equal(t, codec.EXECUTION_RESULT_SUCCESS, txProofResponse.ExecutionResult)
@@ -65,6 +68,7 @@ func TestSimpleTransfer(t *testing.T) {
 
 	// send the query
 	balanceResponse, err := client.SendQuery(query)
+	t.Logf("%+v", balanceResponse)
 	require.NoError(t, err)
 	require.Equal(t, codec.REQUEST_STATUS_COMPLETED, balanceResponse.RequestStatus)
 	require.Equal(t, codec.EXECUTION_RESULT_SUCCESS, balanceResponse.ExecutionResult)

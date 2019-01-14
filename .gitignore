@@ -83,10 +83,10 @@ fabric.properties
 logs/
 
 # binaries
-orbs-*
 .deploy.json
 gamma-cli
 gamma-server
 _bin
 orbs-gamma-config.json
+orbs-test-keys.json
 _tmp

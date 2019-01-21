@@ -3,3 +3,5 @@
 go test ./crypto/... -v
 
 go test ./test/... -v
+
+go test ./...

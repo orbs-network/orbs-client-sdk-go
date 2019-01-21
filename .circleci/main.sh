@@ -16,5 +16,5 @@ export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
 go version
 
-./.circleci/bring-gamma.sh
-./test.sh
+./bring-gamma.sh
+./../test.sh

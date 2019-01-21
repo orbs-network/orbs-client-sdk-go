@@ -26,9 +26,6 @@ mkdir -p src/github.com/orbs-network/orbs-client-sdk-go
 mv /tmp/project/* ./src/github.com/orbs-network/orbs-client-sdk-go/
 
 cd src/github.com/orbs-network/orbs-client-sdk-go/
-ls -la 
-
-exit 1
 
 ./.circleci/bring-gamma.sh
 

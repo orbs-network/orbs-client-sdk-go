@@ -24,6 +24,7 @@ const (
 	TRANSACTION_STATUS_REJECTED_SMART_CONTRACT_PRE_ORDER       TransactionStatus = "REJECTED_SMART_CONTRACT_PRE_ORDER"
 	TRANSACTION_STATUS_REJECTED_TIMESTAMP_AHEAD_OF_NODE_TIME   TransactionStatus = "REJECTED_TIMESTAMP_AHEAD_OF_NODE_TIME"
 	TRANSACTION_STATUS_REJECTED_CONGESTION                     TransactionStatus = "REJECTED_CONGESTION"
+	TRANSACTION_STATUS_REJECTED_NODE_OUT_OF_SYNC               TransactionStatus = "REJECTED_NODE_OUT_OF_SYNC"
 )
 
 func (x TransactionStatus) String() string {
@@ -64,6 +65,8 @@ func transactionStatusDecode(transactionStatus protocol.TransactionStatus) (Tran
 		return TRANSACTION_STATUS_REJECTED_TIMESTAMP_AHEAD_OF_NODE_TIME, nil
 	case protocol.TRANSACTION_STATUS_REJECTED_CONGESTION:
 		return TRANSACTION_STATUS_REJECTED_CONGESTION, nil
+	case protocol.TRANSACTION_STATUS_REJECTED_NODE_OUT_OF_SYNC:
+		return TRANSACTION_STATUS_REJECTED_NODE_OUT_OF_SYNC, nil
 	default:
 		return TRANSACTION_STATUS_PARSE_ERROR, errors.Errorf("unsupported TransactionStatus received: %d", transactionStatus)
 	}

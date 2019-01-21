@@ -62,7 +62,7 @@ func main() {
 
 	r3 := (&client.GetTransactionStatusResponseBuilder{
 		RequestResult: &client.RequestResultBuilder{
-			RequestStatus:  protocol.REQUEST_STATUS_BAD_REQUEST,
+			RequestStatus:  protocol.REQUEST_STATUS_OUT_OF_SYNC,
 			BlockHeight:    math.MaxUint64 - 5000,
 			BlockTimestamp: primitives.TimestampNano(t2.UnixNano()),
 		},

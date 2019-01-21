@@ -99,7 +99,7 @@
         "uint64"
       ],
       "OutputEvents": [],
-      "RequestStatus": "BAD_REQUEST",
+      "RequestStatus": "OUT_OF_SYNC",
       "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA=",
       "ExecutionResult": "ERROR_INPUT",
       "TransactionStatus": "REJECTED_UNKNOWN_SIGNER_SCHEME"

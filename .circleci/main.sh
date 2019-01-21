@@ -32,5 +32,7 @@ cd src/github.com/orbs-network/orbs-client-sdk-go/
 
 ./.circleci/bring-gamma.sh
 
+gamma-cli start-local -env experimental
+
 ./test.sh
 

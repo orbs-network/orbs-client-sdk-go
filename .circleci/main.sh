@@ -13,14 +13,20 @@ sudo rm -rf /usr/local/go
 sudo mv go /usr/local
 
 export GOROOT=/usr/local/go
-export GOPATH=$HOME/go
+export GOPATH=$PROJ_PATH
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
 go version
 
 cd $PROJ_PATH
 
-pwd
+mkdir -p /tmp/project
+mv ../project/* /tmp/project/
+mkdir -p src/github.com/orbs-network/orbs-client-sdk-go
+mv /tmp/project/* ./src/github.com/orbs-network/orbs-client-sdk-go/
+
+cd src/github.com/orbs-network/orbs-client-sdk-go/
+ls -la 
 
 exit 1
 

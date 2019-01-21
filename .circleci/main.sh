@@ -1,9 +1,11 @@
-#!/bin/bash -xe
+#!/bin/bash
+
+PROJ_PATH=`pwd`
 
 # First let's install Go 1.11
-
 echo "Installing Go 1.11"
 cd /tmp
+
 wget https://dl.google.com/go/go1.11.linux-amd64.tar.gz
 sudo tar -xvf go1.11.linux-amd64.tar.gz
 # Uninstall older version of Go
@@ -16,5 +18,9 @@ export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
 go version
 
-./bring-gamma.sh
-./../test.sh
+cd $PROJ_PATH
+
+./.circleci/bring-gamma.sh
+
+./test.sh
+

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xe
 
 PROJ_PATH=`pwd`
 
@@ -19,6 +19,10 @@ export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 go version
 
 cd $PROJ_PATH
+
+pwd
+
+exit 1
 
 ./.circleci/bring-gamma.sh
 

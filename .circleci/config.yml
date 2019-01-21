@@ -5,7 +5,7 @@ jobs:
     steps:
       - checkout
       - run: ./git-submodule-checkout.sh
-      - run: go version
+      - run: ./.circleci/main.sh
 
 workflows:
   version: 2

@@ -20,6 +20,9 @@ go version
 
 cd $PROJ_PATH
 
+# This allows our mv calls to move also hidden files and folders
+# for example /.circleci ;-)
+shopt -s dotglob
 mkdir -p /tmp/project
 mv ../project/* /tmp/project/
 mkdir -p src/github.com/orbs-network/orbs-client-sdk-go

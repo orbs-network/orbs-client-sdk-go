@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/orbs-network/orbs-client-sdk-go/codec"
+	"github.com/orbs-network/orbs-client-sdk-go/crypto/digest"
 	"github.com/orbs-network/orbs-spec/types/go/primitives"
 	"github.com/orbs-network/orbs-spec/types/go/protocol"
 	"github.com/orbs-network/orbs-spec/types/go/protocol/client"
@@ -29,6 +30,37 @@ func main() {
 	e2 := codec.PackedEventsEncode([]*protocol.EventBuilder{
 		{ContractName: "Contract3", EventName: "Event3", OutputArgumentArray: a3},
 	})
+
+	tx1 := &protocol.TransactionBuilder{
+		ProtocolVersion: 1,
+		VirtualChainId:  42,
+		Timestamp:       primitives.TimestampNano(t1.UnixNano()),
+		Signer: &protocol.SignerBuilder{
+			Scheme: protocol.SIGNER_SCHEME_EDDSA,
+			Eddsa: &protocol.EdDSA01SignerBuilder{
+				NetworkType:     protocol.NETWORK_TYPE_TEST_NET,
+				SignerPublicKey: []byte{0x12, 0x34, 0x56},
+			},
+		},
+		ContractName:       "Contract1",
+		MethodName:         "Method1",
+		InputArgumentArray: a1,
+	}
+	tx2 := &protocol.TransactionBuilder{
+		ProtocolVersion: 1,
+		VirtualChainId:  42,
+		Timestamp:       primitives.TimestampNano(t2.UnixNano()),
+		Signer: &protocol.SignerBuilder{
+			Scheme: protocol.SIGNER_SCHEME_EDDSA,
+			Eddsa: &protocol.EdDSA01SignerBuilder{
+				NetworkType:     protocol.NETWORK_TYPE_TEST_NET,
+				SignerPublicKey: []byte{0x78, 0x9a, 0xbc},
+			},
+		},
+		ContractName:       "Contract2",
+		MethodName:         "Method2",
+		InputArgumentArray: a2,
+	}
 
 	r1 := (&client.SendTransactionResponseBuilder{
 		RequestResult: &client.RequestResultBuilder{
@@ -90,4 +122,53 @@ func main() {
 		PackedProof:       []byte{0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99},
 	}).Build()
 	fmt.Printf(`"GetTransactionReceiptProofResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r4.Raw()))
+
+	r5 := (&client.GetBlockResponseBuilder{
+		RequestResult: &client.RequestResultBuilder{
+			RequestStatus:  protocol.REQUEST_STATUS_COMPLETED,
+			BlockHeight:    3301,
+			BlockTimestamp: primitives.TimestampNano(t2.UnixNano()),
+		},
+		TransactionsBlockHeader: &protocol.TransactionsBlockHeaderBuilder{
+			ProtocolVersion:       1,
+			VirtualChainId:        42,
+			BlockHeight:           3301,
+			PrevBlockHashPtr:      []byte{0x11, 0x22, 0x33},
+			Timestamp:             primitives.TimestampNano(t2.UnixNano()),
+			NumSignedTransactions: 2,
+		},
+		ResultsBlockHeader: &protocol.ResultsBlockHeaderBuilder{
+			ProtocolVersion:          1,
+			VirtualChainId:           42,
+			BlockHeight:              3301,
+			PrevBlockHashPtr:         []byte{0x44, 0x55, 0x66},
+			Timestamp:                primitives.TimestampNano(t2.UnixNano()),
+			TransactionsBlockHashPtr: []byte{0x77, 0x88, 0x99},
+			NumTransactionReceipts:   2,
+		},
+		SignedTransactions: []*protocol.SignedTransactionBuilder{
+			{
+				Transaction: tx1,
+				Signature:   []byte{0x12},
+			},
+			{
+				Transaction: tx2,
+				Signature:   []byte{0x21},
+			},
+		},
+		TransactionReceipts: []*protocol.TransactionReceiptBuilder{
+			{
+				Txhash:              digest.CalcTxHash(tx2.Build()),
+				ExecutionResult:     protocol.EXECUTION_RESULT_ERROR_UNEXPECTED,
+				OutputArgumentArray: a3,
+			},
+			{
+				Txhash:              digest.CalcTxHash(tx1.Build()),
+				ExecutionResult:     protocol.EXECUTION_RESULT_SUCCESS,
+				OutputArgumentArray: a2,
+				OutputEventsArray:   e1,
+			},
+		},
+	}).Build()
+	fmt.Printf(`"GetBlockResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r5.Raw()))
 }

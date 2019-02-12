@@ -73,4 +73,9 @@ func TestSimpleTransfer(t *testing.T) {
 	require.Equal(t, codec.REQUEST_STATUS_COMPLETED, balanceResponse.RequestStatus)
 	require.Equal(t, codec.EXECUTION_RESULT_SUCCESS, balanceResponse.ExecutionResult)
 	require.Equal(t, uint64(10), balanceResponse.OutputArguments[0])
+
+	// get the first block
+	//blockResponse, err := client.GetBlock(transferResponse.BlockHeight)
+	//t.Logf("%+v", blockResponse)
+	//require.NoError(t, err)
 }

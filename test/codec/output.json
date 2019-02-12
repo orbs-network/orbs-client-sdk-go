@@ -128,5 +128,107 @@
       "PackedProof": "M0RVZneImQ==",
       "PackedReceipt": "IAAAAM+AzYrtSC1dFSfX3HL87/hOYyZZKEhEfS3AsOh9/JqQBQAAABAAAAAMAAAAAQAAABf8////////AAAAAA=="
     }
+  },
+  {
+    "Test": "gb_req_1",
+    "GetBlockRequest": "AQAAADQRAADPBwAAAAAAAA=="
+  },
+  {
+    "Test": "gb_res_1",
+    "GetBlockResponse": {
+      "BlockHeight": "3301",
+      "BlockTimestamp": "2020-11-21T20:00:00.000Z",
+      "RequestStatus": "COMPLETED",
+      "TransactionsBlockHash": "BYbA/qvVuKXyz/BG+fB/ljd01CNIo6j7VJrjEM1QPB8=",
+      "TransactionsBlockHeader": {
+        "ProtocolVersion": "1",
+        "VirtualChainId": "42",
+        "BlockHeight": "3301",
+        "Timestamp": "2020-11-21T20:00:00.000Z",
+        "NumTransactions": "2",
+        "PrevBlockHash": "ESIz"
+      },
+      "ResultsBlockHash": "KJXkCFmBKj1ACZ70Fex/dLf7sWjzenidllImuENdUus=",
+      "ResultsBlockHeader": {
+        "ProtocolVersion": "1",
+        "VirtualChainId": "42",
+        "BlockHeight": "3301",
+        "Timestamp": "2020-11-21T20:00:00.000Z",
+        "NumTransactionReceipts": "2",
+        "PrevBlockHash": "RFVm",
+        "TransactionsBlockHash": "d4iZ"
+      },
+      "Transactions": [
+        {
+          "ProtocolVersion": "1",
+          "VirtualChainId": "42",
+          "Timestamp": "2010-11-21T10:00:00.000Z",
+          "InputArguments": [
+            "1",
+            "2",
+            "hello",
+            "AQID"
+          ],
+          "InputArgumentsTypes": [
+            "uint32",
+            "uint64",
+            "string",
+            "bytes"
+          ],
+          "OutputArguments": [],
+          "OutputArgumentsTypes": [],
+          "OutputEvents": [
+            {
+              "ContractName": "Contract1",
+              "EventName": "Event1",
+              "Arguments": [
+                "1",
+                "2",
+                "hello",
+                "AQID"
+              ],
+              "ArgumentsTypes": [
+                "uint32",
+                "uint64",
+                "string",
+                "bytes"
+              ]
+            },
+            {
+              "ContractName": "Contract2",
+              "EventName": "Event2",
+              "Arguments": [],
+              "ArgumentsTypes": []
+            }
+          ],
+          "TxId": "AEDAnZIv6BGJexcKem8Kw5czE9vEiA37yGAJnPR37m+ZaJUqJ59lDg==",
+          "TxHash": "iXsXCnpvCsOXMxPbxIgN+8hgCZz0d+5vmWiVKiefZQ4=",
+          "PublicKey": "EjRW",
+          "ContractName": "Contract1",
+          "MethodName": "Method1",
+          "ExecutionResult": "SUCCESS"
+        },
+        {
+          "ProtocolVersion": "1",
+          "VirtualChainId": "42",
+          "Timestamp": "2020-11-21T20:00:00.000Z",
+          "InputArguments": [],
+          "InputArgumentsTypes": [],
+          "OutputArguments": [
+            "18446744073709550615"
+          ],
+          "OutputArgumentsTypes": [
+            "uint64"
+          ],
+          "OutputEvents": [],
+          "TxId": "AIBBAU6eSRbX6F02Fc5UiIAKLPVdwBhZjMF8Jz4+an0o+HpO+cbhvQ==",
+          "TxHash": "1+hdNhXOVIiACiz1XcAYWYzBfCc+Pmp9KPh6TvnG4b0=",
+          "PublicKey": "eJq8",
+          "ContractName": "Contract2",
+          "MethodName": "Method2",
+          "ExecutionResult": "ERROR_UNEXPECTED"
+        }
+      ]
+    }
   }
 ]

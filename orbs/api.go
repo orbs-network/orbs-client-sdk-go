@@ -14,6 +14,7 @@ const (
 	CALL_METHOD_URL                   = "/api/v1/run-query"
 	GET_TRANSACTION_STATUS_URL        = "/api/v1/get-transaction-status"
 	GET_TRANSACTION_RECEIPT_PROOF_URL = "/api/v1/get-transaction-receipt-proof"
+	GET_BLOCK_URL                     = "/api/v1/get-block"
 )
 
 func (c *OrbsClient) SendTransaction(rawTransaction []byte) (response *codec.SendTransactionResponse, err error) {
@@ -95,6 +96,31 @@ func (c *OrbsClient) GetTransactionReceiptProof(txId string) (response *codec.Ge
 	}
 
 	response, err = codec.DecodeGetTransactionReceiptProofResponse(buf)
+	if err != nil {
+		err = errors.Wrap(err, "failed decoding response")
+		return
+	}
+
+	if res.StatusCode != http.StatusOK {
+		err = errors.Errorf("http status %s", res.Status)
+		return
+	}
+
+	return
+}
+
+func (c *OrbsClient) GetBlock(blockHeight uint64) (response *codec.GetBlockResponse, err error) {
+	payload, err := c.createGetBlockPayload(blockHeight)
+	if err != nil {
+		return
+	}
+
+	res, buf, err := c.sendHttpPost(GET_BLOCK_URL, payload)
+	if err != nil {
+		return
+	}
+
+	response, err = codec.DecodeGetBlockResponse(buf)
 	if err != nil {
 		err = errors.Wrap(err, "failed decoding response")
 		return

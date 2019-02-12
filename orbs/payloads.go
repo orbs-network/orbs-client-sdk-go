@@ -59,3 +59,11 @@ func (c *OrbsClient) createGetTransactionReceiptProofPayload(txId string) (paylo
 		TxId:            rawTxId,
 	})
 }
+
+func (c *OrbsClient) createGetBlockPayload(blockHeight uint64) (payload []byte, err error) {
+	return codec.EncodeGetBlockRequest(&codec.GetBlockRequest{
+		ProtocolVersion: PROTOCOL_VERSION,
+		VirtualChainId:  c.VirtualChainId,
+		BlockHeight:     blockHeight,
+	})
+}

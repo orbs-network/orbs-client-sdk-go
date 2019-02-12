@@ -18,12 +18,14 @@ type ScenarioInput struct {
 	RunQueryRequest                    *codec.RunQueryRequest
 	GetTransactionStatusRequest        *codec.GetTransactionStatusRequest
 	GetTransactionReceiptProofRequest  *codec.GetTransactionReceiptProofRequest
+	GetBlockRequest                    *codec.GetBlockRequest
 	PrivateKey                         []byte
 	InputArgumentsTypes                []string
 	SendTransactionResponse            []byte
 	RunQueryResponse                   []byte
 	GetTransactionStatusResponse       []byte
 	GetTransactionReceiptProofResponse []byte
+	GetBlockResponse                   []byte
 }
 
 type ScenarioOutput struct {
@@ -32,11 +34,13 @@ type ScenarioOutput struct {
 	RunQueryRequest                    []byte                                    `json:",omitempty"`
 	GetTransactionStatusRequest        []byte                                    `json:",omitempty"`
 	GetTransactionReceiptProofRequest  []byte                                    `json:",omitempty"`
+	GetBlockRequest                    []byte                                    `json:",omitempty"`
 	TxId                               []byte                                    `json:",omitempty"`
 	SendTransactionResponse            *codec.SendTransactionResponse            `json:",omitempty"`
 	RunQueryResponse                   *codec.RunQueryResponse                   `json:",omitempty"`
 	GetTransactionStatusResponse       *codec.GetTransactionStatusResponse       `json:",omitempty"`
 	GetTransactionReceiptProofResponse *codec.GetTransactionReceiptProofResponse `json:",omitempty"`
+	GetBlockResponse                   *codec.GetBlockResponse                   `json:",omitempty"`
 }
 
 func die(err error) {
@@ -120,6 +124,15 @@ func generateOutput(scenarioInput *ScenarioInput) (*ScenarioOutput, error) {
 		return &ScenarioOutput{Test: scenarioInput.Test, GetTransactionReceiptProofRequest: encodedBytes}, nil
 	}
 
+	// GetBlockRequest
+	if scenarioInput.GetBlockRequest != nil {
+		encodedBytes, err := codec.EncodeGetBlockRequest(scenarioInput.GetBlockRequest)
+		if err != nil {
+			return nil, err
+		}
+		return &ScenarioOutput{Test: scenarioInput.Test, GetBlockRequest: encodedBytes}, nil
+	}
+
 	// SendTransactionResponse
 	if scenarioInput.SendTransactionResponse != nil {
 		res, err := codec.DecodeSendTransactionResponse(scenarioInput.SendTransactionResponse)
@@ -154,6 +167,15 @@ func generateOutput(scenarioInput *ScenarioInput) (*ScenarioOutput, error) {
 			return nil, err
 		}
 		return &ScenarioOutput{Test: scenarioInput.Test, GetTransactionReceiptProofResponse: res}, nil
+	}
+
+	// GetBlockResponse
+	if scenarioInput.GetBlockResponse != nil {
+		res, err := codec.DecodeGetBlockResponse(scenarioInput.GetBlockResponse)
+		if err != nil {
+			return nil, err
+		}
+		return &ScenarioOutput{Test: scenarioInput.Test, GetBlockResponse: res}, nil
 	}
 
 	return nil, errors.New("scenario type unrecognized")

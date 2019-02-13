@@ -93,7 +93,6 @@ func DecodeGetBlockResponse(buf []byte) (*GetBlockResponse, error) {
 
 	// decode transactions
 	transactions := []*BlockTransaction{}
-
 	for txIterator := res.SignedTransactionsIterator(); txIterator.HasNext(); {
 		tx := txIterator.NextSignedTransactions()
 
@@ -105,8 +104,8 @@ func DecodeGetBlockResponse(buf []byte) (*GetBlockResponse, error) {
 
 		// add transaction
 		transactions = append(transactions, &BlockTransaction{
-			TxId:            digest.CalcTxId(tx.Transaction()),
 			TxHash:          digest.CalcTxHash(tx.Transaction()),
+			TxId:            digest.CalcTxId(tx.Transaction()),
 			ProtocolVersion: uint32(tx.Transaction().ProtocolVersion()),
 			VirtualChainId:  uint32(tx.Transaction().VirtualChainId()),
 			Timestamp:       time.Unix(0, int64(tx.Transaction().Timestamp())),
@@ -118,32 +117,31 @@ func DecodeGetBlockResponse(buf []byte) (*GetBlockResponse, error) {
 	}
 
 	// decode receipts
-
 	for receiptIterator := res.TransactionReceiptsIterator(); receiptIterator.HasNext(); {
 		receipt := receiptIterator.NextTransactionReceipts()
-		for _, tx := range transactions {
-			if bytes.Equal(tx.TxHash, receipt.Txhash()) {
+		for _, transaction := range transactions {
+			if bytes.Equal(transaction.TxHash, receipt.Txhash()) {
 
 				// decode execution result
 				executionResult, err := executionResultDecode(receipt.ExecutionResult())
 				if err != nil {
 					return nil, err
 				}
-				tx.ExecutionResult = executionResult
+				transaction.ExecutionResult = executionResult
 
 				// decode method arguments
 				outputArgumentArray, err := PackedArgumentsDecode(receipt.RawOutputArgumentArrayWithHeader())
 				if err != nil {
 					return nil, err
 				}
-				tx.OutputArguments = outputArgumentArray
+				transaction.OutputArguments = outputArgumentArray
 
 				// decode events
 				outputEventArray, err := PackedEventsDecode(receipt.RawOutputEventsArrayWithHeader())
 				if err != nil {
 					return nil, err
 				}
-				tx.OutputEvents = outputEventArray
+				transaction.OutputEvents = outputEventArray
 
 			}
 		}

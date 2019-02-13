@@ -34,6 +34,7 @@ func TestSimpleTransfer(t *testing.T) {
 
 	// send the transaction
 	transferResponse, err := client.SendTransaction(tx)
+	t.Log("Transfer response:")
 	t.Logf("%+v", transferResponse)
 	require.NoError(t, err)
 	require.Equal(t, codec.REQUEST_STATUS_COMPLETED, transferResponse.RequestStatus)
@@ -42,6 +43,7 @@ func TestSimpleTransfer(t *testing.T) {
 
 	// check the transaction status
 	statusResponse, err := client.GetTransactionStatus(txId)
+	t.Log("Status response:")
 	t.Logf("%+v", statusResponse)
 	require.NoError(t, err)
 	require.Equal(t, codec.REQUEST_STATUS_COMPLETED, statusResponse.RequestStatus)
@@ -50,6 +52,7 @@ func TestSimpleTransfer(t *testing.T) {
 
 	// check the transaction status receipt proof
 	txProofResponse, err := client.GetTransactionReceiptProof(txId)
+	t.Log("Receipt proof response:")
 	t.Logf("%+v", txProofResponse)
 	require.NoError(t, err)
 	require.Equal(t, codec.REQUEST_STATUS_COMPLETED, txProofResponse.RequestStatus)
@@ -68,14 +71,32 @@ func TestSimpleTransfer(t *testing.T) {
 
 	// send the query
 	balanceResponse, err := client.SendQuery(query)
+	t.Log("Query response:")
 	t.Logf("%+v", balanceResponse)
 	require.NoError(t, err)
 	require.Equal(t, codec.REQUEST_STATUS_COMPLETED, balanceResponse.RequestStatus)
 	require.Equal(t, codec.EXECUTION_RESULT_SUCCESS, balanceResponse.ExecutionResult)
 	require.Equal(t, uint64(10), balanceResponse.OutputArguments[0])
 
-	// get the first block
-	//blockResponse, err := client.GetBlock(transferResponse.BlockHeight)
-	//t.Logf("%+v", blockResponse)
-	//require.NoError(t, err)
+	// get the block which contains the transfer transaction
+	blockResponse, err := client.GetBlock(transferResponse.BlockHeight)
+	require.NoError(t, err)
+	t.Log("Block response:")
+	t.Logf("%+v", blockResponse)
+	require.Equal(t, transferResponse.BlockHeight, blockResponse.BlockHeight)
+	t.Log("  TransactionBlockHeader:")
+	t.Logf("  %+v", blockResponse.TransactionsBlockHeader)
+	require.Equal(t, transferResponse.BlockHeight, blockResponse.TransactionsBlockHeader.BlockHeight)
+	require.EqualValues(t, 1, blockResponse.TransactionsBlockHeader.NumTransactions)
+	t.Log("  ResultsBlockHeader:")
+	t.Logf("  %+v", blockResponse.ResultsBlockHeader)
+	require.Equal(t, transferResponse.BlockHeight, blockResponse.ResultsBlockHeader.BlockHeight)
+	require.Equal(t, blockResponse.TransactionsBlockHash, blockResponse.ResultsBlockHeader.TransactionsBlockHash)
+	require.EqualValues(t, 1, blockResponse.ResultsBlockHeader.NumTransactionReceipts)
+	t.Log("  Transactions:")
+	t.Logf("  %+v", blockResponse.Transactions[0])
+	require.Equal(t, "BenchmarkToken", blockResponse.Transactions[0].ContractName)
+	require.Equal(t, "transfer", blockResponse.Transactions[0].MethodName)
+	require.Equal(t, uint64(10), blockResponse.Transactions[0].InputArguments[0])
+	require.Equal(t, receiver.AddressAsBytes(), blockResponse.Transactions[0].InputArguments[1])
 }

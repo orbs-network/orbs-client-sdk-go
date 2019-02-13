@@ -52,7 +52,7 @@ type BlockTransaction struct {
 	ProtocolVersion uint32
 	VirtualChainId  uint32
 	Timestamp       time.Time
-	PublicKey       []byte
+	SignerPublicKey []byte
 	ContractName    string
 	MethodName      string
 	InputArguments  []interface{}
@@ -110,7 +110,7 @@ func DecodeGetBlockResponse(buf []byte) (*GetBlockResponse, error) {
 			ProtocolVersion: uint32(tx.Transaction().ProtocolVersion()),
 			VirtualChainId:  uint32(tx.Transaction().VirtualChainId()),
 			Timestamp:       time.Unix(0, int64(tx.Transaction().Timestamp())),
-			PublicKey:       tx.Transaction().Signer().Eddsa().SignerPublicKey(),
+			SignerPublicKey: tx.Transaction().Signer().Eddsa().SignerPublicKey(),
 			ContractName:    string(tx.Transaction().ContractName()),
 			MethodName:      string(tx.Transaction().MethodName()),
 			InputArguments:  inputArgumentArray,

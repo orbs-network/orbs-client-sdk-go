@@ -203,7 +203,7 @@
           ],
           "TxId": "AEDAnZIv6BGJexcKem8Kw5czE9vEiA37yGAJnPR37m+ZaJUqJ59lDg==",
           "TxHash": "iXsXCnpvCsOXMxPbxIgN+8hgCZz0d+5vmWiVKiefZQ4=",
-          "PublicKey": "EjRW",
+          "SignerPublicKey": "EjRW",
           "ContractName": "Contract1",
           "MethodName": "Method1",
           "ExecutionResult": "SUCCESS"
@@ -223,7 +223,7 @@
           "OutputEvents": [],
           "TxId": "AIBBAU6eSRbX6F02Fc5UiIAKLPVdwBhZjMF8Jz4+an0o+HpO+cbhvQ==",
           "TxHash": "1+hdNhXOVIiACiz1XcAYWYzBfCc+Pmp9KPh6TvnG4b0=",
-          "PublicKey": "eJq8",
+          "SignerPublicKey": "eJq8",
           "ContractName": "Contract2",
           "MethodName": "Method2",
           "ExecutionResult": "ERROR_UNEXPECTED"

@@ -11,6 +11,7 @@ import (
 const CONTENT_TYPE_MEMBUFFERS = "application/membuffers"
 const (
 	SEND_TRANSACTION_URL              = "/api/v1/send-transaction"
+	SEND_TRANSACTION_ASYNC_URL        = "/api/v1/send-transaction-async"
 	CALL_METHOD_URL                   = "/api/v1/run-query"
 	GET_TRANSACTION_STATUS_URL        = "/api/v1/get-transaction-status"
 	GET_TRANSACTION_RECEIPT_PROOF_URL = "/api/v1/get-transaction-receipt-proof"
@@ -30,6 +31,26 @@ func (c *OrbsClient) SendTransaction(rawTransaction []byte) (response *codec.Sen
 	}
 
 	if res.StatusCode != http.StatusOK {
+		err = errors.Errorf("http status %s", res.Status)
+		return
+	}
+
+	return
+}
+
+func (c *OrbsClient) SendTransactionAsync(rawTransaction []byte) (response *codec.SendTransactionResponse, err error) {
+	res, buf, err := c.sendHttpPost(SEND_TRANSACTION_ASYNC_URL, rawTransaction)
+	if err != nil {
+		return
+	}
+
+	response, err = codec.DecodeSendTransactionResponse(buf)
+	if err != nil {
+		err = errors.Wrap(err, "failed decoding response")
+		return
+	}
+
+	if res.StatusCode != http.StatusAccepted {
 		err = errors.Errorf("http status %s", res.Status)
 		return
 	}

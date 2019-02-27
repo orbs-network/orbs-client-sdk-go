@@ -70,9 +70,12 @@ func DecodeGetTransactionReceiptProofResponse(buf []byte) (*GetTransactionReceip
 	}
 
 	// decode execution result
-	executionResult, err := executionResultDecode(res.TransactionReceipt().ExecutionResult())
-	if err != nil {
-		return nil, err
+	executionResult := EXECUTION_RESULT_NOT_EXECUTED
+	if len(res.RawTransactionReceipt()) > 0 {
+		executionResult, err = executionResultDecode(res.TransactionReceipt().ExecutionResult())
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	// decode method arguments

@@ -89,9 +89,12 @@ func DecodeRunQueryResponse(buf []byte) (*RunQueryResponse, error) {
 	}
 
 	// decode execution result
-	executionResult, err := executionResultDecode(res.QueryResult().ExecutionResult())
-	if err != nil {
-		return nil, err
+	executionResult := EXECUTION_RESULT_NOT_EXECUTED
+	if len(res.RawQueryResult()) > 0 {
+		executionResult, err = executionResultDecode(res.QueryResult().ExecutionResult())
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	// decode method arguments

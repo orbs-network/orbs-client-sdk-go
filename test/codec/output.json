@@ -84,6 +84,18 @@
     }
   },
   {
+    "Test": "cm_res_2",
+    "RunQueryResponse": {
+      "BlockHeight": "12",
+      "BlockTimestamp": "2010-11-21T10:00:00.000Z",
+      "OutputArguments": [],
+      "OutputArgumentsTypes": [],
+      "OutputEvents": [],
+      "RequestStatus": "CONGESTION",
+      "ExecutionResult": "NOT_EXECUTED"
+    }
+  },
+  {
     "Test": "gt_req_1",
     "GetTransactionStatusRequest": "NAAAAAEAAADIAAAAAIBBAU6eSRYgAAAAcmoxcdjTc65YPPLsmrUxHPL7dnZMaqNGrAx4pbasVVU="
   },
@@ -103,6 +115,20 @@
       "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA=",
       "ExecutionResult": "ERROR_INPUT",
       "TransactionStatus": "REJECTED_UNKNOWN_SIGNER_SCHEME"
+    }
+  },
+  {
+    "Test": "gt_res_2",
+    "GetTransactionStatusResponse": {
+      "BlockHeight": "13",
+      "BlockTimestamp": "2020-11-21T20:00:00.000Z",
+      "OutputArguments": [],
+      "OutputArgumentsTypes": [],
+      "OutputEvents": [],
+      "RequestStatus": "NOT_FOUND",
+      "TxHash": "",
+      "ExecutionResult": "NOT_EXECUTED",
+      "TransactionStatus": "NO_RECORD_FOUND"
     }
   },
   {

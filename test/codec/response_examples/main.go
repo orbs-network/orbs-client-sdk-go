@@ -92,6 +92,16 @@ func main() {
 	}).Build()
 	fmt.Printf(`"RunQueryResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r2.Raw()))
 
+	r22 := (&client.RunQueryResponseBuilder{
+		RequestResult: &client.RequestResultBuilder{
+			RequestStatus:  protocol.REQUEST_STATUS_CONGESTION,
+			BlockHeight:    12,
+			BlockTimestamp: primitives.TimestampNano(t1.UnixNano()),
+		},
+		QueryResult: nil,
+	}).Build()
+	fmt.Printf(`"RunQueryResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r22.Raw()))
+
 	r3 := (&client.GetTransactionStatusResponseBuilder{
 		RequestResult: &client.RequestResultBuilder{
 			RequestStatus:  protocol.REQUEST_STATUS_OUT_OF_SYNC,
@@ -106,6 +116,17 @@ func main() {
 		TransactionStatus: protocol.TRANSACTION_STATUS_REJECTED_UNKNOWN_SIGNER_SCHEME,
 	}).Build()
 	fmt.Printf(`"GetTransactionStatusResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r3.Raw()))
+
+	r32 := (&client.GetTransactionStatusResponseBuilder{
+		RequestResult: &client.RequestResultBuilder{
+			RequestStatus:  protocol.REQUEST_STATUS_NOT_FOUND,
+			BlockHeight:    13,
+			BlockTimestamp: primitives.TimestampNano(t2.UnixNano()),
+		},
+		TransactionReceipt: nil,
+		TransactionStatus:  protocol.TRANSACTION_STATUS_NO_RECORD_FOUND,
+	}).Build()
+	fmt.Printf(`"GetTransactionStatusResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r32.Raw()))
 
 	r4 := (&client.GetTransactionReceiptProofResponseBuilder{
 		RequestResult: &client.RequestResultBuilder{

@@ -52,6 +52,10 @@
     "RunQueryResponse": "FAAAAAMAAACOVQEAAAAAAABAwJ2SL+gRlAAAAAEAAAAAAAAAiAAAAF8AAAAJAAAAQ29udHJhY3QxAAAABgAAAEV2ZW50MQAAPwAAAAgAAAAAAAAAAQAAAAwAAAABAAAAAgAAAAAAAAANAAAAAgAAAAUAAABoZWxsbwAAAAsAAAADAAAAAwAAAAECAwAgAAAACQAAAENvbnRyYWN0MgAAAAYAAABFdmVudDIAAAAAAAA="
   },
   {
+    "Test": "cm_res_2",
+    "RunQueryResponse": "FAAAAAQAAAAMAAAAAAAAAABAwJ2SL+gRAAAAAA=="
+  },
+  {
     "Test": "gt_req_1",
     "GetTransactionStatusRequest": {
       "ProtocolVersion": "1",
@@ -62,6 +66,10 @@
   {
     "Test": "gt_res_1",
     "GetTransactionStatusResponse": "FAAAAAYAAAB37P///////wCAQQFOnkkWCwAAAEAAAAAgAAAAz4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpADAAAAEAAAAAwAAAABAAAAF/z///////8AAAAA"
+  },
+  {
+    "Test": "gt_res_2",
+    "GetTransactionStatusResponse": "FAAAAAcAAAANAAAAAAAAAACAQQFOnkkWBgAAAAAAAAA="
   },
   {
     "Test": "gp_req_1",

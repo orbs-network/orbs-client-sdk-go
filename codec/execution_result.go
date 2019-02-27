@@ -14,6 +14,7 @@ const (
 	EXECUTION_RESULT_ERROR_INPUT                 ExecutionResult = "ERROR_INPUT"
 	EXECUTION_RESULT_ERROR_CONTRACT_NOT_DEPLOYED ExecutionResult = "ERROR_CONTRACT_NOT_DEPLOYED"
 	EXECUTION_RESULT_ERROR_UNEXPECTED            ExecutionResult = "ERROR_UNEXPECTED"
+	EXECUTION_RESULT_NOT_EXECUTED                ExecutionResult = "NOT_EXECUTED"
 )
 
 func (x ExecutionResult) String() string {
@@ -34,6 +35,8 @@ func executionResultDecode(executionResult protocol.ExecutionResult) (ExecutionR
 		return EXECUTION_RESULT_ERROR_CONTRACT_NOT_DEPLOYED, nil
 	case protocol.EXECUTION_RESULT_ERROR_UNEXPECTED:
 		return EXECUTION_RESULT_ERROR_UNEXPECTED, nil
+	case protocol.EXECUTION_RESULT_NOT_EXECUTED:
+		return EXECUTION_RESULT_NOT_EXECUTED, nil
 	default:
 		return EXECUTION_RESULT_PARSE_ERROR, errors.Errorf("unsupported ExecutionResult received: %d", executionResult)
 	}

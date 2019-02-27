@@ -15,6 +15,7 @@ const (
 	REQUEST_STATUS_CONGESTION   RequestStatus = "CONGESTION"
 	REQUEST_STATUS_SYSTEM_ERROR RequestStatus = "SYSTEM_ERROR"
 	REQUEST_STATUS_OUT_OF_SYNC  RequestStatus = "OUT_OF_SYNC"
+	REQUEST_STATUS_NOT_FOUND    RequestStatus = "NOT_FOUND"
 )
 
 func (x RequestStatus) String() string {
@@ -37,6 +38,8 @@ func requestStatusDecode(requestStatus protocol.RequestStatus) (RequestStatus, e
 		return REQUEST_STATUS_SYSTEM_ERROR, nil
 	case protocol.REQUEST_STATUS_OUT_OF_SYNC:
 		return REQUEST_STATUS_OUT_OF_SYNC, nil
+	case protocol.REQUEST_STATUS_NOT_FOUND:
+		return REQUEST_STATUS_NOT_FOUND, nil
 	default:
 		return REQUEST_STATUS_PARSE_ERROR, errors.Errorf("unsupported RequestStatus received: %d", requestStatus)
 	}

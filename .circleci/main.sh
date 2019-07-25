@@ -1,4 +1,4 @@
-#!/bin/bash -xe
+#!/bin/bash -e
 
 PROJ_PATH=`pwd`
 GO_VERSION="1.12.6"

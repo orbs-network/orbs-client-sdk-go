@@ -18,14 +18,8 @@ export GOROOT=/usr/local/go
 #export GOPATH=$PROJ_PATH
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
-go version
-
-#./.circleci/bring-gamma.sh
-
 cd $PROJ_PATH
 
-pwd
-
-exit 0
+./.circleci/bring-gamma.sh
 
 ./test.sh

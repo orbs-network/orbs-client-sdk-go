@@ -1,35 +1,31 @@
 #!/bin/bash -xe
 
 PROJ_PATH=`pwd`
+GO_VERSION="1.12.6"
 
 # First let's install Go 1.11
-echo "Installing Go 1.11"
+echo "Installing Go 1.12..."
 cd /tmp
 
-wget https://dl.google.com/go/go1.11.linux-amd64.tar.gz
-sudo tar -xvf go1.11.linux-amd64.tar.gz
+curl -O https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz
+sudo tar -xvf go${GO_VERSION}.linux-amd64.tar.gz
+
 # Uninstall older version of Go
 sudo rm -rf /usr/local/go
 sudo mv go /usr/local
 
 export GOROOT=/usr/local/go
-export GOPATH=$PROJ_PATH
+#export GOPATH=$PROJ_PATH
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
 go version
 
+#./.circleci/bring-gamma.sh
+
 cd $PROJ_PATH
 
-# This allows our mv calls to move also hidden files and folders
-# for example /.circleci ;-)
-shopt -s dotglob
-mkdir -p /tmp/project
-mv ../project/* /tmp/project/
-mkdir -p src/github.com/orbs-network/orbs-client-sdk-go
-mv /tmp/project/* ./src/github.com/orbs-network/orbs-client-sdk-go/
+pwd
 
-cd src/github.com/orbs-network/orbs-client-sdk-go/
-
-./.circleci/bring-gamma.sh
+exit 0
 
 ./test.sh

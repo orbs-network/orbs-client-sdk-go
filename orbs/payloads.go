@@ -12,6 +12,10 @@ import (
 	"time"
 )
 
+type ProcessorType uint32
+const PROCESSOR_TYPE_NATIVE = ProcessorType(1)
+const PROCESSOR_TYPE_JAVASCRIPT = ProcessorType(2)
+
 func (c *OrbsClient) CreateTransaction(publicKey []byte, privateKey []byte, contractName string, methodName string, inputArguments ...interface{}) (rawTransaction []byte, txId string, err error) {
 	req, rawTxId, err := codec.EncodeSendTransactionRequest(&codec.SendTransactionRequest{
 		ProtocolVersion: PROTOCOL_VERSION,
@@ -40,6 +44,19 @@ func (c *OrbsClient) CreateQuery(publicKey []byte, contractName string, methodNa
 		MethodName:      methodName,
 		InputArguments:  inputArguments,
 	})
+}
+
+func (c *OrbsClient) CreateDeployTransaction(publicKey []byte, privateKey []byte, contractName string, processorType ProcessorType, code ...[]byte) (rawTransaction []byte, txId string, err error) {
+	params := []interface{} {
+		contractName,
+		uint32(processorType),
+	}
+
+	for _, c := range code {
+		params = append(params, c)
+	}
+
+	return c.CreateTransaction(publicKey, privateKey, "_Deployments", "deployService", params...)
 }
 
 func (c *OrbsClient) createGetTransactionStatusPayload(txId string) (payload []byte, err error) {

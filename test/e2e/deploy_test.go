@@ -3,7 +3,6 @@ package e2e
 import (
 	"github.com/orbs-network/orbs-client-sdk-go/codec"
 	"github.com/orbs-network/orbs-client-sdk-go/orbs"
-	"github.com/orbs-network/orbs-client-sdk-go/utils"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
@@ -20,7 +19,7 @@ func TestDeployMultifile(t *testing.T) {
 	endpoint := getEndpoint()
 	client := orbs.NewClient(endpoint, VIRTUAL_CHAIN_ID, codec.NETWORK_TYPE_TEST_NET)
 
-	sources, err := utils.ReadSourcesFromDir("./contract")
+	sources, err := orbs.ReadSourcesFromDir("./contract")
 	require.NoError(t, err)
 	require.Len(t, sources, 2)
 

@@ -103,8 +103,13 @@ github.com/orbs-network/go-mock v0.0.0-20180813130752-890a1ee8d0a1/go.mod h1:Hfj
 github.com/orbs-network/membuffers v0.0.0-20190324163848-d8b55355b285/go.mod h1:ZsfRFu9R4z2wbLlaDLp6NQ6QeM+2nyraw0QfMmQKUS4=
 github.com/orbs-network/membuffers v0.3.0 h1:EYtF1T/VBsi6DGPVS/Xbcei+Vn86fEJ/jJESFiiAqfg=
 github.com/orbs-network/membuffers v0.3.0/go.mod h1:b6+sJ9+pgca7HHle0e85RDd5zL0Hv360Xec7TGVrGFk=
+github.com/orbs-network/orbs-contract-sdk v1.0.0 h1:vWMnCVEDexUqZDZ44x2eItwsAtwqMka14w129rQzsdM=
+github.com/orbs-network/orbs-contract-sdk v1.0.0/go.mod h1:N+caPmVwyn3p+kgPwfb43bo4qAcRDoiaq/gw/ag1mHo=
+github.com/orbs-network/orbs-spec v0.0.0-20190702065947-c6cfaf7cd01a h1:3Tl/amE2K9MajPF4tIe05HaH5XR4TAXNo1dahyU8JNI=
+github.com/orbs-network/orbs-spec v0.0.0-20190702065947-c6cfaf7cd01a/go.mod h1:9Bv/kJ/Q7cIlIYmlzsBHelseVJmyw2zywuW3TSvQX5g=
 github.com/orbs-network/orbs-spec v0.0.0-20190724141904-e35d6333ac7e h1:JNo8H2ASFC2zZb7UL1e+2kvGzjLuMxTsZBbwQu1bfm8=
 github.com/orbs-network/orbs-spec v0.0.0-20190724141904-e35d6333ac7e/go.mod h1:JUu42kZ9TWx9cMUj6hOCgngRMxNMUkOpTCIO9MjqMkY=
+github.com/orbs-network/orbs-spec v0.0.0-20190807075255-83ec14da0243 h1:SmXbX+3uiZmjsaxAKiG0ZFVbwY7yH4jwM1qhI94hT8Y=
 github.com/orbs-network/pbparser v0.2.0/go.mod h1:WSzcxgH5xzywQm0YSASbD7RcdxBXZgqZaDVK8M+8DJ8=
 github.com/pelletier/go-toml v1.2.0/go.mod h1:5z9KED0ma1S8pY6P1sdut58dfprrGBbd/94hg7ilaic=
 github.com/pelletier/go-toml v1.4.0/go.mod h1:PN7xzY2wHTK0K9p34ErDQMlFxa51Fk0OUruD3k1mMwo=

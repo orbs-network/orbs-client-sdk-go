@@ -7,6 +7,7 @@
 package orbs
 
 import (
+	"crypto/sha256"
 	"github.com/orbs-network/orbs-client-sdk-go/crypto/digest"
 	"github.com/orbs-network/orbs-client-sdk-go/crypto/encoding"
 	"github.com/orbs-network/orbs-client-sdk-go/crypto/keys"
@@ -55,4 +56,22 @@ func AddressValidate(address string) error {
 
 func BytesToAddress(rawAddress []byte) string {
 	return encoding.EncodeHex(rawAddress)
+}
+
+const (
+	SHA256_HASH_SIZE_BYTES = 32
+	CLIENT_ADDRESS_SIZE_BYTES    = 20
+	CLIENT_ADDRESS_SHA256_OFFSET = SHA256_HASH_SIZE_BYTES - CLIENT_ADDRESS_SIZE_BYTES
+)
+
+// https://github.com/orbs-network/orbs-network-go/commit/681e1383bbfaec977204df1e41d51a291b62c8e5
+func ContractNameToAddressAsBytes(contractName string) []byte {
+	if contractName == "" {
+		return nil
+	}
+
+	s := sha256.New()
+	s.Write([]byte(contractName))
+
+	return s.Sum(nil)[CLIENT_ADDRESS_SHA256_OFFSET:]
 }

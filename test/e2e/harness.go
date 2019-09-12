@@ -35,7 +35,7 @@ func (h *harness) gammaCliRun(args []string) {
 		fmt.Printf("%s\n", string(out))
 	}
 	if err != nil {
-		panic("Unable to run E2E, make sure gamma-cli is installed (https://github.com/orbs-network/gamma-cli). Error: " + err.Error())
+		panic("Unable to run E2E, make sure gamma-cli is installed (https://github.com/orbs-network/gamma-cli) and no gamma-server docker instance is already running. Error: " + err.Error())
 	}
 }
 

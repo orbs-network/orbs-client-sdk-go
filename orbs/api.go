@@ -186,15 +186,11 @@ func (c *OrbsClient) sendHttpPost(relativeUrl string, payload []byte) (*http.Res
 			// TODO: streamline these errors
 			return res, buf, errors.Wrap(NoConnectionError, "http 404 not found")
 		}
-		if res.StatusCode == 400 {
-			// TODO: streamline these errors
-			return res, buf, errors.Wrap(NoConnectionError, "http 400 bad request")
-		}
 
 		if contentType == "text/plain" || contentType == "application/json" {
-			return nil, buf, errors.Errorf("http request failed: %s", string(buf))
+			return nil, buf, errors.Errorf("http request failed (statusCode=%d): %s", res.StatusCode, string(buf))
 		} else {
-			return nil, buf, errors.Errorf("http request failed with Content-Type '%s': %x", contentType, buf)
+			return nil, buf, errors.Errorf("http request failed with Content-Type '%s' (statusCode=%d): %x", res.StatusCode, contentType, buf)
 		}
 	}
 

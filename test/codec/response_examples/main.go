@@ -16,6 +16,7 @@ import (
 	"github.com/orbs-network/orbs-spec/types/go/protocol"
 	"github.com/orbs-network/orbs-spec/types/go/protocol/client"
 	"math"
+	"math/big"
 	"time"
 )
 
@@ -25,7 +26,17 @@ func main() {
 
 	h1, _ := hex.DecodeString("cf80cd8aed482d5d1527d7dc72fceff84e6326592848447d2dc0b0e87dfc9a90")
 
+	bigNum := big.NewInt(0)
+	bigNum.SetBytes([]byte{0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x04,
+		0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x04})
 	a1, _ := codec.PackedArgumentsEncode([]interface{}{uint32(1), uint64(2), "hello", []byte{0x01, 0x02, 0x03}})
+	a4, _ := codec.PackedArgumentsEncode([]interface{}{
+		true,
+		bigNum,
+		[20]byte{0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01},
+		[32]byte{0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x04,
+			0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x04},
+	})
 	a2, _ := codec.PackedArgumentsEncode([]interface{}{})
 	a3, _ := codec.PackedArgumentsEncode([]interface{}{uint64(math.MaxUint64 - 1000)})
 
@@ -76,13 +87,43 @@ func main() {
 		},
 		TransactionReceipt: &protocol.TransactionReceiptBuilder{
 			Txhash:              h1,
-			ExecutionResult:     protocol.EXECUTION_RESULT_ERROR_SMART_CONTRACT,
+			ExecutionResult:     protocol.EXECUTION_RESULT_SUCCESS,
 			OutputArgumentArray: a1,
 			OutputEventsArray:   e2,
 		},
 		TransactionStatus: protocol.TRANSACTION_STATUS_COMMITTED,
 	}).Build()
 	fmt.Printf(`"SendTransactionResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r1.Raw()))
+
+	r1new := (&client.SendTransactionResponseBuilder{
+		RequestResult: &client.RequestResultBuilder{
+			RequestStatus:  protocol.REQUEST_STATUS_COMPLETED,
+			BlockHeight:    2135,
+			BlockTimestamp: primitives.TimestampNano(t1.UnixNano()),
+		},
+		TransactionReceipt: &protocol.TransactionReceiptBuilder{
+			Txhash:              h1,
+			ExecutionResult:     protocol.EXECUTION_RESULT_SUCCESS,
+			OutputArgumentArray: a4,
+			OutputEventsArray:   e2,
+		},
+		TransactionStatus: protocol.TRANSACTION_STATUS_COMMITTED,
+	}).Build()
+	fmt.Printf(`"SendTransactionResponse with new args": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r1new.Raw()))
+
+	r2new := (&client.RunQueryResponseBuilder{
+		RequestResult: &client.RequestResultBuilder{
+			RequestStatus:  protocol.REQUEST_STATUS_COMPLETED,
+			BlockHeight:    87438,
+			BlockTimestamp: primitives.TimestampNano(t1.UnixNano()),
+		},
+		QueryResult: &protocol.QueryResultBuilder{
+			ExecutionResult:     protocol.EXECUTION_RESULT_SUCCESS,
+			OutputArgumentArray: a4,
+			OutputEventsArray:   e1,
+		},
+	}).Build()
+	fmt.Printf(`"RunQueryResponse with new": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r2new.Raw()))
 
 	r2 := (&client.RunQueryResponseBuilder{
 		RequestResult: &client.RequestResultBuilder{

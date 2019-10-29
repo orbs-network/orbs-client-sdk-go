@@ -7,8 +7,9 @@
 package codec
 
 import (
-	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
+	"math/big"
 	"strconv"
 )
 
@@ -331,11 +332,37 @@ func jsonUnmarshalArguments(arguments []string, argumentsTypes []string) []inter
 			case "string":
 				res = append(res, arg)
 			case "bytes":
-				bytes, err := base64.StdEncoding.DecodeString(arg)
+				bytes, err := hex.DecodeString(arg)
 				if err != nil {
 					panic(err)
 				}
 				res = append(res, bytes)
+			case "bool":
+				res = append(res, arg == "1")
+			case "uint256":
+				bytes, err := hex.DecodeString(arg)
+				if err != nil {
+					panic(err)
+				}
+				obj := big.NewInt(0)
+				obj.SetBytes(bytes)
+				res = append(res, obj)
+			case "bytes20":
+				bytes, err := hex.DecodeString(arg)
+				if err != nil {
+					panic(err)
+				}
+				bytes20 := [20]byte{}
+				copy(bytes20[:], bytes)
+				res = append(res, bytes20)
+			case "bytes32":
+				bytes, err := hex.DecodeString(arg)
+				if err != nil {
+					panic(err)
+				}
+				bytes32 := [32]byte{}
+				copy(bytes32[:], bytes)
+				res = append(res, bytes32)
 			default:
 				res = append(res, arg)
 			}
@@ -361,8 +388,29 @@ func jsonMarshalArguments(arguments []interface{}) ([]string, []string) {
 			res = append(res, arg.(string))
 			resTypes = append(resTypes, "string")
 		case []byte:
-			res = append(res, base64.StdEncoding.EncodeToString(arg.([]byte)))
+			res = append(res, hex.EncodeToString(arg.([]byte)))
 			resTypes = append(resTypes, "bytes")
+		case bool:
+			if arg.(bool) {
+				res = append(res, "1")
+			} else {
+				res = append(res, "0")
+			}
+			resTypes = append(resTypes, "bool")
+		case *big.Int:
+			actual := [32]byte{}
+			b := arg.(*big.Int).Bytes()
+			copy(actual[32-len(b):], b)
+			res = append(res, hex.EncodeToString(actual[:]))
+			resTypes = append(resTypes, "uint256")
+		case [20]byte:
+			obj := arg.([20]byte)
+			res = append(res, hex.EncodeToString(obj[:]))
+			resTypes = append(resTypes, "bytes20")
+		case [32]byte:
+			obj := arg.([32]byte)
+			res = append(res, hex.EncodeToString(obj[:]))
+			resTypes = append(resTypes, "bytes32")
 		default:
 			panic("unsupported type in json marshal of method arguments")
 		}

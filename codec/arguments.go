@@ -9,6 +9,7 @@ package codec
 import (
 	"github.com/orbs-network/orbs-spec/types/go/protocol"
 	"github.com/pkg/errors"
+	"math/big"
 )
 
 func argumentsBuilders(args []interface{}) (res []*protocol.ArgumentBuilder, err error) {
@@ -23,8 +24,16 @@ func argumentsBuilders(args []interface{}) (res []*protocol.ArgumentBuilder, err
 			res = append(res, &protocol.ArgumentBuilder{Type: protocol.ARGUMENT_TYPE_STRING_VALUE, StringValue: arg.(string)})
 		case []byte:
 			res = append(res, &protocol.ArgumentBuilder{Type: protocol.ARGUMENT_TYPE_BYTES_VALUE, BytesValue: arg.([]byte)})
+		case bool:
+			res = append(res, &protocol.ArgumentBuilder{Type: protocol.ARGUMENT_TYPE_BOOL_VALUE, BoolValue: arg.(bool)})
+		case *big.Int:
+			res = append(res, &protocol.ArgumentBuilder{Type: protocol.ARGUMENT_TYPE_UINT_256_VALUE, Uint256Value: arg.(*big.Int)})
+		case [20]byte:
+			res = append(res, &protocol.ArgumentBuilder{Type: protocol.ARGUMENT_TYPE_BYTES_20_VALUE, Bytes20Value: arg.([20]byte)})
+		case [32]byte:
+			res = append(res, &protocol.ArgumentBuilder{Type: protocol.ARGUMENT_TYPE_BYTES_32_VALUE, Bytes32Value: arg.([32]byte)})
 		default:
-			err = errors.Errorf("given method argument %d has unsupported type (%T), supported: (uint32) (uint64) (string) ([]byte)", index, arg)
+			err = errors.Errorf("given method argument %d has unsupported type (%T), supported: (uint32) (uint64) (string) ([]byte) (bool) (uint256) ([20]byte) ([32]byte)", index, arg)
 			return
 		}
 	}
@@ -62,6 +71,14 @@ func PackedArgumentsDecode(buf []byte) (res []interface{}, err error) {
 			res = append(res, argument.StringValue())
 		case protocol.ARGUMENT_TYPE_BYTES_VALUE:
 			res = append(res, argument.BytesValue())
+		case protocol.ARGUMENT_TYPE_BOOL_VALUE:
+			res = append(res, argument.BoolValue())
+		case protocol.ARGUMENT_TYPE_UINT_256_VALUE:
+			res = append(res, argument.Uint256Value())
+		case protocol.ARGUMENT_TYPE_BYTES_20_VALUE:
+			res = append(res, argument.Bytes20Value())
+		case protocol.ARGUMENT_TYPE_BYTES_32_VALUE:
+			res = append(res, argument.Bytes32Value())
 		default:
 			err = errors.Errorf("received method argument %d has unknown type: %s", index, argument.StringType())
 			return

@@ -24,14 +24,33 @@
       "PublicKey": "38BsW+JKZ63ugLNatPFHuxo1xV/4Xtpp9A74J73ewXM=",
       "ContractName": "SuperToken",
       "MethodName": "transfer",
-      "InputArguments": ["1", "2", "hello", "AQID"],
+      "InputArguments": ["1", "2", "hello", "010203"],
       "InputArgumentsTypes": ["uint32", "uint64", "string", "bytes"]
+    },
+    "PrivateKey": "k+kZmGoiR3/aAWeJzKMMuEGhNWUJOHFPhfAACmUHa9TfwGxb4kpnre6As1q08Ue7GjXFX/he2mn0Dvgnvd7Bcw=="
+  },
+  {
+    "Test": "st_req_3",
+    "SendTransactionRequest": {
+      "ProtocolVersion": "1",
+      "VirtualChainId": "34727",
+      "Timestamp": "2020-11-21T20:00:00.000Z",
+      "NetworkType": "TEST_NET",
+      "PublicKey": "38BsW+JKZ63ugLNatPFHuxo1xV/4Xtpp9A74J73ewXM=",
+      "ContractName": "SuperToken",
+      "MethodName": "transfer",
+      "InputArguments": ["1", "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff", "0011223344556677889900112233445566778899", "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff"],
+      "InputArgumentsTypes": ["bool", "uint256", "bytes20", "bytes32"]
     },
     "PrivateKey": "k+kZmGoiR3/aAWeJzKMMuEGhNWUJOHFPhfAACmUHa9TfwGxb4kpnre6As1q08Ue7GjXFX/he2mn0Dvgnvd7Bcw=="
   },
   {
     "Test": "st_res_1",
     "SendTransactionResponse": "FAAAAAEAAABXCAAAAAAAAABAwJ2SL+gRAQAAAKQAAAAgAAAAz4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpACAAAAPwAAAAgAAAAAAAAAAQAAAAwAAAABAAAAAgAAAAAAAAANAAAAAgAAAAUAAABoZWxsbwAAAAsAAAADAAAAAwAAAAECAwA0AAAAMAAAAAkAAABDb250cmFjdDMAAAAGAAAARXZlbnQzAAAQAAAADAAAAAEAAAAX/P///////w=="
+  },
+  {
+    "Test": "st_res_2",
+    "SendTransactionResponse": "FAAAAAEAAABXCAAAAAAAAABAwJ2SL+gRAQAAANgAAAAgAAAAz4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpABAAAAdAAAAAMAAAAEAAEAJAAAAAUAAAABAgMBAgMBAgMBAgMBAgMEAQIDAQIDAQIDAQIDAQIDBBgAAAAGAAAAAQIDAQIDAQIDAQECAwECAwECAwEkAAAABwAAAAECAwECAwECAwECAwECAwQBAgMBAgMBAgMBAgMBAgMENAAAADAAAAAJAAAAQ29udHJhY3QzAAAABgAAAEV2ZW50MwAAEAAAAAwAAAABAAAAF/z///////8="
   },
   {
     "Test": "cm_req_1",
@@ -43,8 +62,22 @@
       "PublicKey": "38BsW+JKZ63ugLNatPFHuxo1xV/4Xtpp9A74J73ewXM=",
       "ContractName": "SuperToken",
       "MethodName": "checkSomething",
-      "InputArguments": ["1", "9223372036854770000", "hello", "AQID"],
+      "InputArguments": ["1", "9223372036854770000", "hello", "010203"],
       "InputArgumentsTypes": ["uint32", "uint64", "string", "bytes"]
+    }
+  },
+  {
+    "Test": "cm_req_2",
+    "RunQueryRequest": {
+      "ProtocolVersion": "1",
+      "VirtualChainId": "34727",
+      "Timestamp": "2020-11-21T20:00:00.000Z",
+      "NetworkType": "TEST_NET",
+      "PublicKey": "38BsW+JKZ63ugLNatPFHuxo1xV/4Xtpp9A74J73ewXM=",
+      "ContractName": "SuperToken",
+      "MethodName": "checkSomething",
+      "InputArguments": ["1", "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff", "0011223344556677889900112233445566778899", "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff"],
+      "InputArgumentsTypes": ["bool", "uint256", "bytes20", "bytes32"]
     }
   },
   {
@@ -54,6 +87,10 @@
   {
     "Test": "cm_res_2",
     "RunQueryResponse": "FAAAAAQAAAAMAAAAAAAAAABAwJ2SL+gRAAAAAA=="
+  },
+  {
+    "Test": "cm_res_3",
+    "RunQueryResponse": "FAAAAAEAAACOVQEAAAAAAABAwJ2SL+gRCAEAAAEAAAB0AAAAAwAAAAQAAQAkAAAABQAAAAECAwECAwECAwECAwECAwQBAgMBAgMBAgMBAgMBAgMEGAAAAAYAAAABAgMBAgMBAgMBAQIDAQIDAQIDASQAAAAHAAAAAQIDAQIDAQIDAQIDAQIDBAECAwECAwECAwECAwECAwSIAAAAXwAAAAkAAABDb250cmFjdDEAAAAGAAAARXZlbnQxAAA/AAAACAAAAAAAAAABAAAADAAAAAEAAAACAAAAAAAAAA0AAAACAAAABQAAAGhlbGxvAAAACwAAAAMAAAADAAAAAQIDACAAAAAJAAAAQ29udHJhY3QyAAAABgAAAEV2ZW50MgAAAAAAAA=="
   },
   {
     "Test": "gt_req_1",

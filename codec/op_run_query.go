@@ -27,12 +27,7 @@ type RunQueryRequest struct {
 }
 
 type RunQueryResponse struct {
-	RequestStatus   RequestStatus
-	ExecutionResult ExecutionResult
-	OutputArguments []interface{}
-	OutputEvents    []*Event
-	BlockHeight     uint64
-	BlockTimestamp  time.Time
+	ReadResponse
 }
 
 func EncodeRunQueryRequest(req *RunQueryRequest) ([]byte, error) {
@@ -117,11 +112,6 @@ func DecodeRunQueryResponse(buf []byte) (*RunQueryResponse, error) {
 
 	// return
 	return &RunQueryResponse{
-		RequestStatus:   requestStatus,
-		ExecutionResult: executionResult,
-		OutputArguments: outputArgumentArray,
-		OutputEvents:    outputEventArray,
-		BlockHeight:     uint64(res.RequestResult().BlockHeight()),
-		BlockTimestamp:  time.Unix(0, int64(res.RequestResult().BlockTimestamp())),
+		ReadResponse: NewReadResponse(res, outputArgumentArray, outputEventArray, executionResult, requestStatus),
 	}, nil
 }

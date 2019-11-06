@@ -11,7 +11,6 @@ import (
 	"github.com/orbs-network/orbs-spec/types/go/primitives"
 	"github.com/orbs-network/orbs-spec/types/go/protocol/client"
 	"github.com/pkg/errors"
-	"time"
 )
 
 type GetTransactionReceiptProofRequest struct {
@@ -21,14 +20,7 @@ type GetTransactionReceiptProofRequest struct {
 }
 
 type GetTransactionReceiptProofResponse struct {
-	RequestStatus     RequestStatus
-	TxHash            []byte
-	ExecutionResult   ExecutionResult
-	OutputArguments   []interface{}
-	OutputEvents      []*Event
-	TransactionStatus TransactionStatus
-	BlockHeight       uint64
-	BlockTimestamp    time.Time
+	TransactionResponse
 	PackedProof       []byte
 	PackedReceipt     []byte
 }
@@ -104,15 +96,9 @@ func DecodeGetTransactionReceiptProofResponse(buf []byte) (*GetTransactionReceip
 
 	// return
 	return &GetTransactionReceiptProofResponse{
-		RequestStatus:     requestStatus,
-		TxHash:            res.TransactionReceipt().Txhash(),
-		ExecutionResult:   executionResult,
-		OutputArguments:   outputArgumentArray,
-		OutputEvents:      outputEventArray,
-		TransactionStatus: transactionStatus,
-		BlockHeight:       uint64(res.RequestResult().BlockHeight()),
-		BlockTimestamp:    time.Unix(0, int64(res.RequestResult().BlockTimestamp())),
-		PackedProof:       res.PackedProof(),
-		PackedReceipt:     res.TransactionReceipt().Raw(),
+		TransactionResponse: NewTransactionResponse(res, outputArgumentArray, outputEventArray, executionResult, requestStatus, transactionStatus),
+		PackedProof:         res.PackedProof(),
+		PackedReceipt:       res.TransactionReceipt().Raw(),
 	}, nil
 }
+

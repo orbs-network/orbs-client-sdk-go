@@ -11,7 +11,6 @@ import (
 	"github.com/orbs-network/orbs-spec/types/go/primitives"
 	"github.com/orbs-network/orbs-spec/types/go/protocol/client"
 	"github.com/pkg/errors"
-	"time"
 )
 
 type GetTransactionStatusRequest struct {
@@ -21,14 +20,7 @@ type GetTransactionStatusRequest struct {
 }
 
 type GetTransactionStatusResponse struct {
-	RequestStatus     RequestStatus
-	TxHash            []byte
-	ExecutionResult   ExecutionResult
-	OutputArguments   []interface{}
-	OutputEvents      []*Event
-	TransactionStatus TransactionStatus
-	BlockHeight       uint64
-	BlockTimestamp    time.Time
+	TransactionResponse
 }
 
 func EncodeGetTransactionStatusRequest(req *GetTransactionStatusRequest) ([]byte, error) {
@@ -102,13 +94,6 @@ func DecodeGetTransactionStatusResponse(buf []byte) (*GetTransactionStatusRespon
 
 	// return
 	return &GetTransactionStatusResponse{
-		RequestStatus:     requestStatus,
-		TxHash:            res.TransactionReceipt().Txhash(),
-		ExecutionResult:   executionResult,
-		OutputArguments:   outputArgumentArray,
-		OutputEvents:      outputEventArray,
-		TransactionStatus: transactionStatus,
-		BlockHeight:       uint64(res.RequestResult().BlockHeight()),
-		BlockTimestamp:    time.Unix(0, int64(res.RequestResult().BlockTimestamp())),
+		TransactionResponse: NewTransactionResponse(res, outputArgumentArray, outputEventArray, executionResult, requestStatus, transactionStatus),
 	}, nil
 }

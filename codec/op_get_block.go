@@ -23,9 +23,7 @@ type GetBlockRequest struct {
 }
 
 type GetBlockResponse struct {
-	RequestStatus           RequestStatus
-	BlockHeight             uint64
-	BlockTimestamp          time.Time
+	Response
 	TransactionsBlockHash   []byte
 	TransactionsBlockHeader *TransactionsBlockHeader
 	ResultsBlockHash        []byte
@@ -155,9 +153,7 @@ func DecodeGetBlockResponse(buf []byte) (*GetBlockResponse, error) {
 
 	// return
 	return &GetBlockResponse{
-		RequestStatus:         requestStatus,
-		BlockHeight:           uint64(res.RequestResult().BlockHeight()),
-		BlockTimestamp:        time.Unix(0, int64(res.RequestResult().BlockTimestamp())),
+		Response: NewResponse(res, requestStatus),
 		TransactionsBlockHash: hash.CalcSha256(res.TransactionsBlockHeader().Raw()),
 		TransactionsBlockHeader: &TransactionsBlockHeader{
 			ProtocolVersion: uint32(res.TransactionsBlockHeader().ProtocolVersion()),

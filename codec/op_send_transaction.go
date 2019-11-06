@@ -29,14 +29,7 @@ type SendTransactionRequest struct {
 }
 
 type SendTransactionResponse struct {
-	RequestStatus     RequestStatus
-	TxHash            []byte
-	ExecutionResult   ExecutionResult
-	OutputArguments   []interface{}
-	OutputEvents      []*Event
-	TransactionStatus TransactionStatus
-	BlockHeight       uint64
-	BlockTimestamp    time.Time
+	TransactionResponse
 }
 
 func EncodeSendTransactionRequest(req *SendTransactionRequest, privateKey []byte) ([]byte, []byte, error) {
@@ -139,13 +132,6 @@ func DecodeSendTransactionResponse(buf []byte) (*SendTransactionResponse, error)
 
 	// return
 	return &SendTransactionResponse{
-		RequestStatus:     requestStatus,
-		TxHash:            res.TransactionReceipt().Txhash(),
-		ExecutionResult:   executionResult,
-		OutputArguments:   outputArgumentArray,
-		OutputEvents:      outputEventArray,
-		TransactionStatus: transactionStatus,
-		BlockHeight:       uint64(res.RequestResult().BlockHeight()),
-		BlockTimestamp:    time.Unix(0, int64(res.RequestResult().BlockTimestamp())),
+		TransactionResponse: NewTransactionResponse(res, outputArgumentArray, outputEventArray, executionResult, requestStatus, transactionStatus),
 	}, nil
 }

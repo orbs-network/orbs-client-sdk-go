@@ -45,7 +45,7 @@ func EncodeRunQueryRequest(req *RunQueryRequest) ([]byte, error) {
 	}
 
 	// encode method arguments
-	inputArgumentArray, err := PackedArgumentsEncode(req.InputArguments)
+	inputArgumentArray, err := protocol.PackedInputArgumentsFromNatives(req.InputArguments)
 	if err != nil {
 		return nil, err
 	}
@@ -104,7 +104,7 @@ func DecodeRunQueryResponse(buf []byte) (*RunQueryResponse, error) {
 	}
 
 	// decode method arguments
-	outputArgumentArray, err := PackedArgumentsDecode(res.QueryResult().RawOutputArgumentArrayWithHeader())
+	outputArgumentArray, err := protocol.PackedOutputArgumentsToNatives(res.QueryResult().RawOutputArgumentArrayWithHeader())
 	if err != nil {
 		return nil, err
 	}

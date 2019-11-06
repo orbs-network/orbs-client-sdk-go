@@ -52,7 +52,7 @@ func EncodeSendTransactionRequest(req *SendTransactionRequest, privateKey []byte
 	}
 
 	// encode method arguments
-	inputArgumentArray, err := PackedArgumentsEncode(req.InputArguments)
+	inputArgumentArray, err := protocol.PackedInputArgumentsFromNatives(req.InputArguments)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -120,7 +120,7 @@ func DecodeSendTransactionResponse(buf []byte) (*SendTransactionResponse, error)
 	}
 
 	// decode method arguments
-	outputArgumentArray, err := PackedArgumentsDecode(res.TransactionReceipt().RawOutputArgumentArrayWithHeader())
+	outputArgumentArray, err := protocol.PackedOutputArgumentsToNatives(res.TransactionReceipt().RawOutputArgumentArrayWithHeader())
 	if err != nil {
 		return nil, err
 	}

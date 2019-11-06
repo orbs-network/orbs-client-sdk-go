@@ -11,6 +11,7 @@ import (
 	"github.com/orbs-network/orbs-client-sdk-go/crypto/digest"
 	"github.com/orbs-network/orbs-client-sdk-go/crypto/hash"
 	"github.com/orbs-network/orbs-spec/types/go/primitives"
+	"github.com/orbs-network/orbs-spec/types/go/protocol"
 	"github.com/orbs-network/orbs-spec/types/go/protocol/client"
 	"github.com/pkg/errors"
 	"time"
@@ -103,7 +104,7 @@ func DecodeGetBlockResponse(buf []byte) (*GetBlockResponse, error) {
 		tx := txIterator.NextSignedTransactions()
 
 		// decode method arguments
-		inputArgumentArray, err := PackedArgumentsDecode(tx.Transaction().RawInputArgumentArrayWithHeader())
+		inputArgumentArray, err := protocol.PackedOutputArgumentsToNatives(tx.Transaction().RawInputArgumentArrayWithHeader())
 		if err != nil {
 			return nil, err
 		}
@@ -136,7 +137,7 @@ func DecodeGetBlockResponse(buf []byte) (*GetBlockResponse, error) {
 				transaction.ExecutionResult = executionResult
 
 				// decode method arguments
-				outputArgumentArray, err := PackedArgumentsDecode(receipt.RawOutputArgumentArrayWithHeader())
+				outputArgumentArray, err := protocol.PackedOutputArgumentsToNatives(receipt.RawOutputArgumentArrayWithHeader())
 				if err != nil {
 					return nil, err
 				}

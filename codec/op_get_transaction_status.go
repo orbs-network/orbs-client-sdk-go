@@ -9,6 +9,7 @@ package codec
 import (
 	"github.com/orbs-network/orbs-client-sdk-go/crypto/digest"
 	"github.com/orbs-network/orbs-spec/types/go/primitives"
+	"github.com/orbs-network/orbs-spec/types/go/protocol"
 	"github.com/orbs-network/orbs-spec/types/go/protocol/client"
 	"github.com/pkg/errors"
 	"time"
@@ -83,7 +84,7 @@ func DecodeGetTransactionStatusResponse(buf []byte) (*GetTransactionStatusRespon
 	}
 
 	// decode method arguments
-	outputArgumentArray, err := PackedArgumentsDecode(res.TransactionReceipt().RawOutputArgumentArrayWithHeader())
+	outputArgumentArray, err := protocol.PackedOutputArgumentsToNatives(res.TransactionReceipt().RawOutputArgumentArrayWithHeader())
 	if err != nil {
 		return nil, err
 	}

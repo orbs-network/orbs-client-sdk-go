@@ -74,7 +74,7 @@ func NewReadResponse(res requestResponser, rawReceipt []byte, receipt ReceiptLik
 		}
 	}
 
-	outputArgumentArray, err := PackedArgumentsDecode(receipt.RawOutputArgumentArrayWithHeader())
+	outputArgumentArray, err := protocol.PackedOutputArgumentsToNatives(receipt.RawOutputArgumentArrayWithHeader())
 	if err != nil {
 		return nil, err
 	}

@@ -45,7 +45,7 @@ func EncodeSendTransactionRequest(req *SendTransactionRequest, privateKey []byte
 	}
 
 	// encode method arguments
-	inputArgumentArray, err := PackedArgumentsEncode(req.InputArguments)
+	inputArgumentArray, err := protocol.PackedInputArgumentsFromNatives(req.InputArguments)
 	if err != nil {
 		return nil, nil, err
 	}

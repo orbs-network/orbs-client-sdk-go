@@ -40,7 +40,7 @@ func EncodeRunQueryRequest(req *RunQueryRequest) ([]byte, error) {
 	}
 
 	// encode method arguments
-	inputArgumentArray, err := PackedArgumentsEncode(req.InputArguments)
+	inputArgumentArray, err := protocol.PackedInputArgumentsFromNatives(req.InputArguments)
 	if err != nil {
 		return nil, err
 	}

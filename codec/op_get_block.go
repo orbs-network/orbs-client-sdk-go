@@ -60,6 +60,9 @@ type BlockTransaction struct {
 	ContractName    string
 	MethodName      string
 	InputArguments  []interface{}
+	ExecutionResult ExecutionResult
+	OutputArguments []interface{}
+	OutputEvents    []*Event
 }
 
 func EncodeGetBlockRequest(req *GetBlockRequest) ([]byte, error) {

@@ -44,9 +44,9 @@
         }
       ],
       "RequestStatus": "COMPLETED",
-      "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA=",
       "ExecutionResult": "ERROR_SMART_CONTRACT",
-      "TransactionStatus": "COMMITTED"
+      "TransactionStatus": "COMMITTED",
+      "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA="
     }
   },
   {
@@ -79,9 +79,9 @@
         }
       ],
       "RequestStatus": "COMPLETED",
-      "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA=",
       "ExecutionResult": "SUCCESS",
-      "TransactionStatus": "COMMITTED"
+      "TransactionStatus": "COMMITTED",
+      "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA="
     }
   },
   {
@@ -201,9 +201,9 @@
       ],
       "OutputEvents": [],
       "RequestStatus": "OUT_OF_SYNC",
-      "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA=",
       "ExecutionResult": "ERROR_INPUT",
-      "TransactionStatus": "REJECTED_UNKNOWN_SIGNER_SCHEME"
+      "TransactionStatus": "REJECTED_UNKNOWN_SIGNER_SCHEME",
+      "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA="
     }
   },
   {
@@ -215,9 +215,9 @@
       "OutputArgumentsTypes": [],
       "OutputEvents": [],
       "RequestStatus": "NOT_FOUND",
-      "TxHash": "",
       "ExecutionResult": "NOT_EXECUTED",
-      "TransactionStatus": "NO_RECORD_FOUND"
+      "TransactionStatus": "NO_RECORD_FOUND",
+      "TxHash": ""
     }
   },
   {
@@ -237,9 +237,9 @@
       ],
       "OutputEvents": [],
       "RequestStatus": "IN_PROCESS",
-      "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA=",
       "ExecutionResult": "ERROR_UNEXPECTED",
       "TransactionStatus": "NO_RECORD_FOUND",
+      "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA=",
       "PackedProof": "M0RVZneImQ==",
       "PackedReceipt": "IAAAAM+AzYrtSC1dFSfX3HL87/hOYyZZKEhEfS3AsOh9/JqQBQAAABAAAAAMAAAAAQAAABf8////////AAAAAA=="
     }

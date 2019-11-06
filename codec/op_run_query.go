@@ -27,12 +27,7 @@ type RunQueryRequest struct {
 }
 
 type RunQueryResponse struct {
-	RequestStatus   RequestStatus
-	ExecutionResult ExecutionResult
-	OutputArguments []interface{}
-	OutputEvents    []*Event
-	BlockHeight     uint64
-	BlockTimestamp  time.Time
+	*ReadResponse
 }
 
 func EncodeRunQueryRequest(req *RunQueryRequest) ([]byte, error) {
@@ -88,40 +83,12 @@ func DecodeRunQueryResponse(buf []byte) (*RunQueryResponse, error) {
 		return nil, errors.New("response is corrupt and cannot be decoded")
 	}
 
-	// decode request status
-	requestStatus, err := requestStatusDecode(res.RequestResult().RequestStatus())
-	if err != nil {
-		return nil, err
-	}
-
-	// decode execution result
-	executionResult := EXECUTION_RESULT_NOT_EXECUTED
-	if len(res.RawQueryResult()) > 0 {
-		executionResult, err = executionResultDecode(res.QueryResult().ExecutionResult())
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	// decode method arguments
-	outputArgumentArray, err := protocol.PackedOutputArgumentsToNatives(res.QueryResult().RawOutputArgumentArrayWithHeader())
-	if err != nil {
-		return nil, err
-	}
-
-	// decode events
-	outputEventArray, err := PackedEventsDecode(res.QueryResult().RawOutputEventsArrayWithHeader())
-	if err != nil {
-		return nil, err
-	}
-
 	// return
+	response, err := NewReadResponse(res, res.RawQueryResult(), res.QueryResult())
+	if err != nil {
+		return nil, err
+	}
 	return &RunQueryResponse{
-		RequestStatus:   requestStatus,
-		ExecutionResult: executionResult,
-		OutputArguments: outputArgumentArray,
-		OutputEvents:    outputEventArray,
-		BlockHeight:     uint64(res.RequestResult().BlockHeight()),
-		BlockTimestamp:  time.Unix(0, int64(res.RequestResult().BlockTimestamp())),
+		ReadResponse: response,
 	}, nil
 }

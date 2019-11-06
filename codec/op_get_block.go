@@ -23,7 +23,7 @@ type GetBlockRequest struct {
 }
 
 type GetBlockResponse struct {
-	Response
+	*Response
 	TransactionsBlockHash   []byte
 	TransactionsBlockHeader *TransactionsBlockHeader
 	ResultsBlockHash        []byte
@@ -60,9 +60,6 @@ type BlockTransaction struct {
 	ContractName    string
 	MethodName      string
 	InputArguments  []interface{}
-	ExecutionResult ExecutionResult
-	OutputArguments []interface{}
-	OutputEvents    []*Event
 }
 
 func EncodeGetBlockRequest(req *GetBlockRequest) ([]byte, error) {
@@ -89,14 +86,8 @@ func DecodeGetBlockResponse(buf []byte) (*GetBlockResponse, error) {
 		return nil, errors.New("response is corrupt and cannot be decoded")
 	}
 
-	// decode request status
-	requestStatus, err := requestStatusDecode(res.RequestResult().RequestStatus())
-	if err != nil {
-		return nil, err
-	}
-
 	// decode transactions
-	transactions := []*BlockTransaction{}
+	var transactions []*BlockTransaction
 	for txIterator := res.SignedTransactionsIterator(); txIterator.HasNext(); {
 		tx := txIterator.NextSignedTransactions()
 
@@ -152,8 +143,12 @@ func DecodeGetBlockResponse(buf []byte) (*GetBlockResponse, error) {
 	}
 
 	// return
+	response, err := NewResponse(res)
+	if err != nil {
+		return nil, err
+	}
 	return &GetBlockResponse{
-		Response: NewResponse(res, requestStatus),
+		Response:              response,
 		TransactionsBlockHash: hash.CalcSha256(res.TransactionsBlockHeader().Raw()),
 		TransactionsBlockHeader: &TransactionsBlockHeader{
 			ProtocolVersion: uint32(res.TransactionsBlockHeader().ProtocolVersion()),

@@ -29,19 +29,33 @@ func main() {
 	bigNum := big.NewInt(0)
 	bigNum.SetBytes([]byte{0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x04,
 		0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x04})
-	a1, _ := protocol.PackedInputArgumentsFromNatives([]interface{}{uint32(1), uint64(2), "hello", []byte{0x01, 0x02, 0x03}})
-	a4, _ := protocol.PackedInputArgumentsFromNatives([]interface{}{
+	argumentArrayOfScalars, _ := protocol.PackedInputArgumentsFromNatives([]interface{}{
+		uint32(1),
+		uint64(2),
+		"hello",
+		[]byte{0x01, 0x02, 0x03},
 		true,
 		bigNum,
 		[20]byte{0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01},
 		[32]byte{0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x04,
 			0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x04},
 	})
+	argumentArrayOfArraysofScalar, _ := protocol.PackedInputArgumentsFromNatives([]interface{}{
+		[]bool{true, false, true, false, false, true},
+		[]uint32{1, 10, 100, 1000, 10000, 100000, 3},
+		[]uint64{1, 10, 100, 1000, 10000, 100000, 3},
+		[]*big.Int{big.NewInt(1), big.NewInt(1000000), big.NewInt(555555555555)},
+		[]string{"picture", "yourself", "in", "a", "boat", "on", "a", "river"},
+		[][]byte{{0x11, 0x12}, {0xa, 0xb, 0xc, 0xd}, {0x1, 0x2}},
+		[][20]byte{{0xaa, 0xbb}, {0x11, 0x12}, {0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01}, {0x1, 0x2}},
+		[][32]byte{{0x11, 0x12}, {0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x04, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x04}, {0xa, 0xb, 0xc, 0xd}, {0x1, 0x2}},
+	})
+	a1, _ := protocol.PackedInputArgumentsFromNatives([]interface{}{uint32(1), uint64(2), "hello", []byte{0x01, 0x02, 0x03}})
 	a2, _ := protocol.PackedInputArgumentsFromNatives([]interface{}{})
 	a3, _ := protocol.PackedInputArgumentsFromNatives([]interface{}{uint64(math.MaxUint64 - 1000)})
 
 	e1 := codec.PackedEventsEncode([]*protocol.EventBuilder{
-		{ContractName: "Contract1", EventName: "Event1", OutputArgumentArray: a1},
+		{ContractName: "Contract1", EventName: "Event1", OutputArgumentArray: argumentArrayOfScalars},
 		{ContractName: "Contract2", EventName: "Event2", OutputArgumentArray: a2},
 	})
 	e2 := codec.PackedEventsEncode([]*protocol.EventBuilder{
@@ -79,7 +93,7 @@ func main() {
 		InputArgumentArray: a2,
 	}
 
-	r1 := (&client.SendTransactionResponseBuilder{
+	sendTxResponse_Scalars := (&client.SendTransactionResponseBuilder{
 		RequestResult: &client.RequestResultBuilder{
 			RequestStatus:  protocol.REQUEST_STATUS_COMPLETED,
 			BlockHeight:    2135,
@@ -88,14 +102,14 @@ func main() {
 		TransactionReceipt: &protocol.TransactionReceiptBuilder{
 			Txhash:              h1,
 			ExecutionResult:     protocol.EXECUTION_RESULT_SUCCESS,
-			OutputArgumentArray: a1,
+			OutputArgumentArray: argumentArrayOfScalars,
 			OutputEventsArray:   e2,
 		},
 		TransactionStatus: protocol.TRANSACTION_STATUS_COMMITTED,
 	}).Build()
-	fmt.Printf(`"SendTransactionResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r1.Raw()))
+	fmt.Printf(`"SendTransactionResponse" with scalars: "%s"`+"\n\n", base64.StdEncoding.EncodeToString(sendTxResponse_Scalars.Raw()))
 
-	r1new := (&client.SendTransactionResponseBuilder{
+	sendTxResponse_Arrays := (&client.SendTransactionResponseBuilder{
 		RequestResult: &client.RequestResultBuilder{
 			RequestStatus:  protocol.REQUEST_STATUS_COMPLETED,
 			BlockHeight:    2135,
@@ -104,14 +118,46 @@ func main() {
 		TransactionReceipt: &protocol.TransactionReceiptBuilder{
 			Txhash:              h1,
 			ExecutionResult:     protocol.EXECUTION_RESULT_SUCCESS,
-			OutputArgumentArray: a4,
+			OutputArgumentArray: argumentArrayOfArraysofScalar,
 			OutputEventsArray:   e2,
 		},
 		TransactionStatus: protocol.TRANSACTION_STATUS_COMMITTED,
 	}).Build()
-	fmt.Printf(`"SendTransactionResponse with new args": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r1new.Raw()))
+	fmt.Printf(`"SendTransactionResponse with arg-arrays": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(sendTxResponse_Arrays.Raw()))
 
-	r2new := (&client.RunQueryResponseBuilder{
+	sendTxResponse_Events := (&client.SendTransactionResponseBuilder{
+		RequestResult: &client.RequestResultBuilder{
+			RequestStatus:  protocol.REQUEST_STATUS_COMPLETED,
+			BlockHeight:    2135,
+			BlockTimestamp: primitives.TimestampNano(t1.UnixNano()),
+		},
+		TransactionReceipt: &protocol.TransactionReceiptBuilder{
+			Txhash:              h1,
+			ExecutionResult:     protocol.EXECUTION_RESULT_SUCCESS,
+			OutputArgumentArray: a3,
+			OutputEventsArray:   e1,
+		},
+		TransactionStatus: protocol.TRANSACTION_STATUS_COMMITTED,
+	}).Build()
+	fmt.Printf(`"SendTransactionResponse with events": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(sendTxResponse_Events.Raw()))
+
+	sendTxResponse_BadRequest := (&client.SendTransactionResponseBuilder{
+		RequestResult: &client.RequestResultBuilder{
+			RequestStatus:  protocol.REQUEST_STATUS_BAD_REQUEST,
+			BlockHeight:    2135,
+			BlockTimestamp: primitives.TimestampNano(t1.UnixNano()),
+		},
+		TransactionStatus: protocol.TRANSACTION_STATUS_COMMITTED,
+		TransactionReceipt: &protocol.TransactionReceiptBuilder{
+			Txhash:              h1,
+			ExecutionResult:     protocol.EXECUTION_RESULT_ERROR_CONTRACT_NOT_DEPLOYED,
+			OutputArgumentArray: a3,
+			OutputEventsArray:   e1,
+		},
+	}).Build()
+	fmt.Printf(`"SendTransactionResponse with bad request": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(sendTxResponse_BadRequest.Raw()))
+
+	runQueryResponse_Scalars := (&client.RunQueryResponseBuilder{
 		RequestResult: &client.RequestResultBuilder{
 			RequestStatus:  protocol.REQUEST_STATUS_COMPLETED,
 			BlockHeight:    87438,
@@ -119,11 +165,25 @@ func main() {
 		},
 		QueryResult: &protocol.QueryResultBuilder{
 			ExecutionResult:     protocol.EXECUTION_RESULT_SUCCESS,
-			OutputArgumentArray: a4,
-			OutputEventsArray:   e1,
+			OutputArgumentArray: argumentArrayOfScalars,
+			OutputEventsArray:   e2,
 		},
 	}).Build()
-	fmt.Printf(`"RunQueryResponse with new": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r2new.Raw()))
+	fmt.Printf(`"RunQueryResponse with scalars": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(runQueryResponse_Scalars.Raw()))
+
+	runQueryResponse_ArrayOfScalars := (&client.RunQueryResponseBuilder{
+		RequestResult: &client.RequestResultBuilder{
+			RequestStatus:  protocol.REQUEST_STATUS_COMPLETED,
+			BlockHeight:    87438,
+			BlockTimestamp: primitives.TimestampNano(t1.UnixNano()),
+		},
+		QueryResult: &protocol.QueryResultBuilder{
+			ExecutionResult:     protocol.EXECUTION_RESULT_SUCCESS,
+			OutputArgumentArray: argumentArrayOfArraysofScalar,
+			OutputEventsArray:   e2,
+		},
+	}).Build()
+	fmt.Printf(`"RunQueryResponse with array of scalars": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(runQueryResponse_ArrayOfScalars.Raw()))
 
 	r2 := (&client.RunQueryResponseBuilder{
 		RequestResult: &client.RequestResultBuilder{
@@ -132,12 +192,10 @@ func main() {
 			BlockTimestamp: primitives.TimestampNano(t1.UnixNano()),
 		},
 		QueryResult: &protocol.QueryResultBuilder{
-			ExecutionResult:     protocol.EXECUTION_RESULT_SUCCESS,
-			OutputArgumentArray: a2,
-			OutputEventsArray:   e1,
+			ExecutionResult: protocol.EXECUTION_RESULT_ERROR_CONTRACT_NOT_DEPLOYED,
 		},
 	}).Build()
-	fmt.Printf(`"RunQueryResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r2.Raw()))
+	fmt.Printf(`"RunQueryResponse bad reques": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r2.Raw()))
 
 	r22 := (&client.RunQueryResponseBuilder{
 		RequestResult: &client.RequestResultBuilder{
@@ -147,7 +205,7 @@ func main() {
 		},
 		QueryResult: nil,
 	}).Build()
-	fmt.Printf(`"RunQueryResponse": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r22.Raw()))
+	fmt.Printf(`"RunQueryResponse conjection": "%s"`+"\n\n", base64.StdEncoding.EncodeToString(r22.Raw()))
 
 	r3 := (&client.GetTransactionStatusResponseBuilder{
 		RequestResult: &client.RequestResultBuilder{

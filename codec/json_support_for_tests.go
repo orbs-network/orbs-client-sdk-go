@@ -9,6 +9,7 @@ package codec
 import (
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"math/big"
 	"strconv"
 )
@@ -312,6 +313,14 @@ func (r *BlockTransaction) MarshalJSON() ([]byte, error) {
 	})
 }
 
+func jsonPreUnmarshalForArray(arg string) []string {
+	var res []string
+	if err := json.Unmarshal([]byte(arg), &res); err != nil {
+		panic(fmt.Sprintf("parse of string contain array of string %s\n", err.Error()))
+	}
+	return res
+}
+
 func jsonUnmarshalArguments(arguments []string, argumentsTypes []string) []interface{} {
 	res := []interface{}{}
 	for index, arg := range arguments {
@@ -363,6 +372,93 @@ func jsonUnmarshalArguments(arguments []string, argumentsTypes []string) []inter
 				bytes32 := [32]byte{}
 				copy(bytes32[:], bytes)
 				res = append(res, bytes32)
+			case "uint32Array":
+				argArr := jsonPreUnmarshalForArray(arg)
+				var arr []uint32
+				for _, internalArg := range argArr {
+					num, err := strconv.ParseInt(internalArg, 10, 64)
+					if err != nil {
+						panic(err)
+					}
+					arr = append(arr, uint32(num))
+				}
+				res = append(res, arr)
+			case "uint64Array":
+				argArr := jsonPreUnmarshalForArray(arg)
+				//				fmt.Printf("uints str %v %T\n", argArr, argArr)
+				var arr []uint64
+				for _, internalArg := range argArr {
+					//					fmt.Printf("uint str %v %T\n", internalArg, internalArg)
+					num, err := strconv.ParseInt(internalArg, 10, 64)
+					if err != nil {
+						panic(err)
+					}
+					//					fmt.Printf("uint num %v %T\n", num, num)
+					arr = append(arr, uint64(num))
+				}
+				res = append(res, arr)
+			case "stringArray":
+				argArr := jsonPreUnmarshalForArray(arg)
+				res = append(res, argArr)
+			case "bytesArray":
+				argArr := jsonPreUnmarshalForArray(arg)
+				var arr [][]byte
+				for _, internalArg := range argArr {
+					bytes, err := hex.DecodeString(internalArg)
+					if err != nil {
+						panic(err)
+					}
+					arr = append(arr, bytes)
+				}
+				res = append(res, arr)
+			case "boolArray":
+				argArr := jsonPreUnmarshalForArray(arg)
+				//				fmt.Printf("bools str %v %T\n", argArr, argArr)
+				var arr []bool
+				for _, internalArg := range argArr {
+					//					fmt.Printf("bools str %v %T\n", internalArg, internalArg)
+					arr = append(arr, internalArg == "1")
+				}
+				res = append(res, arr)
+			case "uint256Array":
+				argArr := jsonPreUnmarshalForArray(arg)
+				var arr []*big.Int
+				for _, internalArg := range argArr {
+					bytes, err := hex.DecodeString(internalArg)
+					if err != nil {
+						panic(err)
+					}
+					obj := big.NewInt(0)
+					obj.SetBytes(bytes)
+					arr = append(arr, obj)
+				}
+				res = append(res, arr)
+			case "bytes20Array":
+				argArr := jsonPreUnmarshalForArray(arg)
+				var arr [][20]byte
+				for _, internalArg := range argArr {
+					bytes, err := hex.DecodeString(internalArg)
+					if err != nil {
+						panic(err)
+					}
+					bytes20 := [20]byte{}
+					copy(bytes20[:], bytes)
+					arr = append(arr, bytes20)
+				}
+				res = append(res, arr)
+			case "bytes32Array":
+				argArr := jsonPreUnmarshalForArray(arg)
+				var arr [][32]byte
+				for _, internalArg := range argArr {
+					bytes, err := hex.DecodeString(internalArg)
+					if err != nil {
+						panic(err)
+					}
+					bytes32 := [32]byte{}
+					copy(bytes32[:], bytes)
+					arr = append(arr, bytes32)
+				}
+				res = append(res, arr)
 			default:
 				res = append(res, arg)
 			}
@@ -379,43 +475,137 @@ func jsonMarshalArguments(arguments []interface{}) ([]string, []string) {
 	for _, arg := range arguments {
 		switch arg.(type) {
 		case uint32:
-			res = append(res, strconv.FormatUint(uint64(arg.(uint32)), 10))
+			res = append(res, jsonMarshalPrimitiveScalar(arg))
 			resTypes = append(resTypes, "uint32")
 		case uint64:
-			res = append(res, strconv.FormatUint(uint64(arg.(uint64)), 10))
+			res = append(res, jsonMarshalPrimitiveScalar(arg))
 			resTypes = append(resTypes, "uint64")
 		case string:
-			res = append(res, arg.(string))
+			res = append(res, jsonMarshalPrimitiveScalar(arg))
 			resTypes = append(resTypes, "string")
 		case []byte:
-			res = append(res, hex.EncodeToString(arg.([]byte)))
+			res = append(res, jsonMarshalPrimitiveScalar(arg))
 			resTypes = append(resTypes, "bytes")
 		case bool:
-			if arg.(bool) {
-				res = append(res, "1")
-			} else {
-				res = append(res, "0")
-			}
+			res = append(res, jsonMarshalPrimitiveScalar(arg))
 			resTypes = append(resTypes, "bool")
 		case *big.Int:
-			actual := [32]byte{}
-			b := arg.(*big.Int).Bytes()
-			copy(actual[32-len(b):], b)
-			res = append(res, hex.EncodeToString(actual[:]))
+			res = append(res, jsonMarshalPrimitiveScalar(arg))
 			resTypes = append(resTypes, "uint256")
 		case [20]byte:
-			obj := arg.([20]byte)
-			res = append(res, hex.EncodeToString(obj[:]))
+			res = append(res, jsonMarshalPrimitiveScalar(arg))
 			resTypes = append(resTypes, "bytes20")
 		case [32]byte:
-			obj := arg.([32]byte)
-			res = append(res, hex.EncodeToString(obj[:]))
+			res = append(res, jsonMarshalPrimitiveScalar(arg))
 			resTypes = append(resTypes, "bytes32")
+		case []uint32:
+			internalArgs := arg.([]uint32)
+			var resArgs []string
+			for _, v := range internalArgs {
+				resArgs = append(resArgs, jsonMarshalPrimitiveScalar(v))
+			}
+			res = append(res, jsonMarshalArray(resArgs))
+			resTypes = append(resTypes, "uint32Array")
+		case []uint64:
+			internalArgs := arg.([]uint64)
+			var resArgs []string
+			for _, v := range internalArgs {
+				resArgs = append(resArgs, jsonMarshalPrimitiveScalar(v))
+			}
+			res = append(res, jsonMarshalArray(resArgs))
+			resTypes = append(resTypes, "uint64Array")
+		case []string:
+			internalArgs := arg.([]string)
+			var resArgs []string
+			for _, v := range internalArgs {
+				resArgs = append(resArgs, jsonMarshalPrimitiveScalar(v))
+			}
+			res = append(res, jsonMarshalArray(resArgs))
+			resTypes = append(resTypes, "stringArray")
+		case [][]byte:
+			internalArgs := arg.([][]byte)
+			var resArgs []string
+			for _, v := range internalArgs {
+				resArgs = append(resArgs, jsonMarshalPrimitiveScalar(v))
+			}
+			res = append(res, jsonMarshalArray(resArgs))
+			resTypes = append(resTypes, "bytesArray")
+		case []bool:
+			internalArgs := arg.([]bool)
+			var resArgs []string
+			for _, v := range internalArgs {
+				resArgs = append(resArgs, jsonMarshalPrimitiveScalar(v))
+			}
+			res = append(res, jsonMarshalArray(resArgs))
+			resTypes = append(resTypes, "boolArray")
+		case []*big.Int:
+			internalArgs := arg.([]*big.Int)
+			var resArgs []string
+			for _, v := range internalArgs {
+				resArgs = append(resArgs, jsonMarshalPrimitiveScalar(v))
+			}
+			res = append(res, jsonMarshalArray(resArgs))
+			resTypes = append(resTypes, "uint256Array")
+		case [][20]byte:
+			internalArgs := arg.([][20]byte)
+			var resArgs []string
+			for _, v := range internalArgs {
+				resArgs = append(resArgs, jsonMarshalPrimitiveScalar(v))
+			}
+			res = append(res, jsonMarshalArray(resArgs))
+			resTypes = append(resTypes, "bytes20Array")
+		case [][32]byte:
+			internalArgs := arg.([][32]byte)
+			var resArgs []string
+			for _, v := range internalArgs {
+				resArgs = append(resArgs, jsonMarshalPrimitiveScalar(v))
+			}
+			res = append(res, jsonMarshalArray(resArgs))
+			resTypes = append(resTypes, "bytes32Array")
 		default:
 			panic("unsupported type in json marshal of method arguments")
 		}
 	}
 	return res, resTypes
+}
+
+// can only run inside the bigger function - doesn't check errors
+func jsonMarshalPrimitiveScalar(arg interface{}) string {
+	switch arg := arg.(type) {
+	case uint32:
+		return strconv.FormatUint(uint64(arg), 10)
+	case uint64:
+		return strconv.FormatUint(arg, 10)
+	case string:
+		return arg
+	case []byte:
+		return hex.EncodeToString(arg)
+	case bool:
+		if arg {
+			return "1"
+		} else {
+			return "0"
+		}
+	case *big.Int:
+		actual := [32]byte{}
+		b := arg.Bytes()
+		copy(actual[32-len(b):], b)
+		return hex.EncodeToString(actual[:])
+	case [20]byte:
+		obj := arg
+		return hex.EncodeToString(obj[:])
+	case [32]byte:
+		obj := arg
+		return hex.EncodeToString(obj[:])
+	default:
+		panic("")
+	}
+	return ""
+}
+
+func jsonMarshalArray(a []string) string {
+	bytes, _ := json.Marshal(a)
+	return string(bytes)
 }
 
 type jsonEvent struct {

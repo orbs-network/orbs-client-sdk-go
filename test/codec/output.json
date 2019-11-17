@@ -5,17 +5,17 @@
     "TxId": "AEDAnZIv6BFWEd76jhp+EM8sxss/w05OYQ9arEN091GdAhuROfPX4w=="
   },
   {
-    "Test": "st_req_2",
-    "SendTransactionRequest": "7AAAAKMAAAABAAAAp4cAAACAQQFOnkkWMAAAAAAAAAAoAAAAVAAAACAAAADfwGxb4kpnre6As1q08Ue7GjXFX/he2mn0Dvgnvd7BcwoAAABTdXBlclRva2VuAAAIAAAAdHJhbnNmZXI/AAAACAAAAAAAAAABAAAADAAAAAEAAAACAAAAAAAAAA0AAAACAAAABQAAAGhlbGxvAAAACwAAAAMAAAADAAAAAQIDAEAAAADYz2DXexwKCdbvK+YrolbqqVSY5XnqjmMyvk7R/pDXFt6XBLiu9rzvcoVlHs6zndO/5IBidEixCWfUstGdLvUP",
-    "TxId": "AIBBAU6eSRYVcCfXr/P4bOJiwx32xlrU+NSs0YVkwQtHB9bSv2pCTQ=="
+    "Test": "st_req_2_scalar_inputs",
+    "SendTransactionRequest": "YAEAABgBAAABAAAAp4cAAACAQQFOnkkWMAAAAAAAAAAoAAAAVAAAACAAAADfwGxb4kpnre6As1q08Ue7GjXFX/he2mn0Dvgnvd7BcwoAAABTdXBlclRva2VuAAAIAAAAdHJhbnNmZXK0AAAACAAAAAAAAAABAAAADAAAAAEAAAACAAAAAAAAAA0AAAACAAAABQAAAGhlbGxvAAAACwAAAAMAAAADAAAAAQIDAAMAAAAEAAEAJAAAAAUAAAAAESIzRFVmd4iZqrvM3e7/ABEiM0RVZneImaq7zN3u/xgAAAAGAAAAABEiM0RVZneImQARIjNEVWZ3iJkkAAAABwAAAAARIjNEVWZ3iJmqu8zd7v8AESIzRFVmd4iZqrvM3e7/QAAAAM6DC4PZdoQgxHx3JZbJv2UZInCVcCcwSpDFwS9RPnMhrX2lo2KdQ6Hv4MXt3tbMGxbEM1Q5tCOj//Ia/YwXuws=",
+    "TxId": "AIBBAU6eSRa63evE2qp0Ld9ZCbTe6vYqm1nOYEG0QqNX5biAbQviXA=="
   },
   {
-    "Test": "st_req_3",
-    "SendTransactionRequest": "IAEAANgAAAABAAAAp4cAAACAQQFOnkkWMAAAAAAAAAAoAAAAVAAAACAAAADfwGxb4kpnre6As1q08Ue7GjXFX/he2mn0Dvgnvd7BcwoAAABTdXBlclRva2VuAAAIAAAAdHJhbnNmZXJ0AAAAAwAAAAQAAQAkAAAABQAAAAARIjNEVWZ3iJmqu8zd7v8AESIzRFVmd4iZqrvM3e7/GAAAAAYAAAAAESIzRFVmd4iZABEiM0RVZneImSQAAAAHAAAAABEiM0RVZneImaq7zN3u/wARIjNEVWZ3iJmqu8zd7v9AAAAAJn6sSyGX4gSTuyuQbRgaJR4hkE1NxlQkmpE7nDDVsLDYkaqc8OuQYkDdhDfVCiIopaiComdzqu/CcZfdES+3Cg==",
-    "TxId": "AIBBAU6eSRbVGn9BWm4rf+F7ayuQZ31JPXncXy1qUrYEX2bGYAeKtw=="
+    "Test": "st_req_3_arrays_inputs",
+    "SendTransactionRequest": "XAIAABQCAAABAAAAp4cAAACAQQFOnkkWMAAAAAAAAAAoAAAAVAAAACAAAADfwGxb4kpnre6As1q08Ue7GjXFX/he2mn0Dvgnvd7BcwoAAABTdXBlclRva2VuAAAIAAAAdHJhbnNmZXKwAQAAFAAAAAgAAAAMAAAAAQAAAAoAAABAQg8AKAAAAAkAAAAgAAAAAgAAAAAAAABAAAAAAAAAAAAEAAAAAAAAoIYTegAAAAAqAAAACgAAACIAAAAFAAAAaGVsbG8AAAACAAAAbXkAAAQAAABuYW1lAgAAAGlzAAAiAAAACwAAABoAAAADAAAAAQIDAAMAAAD/3e4ABgAAAKq7zN3u/wAADgAAAAwAAAAGAAAAAQAAAQAAAABIAAAADQAAAEAAAAAAESIzRFVmd4iZqrvM3e7/ABEiM0RVZneImaq7zN3u/wARIjNEVWZ3iJmqu8zd7v8AESIzRFVmd4iZqrvM3e7/RAAAAA4AAAA8AAAAABEiM0RVZneImQARIjNEVWZ3iJkAESIzRFVmd4iZABEiM0RVZneImQARIjNEVWZ3iJkAESIzRFVmd4iZaAAAAA8AAABgAAAAABEiM0RVZneImaq7zN3u/wARIjNEVWZ3iJmqu8zd7v8AESIzRFVmd4iZqrvM3e7/ABEiM0RVZneImaq7zN3u/wARIjNEVWZ3iJmqu8zd7v8AESIzRFVmd4iZqrvM3e7/QAAAAHU/SOMDcF8ghMMvXYL7sLg/iDSXlg47UYplkH2nBgqClrf+Onz1Fj3IO3N5vYulj/pRFf3AIOVVU7JEAbElxg4=",
+    "TxId": "AIBBAU6eSRZ0xBxIWzUGW8i7V9d+0yFe8vI8Eo2jzN+RrvfBg4O7Yw=="
   },
   {
-    "Test": "st_res_1",
+    "Test": "st_res_1_scalars_output",
     "SendTransactionResponse": {
       "BlockHeight": "2135",
       "BlockTimestamp": "2010-11-21T10:00:00.000Z",
@@ -23,44 +23,17 @@
         "1",
         "2",
         "hello",
-        "010203"
-      ],
-      "OutputArgumentsTypes": [
-        "uint32",
-        "uint64",
-        "string",
-        "bytes"
-      ],
-      "OutputEvents": [
-        {
-          "ContractName": "Contract3",
-          "EventName": "Event3",
-          "Arguments": [
-            "18446744073709550615"
-          ],
-          "ArgumentsTypes": [
-            "uint64"
-          ]
-        }
-      ],
-      "RequestStatus": "COMPLETED",
-      "ExecutionResult": "ERROR_SMART_CONTRACT",
-      "TransactionStatus": "COMMITTED",
-      "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA="
-    }
-  },
-  {
-    "Test": "st_res_2",
-    "SendTransactionResponse": {
-      "BlockHeight": "2135",
-      "BlockTimestamp": "2010-11-21T10:00:00.000Z",
-      "OutputArguments": [
+        "010203",
         "1",
         "0102030102030102030102030102030401020301020301020301020301020304",
         "0102030102030102030101020301020301020301",
         "0102030102030102030102030102030401020301020301020301020301020304"
       ],
       "OutputArgumentsTypes": [
+        "uint32",
+        "uint64",
+        "string",
+        "bytes",
         "bool",
         "uint256",
         "bytes20",
@@ -85,20 +58,59 @@
     }
   },
   {
-    "Test": "cm_req_1",
-    "RunQueryRequest": "tAAAAKsAAAABAAAAp4cAAACAQQFOnkkWMAAAAAAAAAAoAAAAVAAAACAAAADfwGxb4kpnre6As1q08Ue7GjXFX/he2mn0Dvgnvd7BcwoAAABTdXBlclRva2VuAAAOAAAAY2hlY2tTb21ldGhpbmcAAD8AAAAIAAAAAAAAAAEAAAAMAAAAAQAAAFDp//////9/DQAAAAIAAAAFAAAAaGVsbG8AAAALAAAAAwAAAAMAAAABAgMAAAAAAA=="
-  },
-  {
-    "Test": "cm_req_2",
-    "RunQueryRequest": "6AAAAOAAAAABAAAAp4cAAACAQQFOnkkWMAAAAAAAAAAoAAAAVAAAACAAAADfwGxb4kpnre6As1q08Ue7GjXFX/he2mn0Dvgnvd7BcwoAAABTdXBlclRva2VuAAAOAAAAY2hlY2tTb21ldGhpbmcAAHQAAAADAAAABAABACQAAAAFAAAAABEiM0RVZneImaq7zN3u/wARIjNEVWZ3iJmqu8zd7v8YAAAABgAAAAARIjNEVWZ3iJkAESIzRFVmd4iZJAAAAAcAAAAAESIzRFVmd4iZqrvM3e7/ABEiM0RVZneImaq7zN3u/wAAAAA="
-  },
-  {
-    "Test": "cm_res_1",
-    "RunQueryResponse": {
-      "BlockHeight": "87438",
+    "Test": "st_res_2_arrays_output",
+    "SendTransactionResponse": {
+      "BlockHeight": "2135",
       "BlockTimestamp": "2010-11-21T10:00:00.000Z",
-      "OutputArguments": [],
-      "OutputArgumentsTypes": [],
+      "OutputArguments": [
+        "[\"1\",\"0\",\"1\",\"0\",\"0\",\"1\"]",
+        "[\"1\",\"10\",\"100\",\"1000\",\"10000\",\"100000\",\"3\"]",
+        "[\"1\",\"10\",\"100\",\"1000\",\"10000\",\"100000\",\"3\"]",
+        "[\"0000000000000000000000000000000000000000000000000000000000000001\",\"00000000000000000000000000000000000000000000000000000000000f4240\",\"0000000000000000000000000000000000000000000000000000008159b108e3\"]",
+        "[\"picture\",\"yourself\",\"in\",\"a\",\"boat\",\"on\",\"a\",\"river\"]",
+        "[\"1112\",\"0a0b0c0d\",\"0102\"]",
+        "[\"aabb000000000000000000000000000000000000\",\"1112000000000000000000000000000000000000\",\"0102030102030102030101020301020301020301\",\"0102000000000000000000000000000000000000\"]",
+        "[\"1112000000000000000000000000000000000000000000000000000000000000\",\"0102030102030102030102030102030401020301020301020301020301020304\",\"0a0b0c0d00000000000000000000000000000000000000000000000000000000\",\"0102000000000000000000000000000000000000000000000000000000000000\"]"
+      ],
+      "OutputArgumentsTypes": [
+        "boolArray",
+        "uint32Array",
+        "uint64Array",
+        "uint256Array",
+        "stringArray",
+        "bytesArray",
+        "bytes20Array",
+        "bytes32Array"
+      ],
+      "OutputEvents": [
+        {
+          "ContractName": "Contract3",
+          "EventName": "Event3",
+          "Arguments": [
+            "18446744073709550615"
+          ],
+          "ArgumentsTypes": [
+            "uint64"
+          ]
+        }
+      ],
+      "RequestStatus": "COMPLETED",
+      "ExecutionResult": "SUCCESS",
+      "TransactionStatus": "COMMITTED",
+      "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA="
+    }
+  },
+  {
+    "Test": "st_res_3_events_output",
+    "SendTransactionResponse": {
+      "BlockHeight": "2135",
+      "BlockTimestamp": "2010-11-21T10:00:00.000Z",
+      "OutputArguments": [
+        "18446744073709550615"
+      ],
+      "OutputArgumentsTypes": [
+        "uint64"
+      ],
       "OutputEvents": [
         {
           "ContractName": "Contract1",
@@ -107,13 +119,70 @@
             "1",
             "2",
             "hello",
-            "010203"
+            "010203",
+            "1",
+            "0102030102030102030102030102030401020301020301020301020301020304",
+            "0102030102030102030101020301020301020301",
+            "0102030102030102030102030102030401020301020301020301020301020304"
           ],
           "ArgumentsTypes": [
             "uint32",
             "uint64",
             "string",
-            "bytes"
+            "bytes",
+            "bool",
+            "uint256",
+            "bytes20",
+            "bytes32"
+          ]
+        },
+        {
+          "ContractName": "Contract2",
+          "EventName": "Event2",
+          "Arguments": [],
+          "ArgumentsTypes": []
+        }
+      ],
+      "RequestStatus": "COMPLETED",
+      "ExecutionResult": "SUCCESS",
+      "TransactionStatus": "COMMITTED",
+      "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA="
+    }
+  },
+  {
+    "Test": "st_res_3_bad_request",
+    "SendTransactionResponse": {
+      "BlockHeight": "2135",
+      "BlockTimestamp": "2010-11-21T10:00:00.000Z",
+      "OutputArguments": [
+        "18446744073709550615"
+      ],
+      "OutputArgumentsTypes": [
+        "uint64"
+      ],
+      "OutputEvents": [
+        {
+          "ContractName": "Contract1",
+          "EventName": "Event1",
+          "Arguments": [
+            "1",
+            "2",
+            "hello",
+            "010203",
+            "1",
+            "0102030102030102030102030102030401020301020301020301020301020304",
+            "0102030102030102030101020301020301020301",
+            "0102030102030102030102030102030401020301020301020301020301020304"
+          ],
+          "ArgumentsTypes": [
+            "uint32",
+            "uint64",
+            "string",
+            "bytes",
+            "bool",
+            "uint256",
+            "bytes20",
+            "bytes32"
           ]
         },
         {
@@ -124,11 +193,103 @@
         }
       ],
       "RequestStatus": "BAD_REQUEST",
+      "ExecutionResult": "ERROR_CONTRACT_NOT_DEPLOYED",
+      "TransactionStatus": "COMMITTED",
+      "TxHash": "z4DNiu1ILV0VJ9fccvzv+E5jJlkoSER9LcCw6H38mpA="
+    }
+  },
+  {
+    "Test": "cm_req_1_scalar_arguments",
+    "RunQueryRequest": "KAEAACABAAABAAAAp4cAAACAQQFOnkkWMAAAAAAAAAAoAAAAVAAAACAAAADfwGxb4kpnre6As1q08Ue7GjXFX/he2mn0Dvgnvd7BcwoAAABTdXBlclRva2VuAAAOAAAAY2hlY2tTb21ldGhpbmcAALQAAAAIAAAAAAAAAAEAAAAMAAAAAQAAAFDp//////9/DQAAAAIAAAAFAAAAaGVsbG8AAAALAAAAAwAAAAMAAAABAgMAAwAAAAQAAQAkAAAABQAAAAARIjNEVWZ3iJmqu8zd7v8AESIzRFVmd4iZqrvM3e7/GAAAAAYAAAAAESIzRFVmd4iZABEiM0RVZneImSQAAAAHAAAAABEiM0RVZneImaq7zN3u/wARIjNEVWZ3iJmqu8zd7v8AAAAA"
+  },
+  {
+    "Test": "cm_req_2_array_arguments",
+    "RunQueryRequest": "JAIAABwCAAABAAAAp4cAAACAQQFOnkkWMAAAAAAAAAAoAAAAVAAAACAAAADfwGxb4kpnre6As1q08Ue7GjXFX/he2mn0Dvgnvd7BcwoAAABTdXBlclRva2VuAAAOAAAAY2hlY2tTb21ldGhpbmcAALABAAAUAAAACAAAAAwAAAABAAAACgAAAEBCDwAoAAAACQAAACAAAAACAAAAAAAAAEAAAAAAAAAAAAQAAAAAAACghhN6AAAAACoAAAAKAAAAIgAAAAUAAABoZWxsbwAAAAIAAABteQAABAAAAG5hbWUCAAAAaXMAACIAAAALAAAAGgAAAAMAAAABAgMAAwAAAP/d7gAGAAAAqrvM3e7/AAAOAAAADAAAAAYAAAABAAABAAAAAEgAAAANAAAAQAAAAAARIjNEVWZ3iJmqu8zd7v8AESIzRFVmd4iZqrvM3e7/ABEiM0RVZneImaq7zN3u/wARIjNEVWZ3iJmqu8zd7v9EAAAADgAAADwAAAAAESIzRFVmd4iZABEiM0RVZneImQARIjNEVWZ3iJkAESIzRFVmd4iZABEiM0RVZneImQARIjNEVWZ3iJloAAAADwAAAGAAAAAAESIzRFVmd4iZqrvM3e7/ABEiM0RVZneImaq7zN3u/wARIjNEVWZ3iJmqu8zd7v8AESIzRFVmd4iZqrvM3e7/ABEiM0RVZneImaq7zN3u/wARIjNEVWZ3iJmqu8zd7v8AAAAA"
+  },
+  {
+    "Test": "rq_res_1_scalar_outputs",
+    "RunQueryResponse": {
+      "BlockHeight": "87438",
+      "BlockTimestamp": "2010-11-21T10:00:00.000Z",
+      "OutputArguments": [
+        "1",
+        "2",
+        "hello",
+        "010203",
+        "1",
+        "0102030102030102030102030102030401020301020301020301020301020304",
+        "0102030102030102030101020301020301020301",
+        "0102030102030102030102030102030401020301020301020301020301020304"
+      ],
+      "OutputArgumentsTypes": [
+        "uint32",
+        "uint64",
+        "string",
+        "bytes",
+        "bool",
+        "uint256",
+        "bytes20",
+        "bytes32"
+      ],
+      "OutputEvents": [
+        {
+          "ContractName": "Contract3",
+          "EventName": "Event3",
+          "Arguments": [
+            "18446744073709550615"
+          ],
+          "ArgumentsTypes": [
+            "uint64"
+          ]
+        }
+      ],
+      "RequestStatus": "COMPLETED",
       "ExecutionResult": "SUCCESS"
     }
   },
   {
-    "Test": "cm_res_2",
+    "Test": "rq_res_2_array_outputs",
+    "RunQueryResponse": {
+      "BlockHeight": "87438",
+      "BlockTimestamp": "2010-11-21T10:00:00.000Z",
+      "OutputArguments": [
+        "[\"1\",\"0\",\"1\",\"0\",\"0\",\"1\"]",
+        "[\"1\",\"10\",\"100\",\"1000\",\"10000\",\"100000\",\"3\"]",
+        "[\"1\",\"10\",\"100\",\"1000\",\"10000\",\"100000\",\"3\"]",
+        "[\"0000000000000000000000000000000000000000000000000000000000000001\",\"00000000000000000000000000000000000000000000000000000000000f4240\",\"0000000000000000000000000000000000000000000000000000008159b108e3\"]",
+        "[\"picture\",\"yourself\",\"in\",\"a\",\"boat\",\"on\",\"a\",\"river\"]",
+        "[\"1112\",\"0a0b0c0d\",\"0102\"]",
+        "[\"aabb000000000000000000000000000000000000\",\"1112000000000000000000000000000000000000\",\"0102030102030102030101020301020301020301\",\"0102000000000000000000000000000000000000\"]",
+        "[\"1112000000000000000000000000000000000000000000000000000000000000\",\"0102030102030102030102030102030401020301020301020301020301020304\",\"0a0b0c0d00000000000000000000000000000000000000000000000000000000\",\"0102000000000000000000000000000000000000000000000000000000000000\"]"
+      ],
+      "OutputArgumentsTypes": [
+        "boolArray",
+        "uint32Array",
+        "uint64Array",
+        "uint256Array",
+        "stringArray",
+        "bytesArray",
+        "bytes20Array",
+        "bytes32Array"
+      ],
+      "OutputEvents": [
+        {
+          "ContractName": "Contract3",
+          "EventName": "Event3",
+          "Arguments": [
+            "18446744073709550615"
+          ],
+          "ArgumentsTypes": [
+            "uint64"
+          ]
+        }
+      ],
+      "RequestStatus": "COMPLETED",
+      "ExecutionResult": "SUCCESS"
+    }
+  },
+  {
+    "Test": "rq_res_3_conjestion",
     "RunQueryResponse": {
       "BlockHeight": "12",
       "BlockTimestamp": "2010-11-21T10:00:00.000Z",
@@ -140,48 +301,15 @@
     }
   },
   {
-    "Test": "cm_res_3",
+    "Test": "rq_res_4_bad_req",
     "RunQueryResponse": {
       "BlockHeight": "87438",
       "BlockTimestamp": "2010-11-21T10:00:00.000Z",
-      "OutputArguments": [
-        "1",
-        "0102030102030102030102030102030401020301020301020301020301020304",
-        "0102030102030102030101020301020301020301",
-        "0102030102030102030102030102030401020301020301020301020301020304"
-      ],
-      "OutputArgumentsTypes": [
-        "bool",
-        "uint256",
-        "bytes20",
-        "bytes32"
-      ],
-      "OutputEvents": [
-        {
-          "ContractName": "Contract1",
-          "EventName": "Event1",
-          "Arguments": [
-            "1",
-            "2",
-            "hello",
-            "010203"
-          ],
-          "ArgumentsTypes": [
-            "uint32",
-            "uint64",
-            "string",
-            "bytes"
-          ]
-        },
-        {
-          "ContractName": "Contract2",
-          "EventName": "Event2",
-          "Arguments": [],
-          "ArgumentsTypes": []
-        }
-      ],
-      "RequestStatus": "COMPLETED",
-      "ExecutionResult": "SUCCESS"
+      "OutputArguments": [],
+      "OutputArgumentsTypes": [],
+      "OutputEvents": [],
+      "RequestStatus": "BAD_REQUEST",
+      "ExecutionResult": "ERROR_CONTRACT_NOT_DEPLOYED"
     }
   },
   {

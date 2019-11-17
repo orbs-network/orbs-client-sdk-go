@@ -571,32 +571,34 @@ func jsonMarshalArguments(arguments []interface{}) ([]string, []string) {
 
 // can only run inside the bigger function - doesn't check errors
 func jsonMarshalPrimitiveScalar(arg interface{}) string {
-	switch arg.(type) {
+	switch arg := arg.(type) {
 	case uint32:
-		return strconv.FormatUint(uint64(arg.(uint32)), 10)
+		return strconv.FormatUint(uint64(arg), 10)
 	case uint64:
-		return strconv.FormatUint(uint64(arg.(uint64)), 10)
+		return strconv.FormatUint(arg, 10)
 	case string:
-		return arg.(string)
+		return arg
 	case []byte:
-		return hex.EncodeToString(arg.([]byte))
+		return hex.EncodeToString(arg)
 	case bool:
-		if arg.(bool) {
+		if arg {
 			return "1"
 		} else {
 			return "0"
 		}
 	case *big.Int:
 		actual := [32]byte{}
-		b := arg.(*big.Int).Bytes()
+		b := arg.Bytes()
 		copy(actual[32-len(b):], b)
 		return hex.EncodeToString(actual[:])
 	case [20]byte:
-		obj := arg.([20]byte)
+		obj := arg
 		return hex.EncodeToString(obj[:])
 	case [32]byte:
-		obj := arg.([32]byte)
+		obj := arg
 		return hex.EncodeToString(obj[:])
+	default:
+		panic("")
 	}
 	return ""
 }

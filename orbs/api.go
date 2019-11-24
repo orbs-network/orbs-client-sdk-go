@@ -166,7 +166,7 @@ func (c *OrbsClient) sendHttpPost(relativeUrl string, payload []byte) (*http.Res
 		return nil, nil, errors.New("payload sent by http is empty")
 	}
 
-	res, err := http.Post(c.Endpoint+relativeUrl, CONTENT_TYPE_MEMBUFFERS, bytes.NewReader(payload))
+	res, err := c.httpClient.Post(c.Endpoint+relativeUrl, CONTENT_TYPE_MEMBUFFERS, bytes.NewReader(payload))
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "failed sending http post")
 	}

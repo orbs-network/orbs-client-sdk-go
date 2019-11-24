@@ -24,16 +24,15 @@ type OrbsClient struct {
 
 func NewClient(endpoint string, virtualChainId uint32, networkType codec.NetworkType) *OrbsClient {
 	// Customize the Transport to have larger connection pool
-	defaultRoundTripper := http.DefaultTransport
-	defaultTransportPointer, ok := defaultRoundTripper.(*http.Transport)
+	defaultTransportPointer, ok := http.DefaultTransport.(*http.Transport)
 	if !ok {
 		panic(fmt.Sprintf("defaultRoundTripper not an *http.Transport"))
 	}
-	defaultTransport := *defaultTransportPointer // dereference it to get a copy of the struct that the pointer points to
+	defaultTransport := defaultTransportPointer // dereference it to get a copy of the struct that the pointer points to
 	defaultTransport.MaxIdleConns = 100000
 	defaultTransport.MaxIdleConnsPerHost = 100000
 
-	turboClient := &http.Client{Transport: &defaultTransport}
+	turboClient := &http.Client{Transport: defaultTransport}
 
 	return &OrbsClient{
 		Endpoint:       endpoint,

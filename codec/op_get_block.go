@@ -11,6 +11,7 @@ import (
 	"github.com/orbs-network/orbs-client-sdk-go/crypto/digest"
 	"github.com/orbs-network/orbs-client-sdk-go/crypto/hash"
 	"github.com/orbs-network/orbs-spec/types/go/primitives"
+	"github.com/orbs-network/orbs-spec/types/go/protocol"
 	"github.com/orbs-network/orbs-spec/types/go/protocol/client"
 	"github.com/pkg/errors"
 	"time"
@@ -23,9 +24,7 @@ type GetBlockRequest struct {
 }
 
 type GetBlockResponse struct {
-	RequestStatus           RequestStatus
-	BlockHeight             uint64
-	BlockTimestamp          time.Time
+	*Response
 	TransactionsBlockHash   []byte
 	TransactionsBlockHeader *TransactionsBlockHeader
 	ResultsBlockHash        []byte
@@ -91,19 +90,13 @@ func DecodeGetBlockResponse(buf []byte) (*GetBlockResponse, error) {
 		return nil, errors.New("response is corrupt and cannot be decoded")
 	}
 
-	// decode request status
-	requestStatus, err := requestStatusDecode(res.RequestResult().RequestStatus())
-	if err != nil {
-		return nil, err
-	}
-
 	// decode transactions
-	transactions := []*BlockTransaction{}
+	var transactions []*BlockTransaction
 	for txIterator := res.SignedTransactionsIterator(); txIterator.HasNext(); {
 		tx := txIterator.NextSignedTransactions()
 
 		// decode method arguments
-		inputArgumentArray, err := PackedArgumentsDecode(tx.Transaction().RawInputArgumentArrayWithHeader())
+		inputArgumentArray, err := protocol.PackedOutputArgumentsToNatives(tx.Transaction().RawInputArgumentArrayWithHeader())
 		if err != nil {
 			return nil, err
 		}
@@ -136,7 +129,7 @@ func DecodeGetBlockResponse(buf []byte) (*GetBlockResponse, error) {
 				transaction.ExecutionResult = executionResult
 
 				// decode method arguments
-				outputArgumentArray, err := PackedArgumentsDecode(receipt.RawOutputArgumentArrayWithHeader())
+				outputArgumentArray, err := protocol.PackedOutputArgumentsToNatives(receipt.RawOutputArgumentArrayWithHeader())
 				if err != nil {
 					return nil, err
 				}
@@ -154,10 +147,12 @@ func DecodeGetBlockResponse(buf []byte) (*GetBlockResponse, error) {
 	}
 
 	// return
+	response, err := NewResponse(res)
+	if err != nil {
+		return nil, err
+	}
 	return &GetBlockResponse{
-		RequestStatus:         requestStatus,
-		BlockHeight:           uint64(res.RequestResult().BlockHeight()),
-		BlockTimestamp:        time.Unix(0, int64(res.RequestResult().BlockTimestamp())),
+		Response:              response,
 		TransactionsBlockHash: hash.CalcSha256(res.TransactionsBlockHeader().Raw()),
 		TransactionsBlockHeader: &TransactionsBlockHeader{
 			ProtocolVersion: uint32(res.TransactionsBlockHeader().ProtocolVersion()),

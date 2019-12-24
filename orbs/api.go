@@ -190,7 +190,7 @@ func (c *OrbsClient) sendHttpPost(relativeUrl string, payload []byte) (*http.Res
 		if contentType == "text/plain" || contentType == "application/json" {
 			return nil, buf, errors.Errorf("http request failed (statusCode=%d): %s", res.StatusCode, string(buf))
 		} else {
-			return nil, buf, errors.Errorf("http request failed with Content-Type '%s' (statusCode=%d): %x", res.StatusCode, contentType, buf)
+			return nil, buf, errors.Errorf("http request failed with Content-Type '%s' (statusCode=%d): %x", contentType, res.StatusCode, buf)
 		}
 	}
 

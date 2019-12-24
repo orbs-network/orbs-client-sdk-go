@@ -35,8 +35,6 @@ func TestGetTxStatus(t *testing.T) {
 
 	// send the transaction
 	incResponse, err := client.SendTransaction(tx)
-	t.Log("Transfer response:")
-	t.Logf("%+v", incResponse)
 	require.NoError(t, err)
 	require.Equal(t, codec.REQUEST_STATUS_COMPLETED, incResponse.RequestStatus)
 	require.Equal(t, codec.EXECUTION_RESULT_SUCCESS, incResponse.ExecutionResult)

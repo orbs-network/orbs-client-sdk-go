@@ -103,9 +103,8 @@ func (c *OrbsClient) GetTransactionStatus(txId string) (response *codec.GetTrans
 		return
 	}
 
-	if res.StatusCode != http.StatusOK {
+	if !(res.StatusCode == http.StatusOK || res.StatusCode == http.StatusNotFound) {
 		err = errors.Errorf("http status %s", res.Status)
-		return
 	}
 
 	return

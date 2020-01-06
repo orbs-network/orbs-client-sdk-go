@@ -1,15 +1,17 @@
 package e2e
 
 import (
-	"fmt"
 	"github.com/orbs-network/orbs-client-sdk-go/codec"
 	"github.com/orbs-network/orbs-client-sdk-go/orbs"
 	"github.com/stretchr/testify/require"
 	"testing"
-	"time"
 )
 
-func TestDeployMultifile(t *testing.T) {
+func TestGetTxStatus(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping E2E tests in short mode")
+	}
+
 	h := newHarness()
 	defer h.shutdown()
 
@@ -24,7 +26,7 @@ func TestDeployMultifile(t *testing.T) {
 	contractName := deployContract(t, client, sender)
 
 	// create transfer transaction
-	tx, _, err := client.CreateTransaction(
+	tx, txId, err := client.CreateTransaction(
 		sender.PublicKey,
 		sender.PrivateKey,
 		contractName,
@@ -33,34 +35,17 @@ func TestDeployMultifile(t *testing.T) {
 
 	// send the transaction
 	incResponse, err := client.SendTransaction(tx)
-	t.Log("Transfer response:")
-	t.Logf("%+v", incResponse)
 	require.NoError(t, err)
 	require.Equal(t, codec.REQUEST_STATUS_COMPLETED, incResponse.RequestStatus)
 	require.Equal(t, codec.EXECUTION_RESULT_SUCCESS, incResponse.ExecutionResult)
 	require.Equal(t, codec.TRANSACTION_STATUS_COMMITTED, incResponse.TransactionStatus)
-}
 
-func deployContract(t *testing.T, client *orbs.OrbsClient, sender *orbs.OrbsAccount) string {
-	sources, err := orbs.ReadSourcesFromDir("./contract")
+
+	found, err := client.GetTransactionStatus(txId)
 	require.NoError(t, err)
-	require.Len(t, sources, 2)
+	require.EqualValues(t, codec.TRANSACTION_STATUS_COMMITTED, found.TransactionStatus)
 
-	contractName := fmt.Sprintf("Inc%d", time.Now().UnixNano())
-
-	// create transfer transaction
-	deployTx, _, err := client.CreateDeployTransaction(
-		sender.PublicKey,
-		sender.PrivateKey,
-		contractName,
-		orbs.PROCESSOR_TYPE_NATIVE,
-		sources...)
+	notFound, err := client.GetTransactionStatus("0xC0058950d1Bdde15d06C2d7354C3Cb15Dae02CFC6BF5934b358D43dEf1DFE1a0C420Da72e541bd6e")
 	require.NoError(t, err)
-	deployResponse, err := client.SendTransaction(deployTx)
-	require.NoError(t, err)
-	require.Equal(t, codec.REQUEST_STATUS_COMPLETED, deployResponse.RequestStatus)
-	require.Equal(t, codec.EXECUTION_RESULT_SUCCESS, deployResponse.ExecutionResult)
-	require.Equal(t, codec.TRANSACTION_STATUS_COMMITTED, deployResponse.TransactionStatus)
-
-	return contractName
+	require.EqualValues(t, codec.TRANSACTION_STATUS_NO_RECORD_FOUND, notFound.TransactionStatus)
 }

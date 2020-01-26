@@ -8,6 +8,8 @@ import (
 
 func TestInc(t *testing.T) {
 	unit.InServiceScope(nil, nil, func(mockery unit.Mockery) {
+		mockery.MockEmitEvent(Inc, uint64(1))
+
 		inc()
 		require.EqualValues(t, 1, value())
 	})

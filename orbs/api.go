@@ -169,6 +169,9 @@ func (c *OrbsClient) Subscribe(ctx context.Context, publicKey []byte, contractNa
 	pollingInterval time.Duration, callback EventProcessingCallback) (blockHeight uint64, eventIndex uint64, err error) {
 
 	blockHeight, err = c.GetBlockHeight(publicKey)
+	if err != nil {
+		return 0, 0, err
+	}
 
 	for {
 		block, err := c.GetBlock(blockHeight)
@@ -197,8 +200,6 @@ func (c *OrbsClient) Subscribe(ctx context.Context, publicKey []byte, contractNa
 
 		}
 	}
-
-	return
 }
 
 func (c *OrbsClient) GetBlockHeight(publicKey []byte) (uint64, error) {

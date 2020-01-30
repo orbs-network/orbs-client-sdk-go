@@ -8,10 +8,12 @@ package orbs
 
 import (
 	"bytes"
+	"context"
 	"github.com/orbs-network/orbs-client-sdk-go/codec"
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 const CONTENT_TYPE_MEMBUFFERS = "application/membuffers"
@@ -160,6 +162,56 @@ func (c *OrbsClient) GetBlock(blockHeight uint64) (response *codec.GetBlockRespo
 	return
 }
 
+// EventIndex helps looking for the events of a certain transaction
+type EventProcessingCallback func(event *codec.Event, blockHeight uint64, transactionHash []byte, transactionId []byte, eventIndex uint64) error
+
+func (c *OrbsClient) Subscribe(ctx context.Context, publicKey []byte, contractName string, eventNames []string,
+	pollingInterval time.Duration, callback EventProcessingCallback) (blockHeight uint64, eventIndex uint64, err error) {
+
+	blockHeight, err = c.GetBlockHeight(publicKey)
+	if err != nil {
+		return 0, 0, err
+	}
+
+	for {
+		block, err := c.GetBlock(blockHeight)
+
+		if err == nil {
+			for _, tx := range block.Transactions {
+				eventIndex = 0
+				for _, event := range tx.OutputEvents {
+					if event.ContractName == contractName && includes(eventNames, event.EventName) {
+						err = callback(event, blockHeight, tx.TxHash, tx.TxId, eventIndex)
+						if err != nil {
+							return blockHeight, eventIndex, err
+						}
+					}
+
+					eventIndex++
+				}
+			}
+			blockHeight++
+		}
+
+		select {
+		case <- ctx.Done():
+			return blockHeight, eventIndex, ctx.Err()
+		case <-time.After(pollingInterval):
+
+		}
+	}
+}
+
+func (c *OrbsClient) GetBlockHeight(publicKey []byte) (uint64, error) {
+	query, err := c.CreateQuery(publicKey, "_Info", "isAlive")
+	res, err := c.SendQuery(query)
+	if err != nil {
+		return 0, err
+	}
+
+	return uint64(res.BlockHeight), err
+}
+
 func (c *OrbsClient) sendHttpPost(relativeUrl string, payload []byte) (*http.Response, []byte, error) {
 	if len(payload) == 0 {
 		return nil, nil, errors.New("payload sent by http is empty")
@@ -194,6 +246,16 @@ func (c *OrbsClient) sendHttpPost(relativeUrl string, payload []byte) (*http.Res
 	}
 
 	return res, buf, nil
+}
+
+func includes(list []string, item string) bool {
+	for _, s := range list {
+		if s == item {
+			return true
+		}
+	}
+
+	return false
 }
 
 // TODO: streamline these errors

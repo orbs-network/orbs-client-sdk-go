@@ -162,7 +162,8 @@ func (c *OrbsClient) GetBlock(blockHeight uint64) (response *codec.GetBlockRespo
 	return
 }
 
-type EventProcessingCallback func(event *codec.Event, blockHeight uint64, eventIndex uint64) error
+// EventIndex helps looking for the events of a certain transaction
+type EventProcessingCallback func(event *codec.Event, blockHeight uint64, transactionHash []byte, transactionId []byte, eventIndex uint64) error
 
 func (c *OrbsClient) Subscribe(ctx context.Context, publicKey []byte, contractName string, eventNames []string,
 	pollingInterval time.Duration, callback EventProcessingCallback) (blockHeight uint64, eventIndex uint64, err error) {
@@ -170,14 +171,14 @@ func (c *OrbsClient) Subscribe(ctx context.Context, publicKey []byte, contractNa
 	blockHeight, err = c.GetBlockHeight(publicKey)
 
 	for {
-		eventIndex = 0
 		block, err := c.GetBlock(blockHeight)
 
 		if err == nil {
 			for _, tx := range block.Transactions {
+				eventIndex = 0
 				for _, event := range tx.OutputEvents {
 					if event.ContractName == contractName && includes(eventNames, event.EventName) {
-						err = callback(event, blockHeight, eventIndex)
+						err = callback(event, blockHeight, tx.TxHash, tx.TxId, eventIndex)
 						if err != nil {
 							return blockHeight, eventIndex, err
 						}

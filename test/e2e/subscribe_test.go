@@ -38,7 +38,7 @@ func TestSubscribe(t *testing.T) {
 	var events []*codec.Event
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	go client.Subscribe(ctx, sender.PublicKey, contractName, []string{"Inc"}, 5*time.Millisecond, func(event *codec.Event, blockHeight uint64, eventIndex uint64) error {
+	go client.Subscribe(ctx, sender.PublicKey, contractName, []string{"Inc"}, 5*time.Millisecond, func(event *codec.Event, blockHeight uint64, txHash []byte, txId []byte, eventIndex uint64) error {
 		events = append(events, event)
 		return nil
 	})

@@ -102,13 +102,19 @@ func DecodeGetBlockResponse(buf []byte) (*GetBlockResponse, error) {
 		}
 
 		// add transaction
+		signer := tx.Transaction().Signer()
+		var signerPublicKey primitives.Ed25519PublicKey
+		if len(signer.Raw()) != 0 { // much better check than nil
+			signerPublicKey = signer.Eddsa().SignerPublicKey()
+		}
+
 		transactions = append(transactions, &BlockTransaction{
 			TxHash:          digest.CalcTxHash(tx.Transaction()),
 			TxId:            digest.CalcTxId(tx.Transaction()),
 			ProtocolVersion: uint32(tx.Transaction().ProtocolVersion()),
 			VirtualChainId:  uint32(tx.Transaction().VirtualChainId()),
 			Timestamp:       time.Unix(0, int64(tx.Transaction().Timestamp())),
-			SignerPublicKey: tx.Transaction().Signer().Eddsa().SignerPublicKey(),
+			SignerPublicKey: signerPublicKey,
 			ContractName:    string(tx.Transaction().ContractName()),
 			MethodName:      string(tx.Transaction().MethodName()),
 			InputArguments:  inputArgumentArray,

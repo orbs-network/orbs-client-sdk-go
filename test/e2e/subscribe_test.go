@@ -50,7 +50,7 @@ func TestSubscribe(t *testing.T) {
 	require.Equal(t, codec.EXECUTION_RESULT_SUCCESS, incResponse.ExecutionResult)
 	require.Equal(t, codec.TRANSACTION_STATUS_COMMITTED, incResponse.TransactionStatus)
 
-	time.Sleep(10*time.Millisecond)
+	time.Sleep(1*time.Second)
 
 	require.EqualValues(t, &codec.Event{
 		ContractName: contractName,

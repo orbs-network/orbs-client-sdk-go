@@ -8,8 +8,8 @@ package codec
 
 import (
 	"bytes"
-	"github.com/orbs-network/orbs-client-sdk-go/crypto/digest"
-	"github.com/orbs-network/orbs-client-sdk-go/crypto/hash"
+	"github.com/orbs-network/crypto-lib-go/crypto/digest"
+	"github.com/orbs-network/crypto-lib-go/crypto/hash"
 	"github.com/orbs-network/orbs-spec/types/go/primitives"
 	"github.com/orbs-network/orbs-spec/types/go/protocol"
 	"github.com/orbs-network/orbs-spec/types/go/protocol/client"

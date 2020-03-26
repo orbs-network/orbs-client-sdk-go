@@ -8,7 +8,7 @@ package orbs
 
 import (
 	"github.com/orbs-network/orbs-client-sdk-go/codec"
-	"github.com/orbs-network/orbs-client-sdk-go/crypto/encoding"
+	"github.com/orbs-network/crypto-lib-go/crypto/encoding"
 	"io/ioutil"
 	"path"
 	"strings"

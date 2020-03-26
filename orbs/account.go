@@ -8,9 +8,9 @@ package orbs
 
 import (
 	"crypto/sha256"
-	"github.com/orbs-network/orbs-client-sdk-go/crypto/digest"
-	"github.com/orbs-network/orbs-client-sdk-go/crypto/encoding"
-	"github.com/orbs-network/orbs-client-sdk-go/crypto/keys"
+	"github.com/orbs-network/crypto-lib-go/crypto/digest"
+	"github.com/orbs-network/crypto-lib-go/crypto/encoding"
+	"github.com/orbs-network/crypto-lib-go/crypto/keys"
 )
 
 type OrbsAccount struct {

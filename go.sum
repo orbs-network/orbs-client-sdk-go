@@ -106,6 +106,8 @@ github.com/mwitkow/go-conntrack v0.0.0-20190716064945-2f068394615f/go.mod h1:qRW
 github.com/oklog/ulid v1.3.1/go.mod h1:CirwcVhetQ6Lv90oh/F+FBtV6XMibvdAFo93nm5qn4U=
 github.com/orbs-network/crypto-lib-go v1.1.0 h1:78y33AFfVwQ7Qc8Wgz3EQltxid/P66Q8gq0kiaCX8XU=
 github.com/orbs-network/crypto-lib-go v1.1.0/go.mod h1:2jw6UQyT53aRh425j7mpxaGDhvfGVCfTqqBj22zULOs=
+github.com/orbs-network/crypto-lib-go v1.2.0 h1:ZB+RCD8dPE2di97J5ap/7VX+7yuNNyey5P9p2nSHhvA=
+github.com/orbs-network/crypto-lib-go v1.2.0/go.mod h1:2jw6UQyT53aRh425j7mpxaGDhvfGVCfTqqBj22zULOs=
 github.com/orbs-network/go-mock v0.0.0-20180813130752-890a1ee8d0a1 h1:ezKxeCPNvc27Ri1EQkXfJu6N6i4i38kPuL7BkzcFOUU=
 github.com/orbs-network/go-mock v0.0.0-20180813130752-890a1ee8d0a1/go.mod h1:Hfj5NDPp07PIkGv5y8g1C0zsMXbrVTPQVIvSuHSHyvo=
 github.com/orbs-network/gojay v1.3.0/go.mod h1:xdSp1mz0+DL+c6OLsbZ5qB/Gtygikcr5NdSsU1GsRC0=

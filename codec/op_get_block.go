@@ -33,12 +33,14 @@ type GetBlockResponse struct {
 }
 
 type TransactionsBlockHeader struct {
-	ProtocolVersion uint32
-	VirtualChainId  uint32
-	BlockHeight     uint64
-	PrevBlockHash   []byte
-	Timestamp       time.Time
-	NumTransactions uint32
+	ProtocolVersion      uint32
+	VirtualChainId       uint32
+	BlockHeight          uint64
+	PrevBlockHash        []byte
+	Timestamp            time.Time
+	NumTransactions      uint32
+	BlockProposerAddress []byte
+	ReferenceTime        uint32
 }
 
 type ResultsBlockHeader struct {
@@ -49,6 +51,8 @@ type ResultsBlockHeader struct {
 	Timestamp              time.Time
 	TransactionsBlockHash  []byte
 	NumTransactionReceipts uint32
+	BlockProposerAddress   []byte
+	ReferenceTime          uint32
 }
 
 type BlockTransaction struct {
@@ -161,12 +165,14 @@ func DecodeGetBlockResponse(buf []byte) (*GetBlockResponse, error) {
 		Response:              response,
 		TransactionsBlockHash: hash.CalcSha256(res.TransactionsBlockHeader().Raw()),
 		TransactionsBlockHeader: &TransactionsBlockHeader{
-			ProtocolVersion: uint32(res.TransactionsBlockHeader().ProtocolVersion()),
-			VirtualChainId:  uint32(res.TransactionsBlockHeader().VirtualChainId()),
-			BlockHeight:     uint64(res.TransactionsBlockHeader().BlockHeight()),
-			PrevBlockHash:   res.TransactionsBlockHeader().PrevBlockHashPtr(),
-			Timestamp:       time.Unix(0, int64(res.TransactionsBlockHeader().Timestamp())),
-			NumTransactions: res.TransactionsBlockHeader().NumSignedTransactions(),
+			ProtocolVersion:      uint32(res.TransactionsBlockHeader().ProtocolVersion()),
+			VirtualChainId:       uint32(res.TransactionsBlockHeader().VirtualChainId()),
+			BlockHeight:          uint64(res.TransactionsBlockHeader().BlockHeight()),
+			PrevBlockHash:        res.TransactionsBlockHeader().PrevBlockHashPtr(),
+			Timestamp:            time.Unix(0, int64(res.TransactionsBlockHeader().Timestamp())),
+			NumTransactions:      res.TransactionsBlockHeader().NumSignedTransactions(),
+			BlockProposerAddress: res.TransactionsBlockHeader().BlockProposerAddress(),
+			ReferenceTime:        uint32(res.TransactionsBlockHeader().ReferenceTime()),
 		},
 		ResultsBlockHash: hash.CalcSha256(res.ResultsBlockHeader().Raw()),
 		ResultsBlockHeader: &ResultsBlockHeader{
@@ -177,6 +183,8 @@ func DecodeGetBlockResponse(buf []byte) (*GetBlockResponse, error) {
 			Timestamp:              time.Unix(0, int64(res.ResultsBlockHeader().Timestamp())),
 			TransactionsBlockHash:  res.ResultsBlockHeader().TransactionsBlockHashPtr(),
 			NumTransactionReceipts: res.ResultsBlockHeader().NumTransactionReceipts(),
+			BlockProposerAddress:   res.ResultsBlockHeader().BlockProposerAddress(),
+			ReferenceTime:          uint32(res.ResultsBlockHeader().ReferenceTime()),
 		},
 		Transactions: transactions,
 	}, nil

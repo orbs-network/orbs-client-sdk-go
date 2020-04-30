@@ -382,16 +382,18 @@
       "BlockHeight": "3301",
       "BlockTimestamp": "2020-11-21T20:00:00.000Z",
       "RequestStatus": "COMPLETED",
-      "TransactionsBlockHash": "BYbA/qvVuKXyz/BG+fB/ljd01CNIo6j7VJrjEM1QPB8=",
+      "TransactionsBlockHash": "OdBPjuEpLrSppeDtwa3hEiHWzRz9Pkj2Q1f6nACALh8=",
       "TransactionsBlockHeader": {
         "ProtocolVersion": "1",
         "VirtualChainId": "42",
         "BlockHeight": "3301",
         "Timestamp": "2020-11-21T20:00:00.000Z",
         "NumTransactions": "2",
-        "PrevBlockHash": "ESIz"
+        "PrevBlockHash": "ESIz",
+        "BlockProposerAddress": "AQIDAQIDAQIDAQECAwECAwECAwE=",
+        "ReferenceTime": 1605916800
       },
-      "ResultsBlockHash": "KJXkCFmBKj1ACZ70Fex/dLf7sWjzenidllImuENdUus=",
+      "ResultsBlockHash": "ymr0XqbVzzCGyno7LDHkK4E+DeuiQae+wKRqW7mCo6A=",
       "ResultsBlockHeader": {
         "ProtocolVersion": "1",
         "VirtualChainId": "42",
@@ -399,7 +401,9 @@
         "Timestamp": "2020-11-21T20:00:00.000Z",
         "NumTransactionReceipts": "2",
         "PrevBlockHash": "RFVm",
-        "TransactionsBlockHash": "d4iZ"
+        "TransactionsBlockHash": "d4iZ",
+        "BlockProposerAddress": "AQIDAQIDAQIDAQECAwECAwECAwE=",
+        "ReferenceTime": 1605916800
       },
       "Transactions": [
         {
@@ -428,13 +432,21 @@
                 "1",
                 "2",
                 "hello",
-                "010203"
+                "010203",
+                "1",
+                "0102030102030102030102030102030401020301020301020301020301020304",
+                "0102030102030102030101020301020301020301",
+                "0102030102030102030102030102030401020301020301020301020301020304"
               ],
               "ArgumentsTypes": [
                 "uint32",
                 "uint64",
                 "string",
-                "bytes"
+                "bytes",
+                "bool",
+                "uint256",
+                "bytes20",
+                "bytes32"
               ]
             },
             {

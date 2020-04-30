@@ -10,8 +10,8 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
-	"github.com/orbs-network/orbs-client-sdk-go/codec"
 	"github.com/orbs-network/crypto-lib-go/crypto/digest"
+	"github.com/orbs-network/orbs-client-sdk-go/codec"
 	"github.com/orbs-network/orbs-spec/types/go/primitives"
 	"github.com/orbs-network/orbs-spec/types/go/protocol"
 	"github.com/orbs-network/orbs-spec/types/go/protocol/client"
@@ -23,8 +23,11 @@ import (
 func main() {
 	t1, _ := time.Parse(time.RFC3339, "2010-11-21T10:00:00.000Z")
 	t2, _ := time.Parse(time.RFC3339, "2020-11-21T20:00:00.000Z")
+	ref, _ := time.Parse(time.RFC3339, "2020-11-21T00:00:00.000Z")
 
 	h1, _ := hex.DecodeString("cf80cd8aed482d5d1527d7dc72fceff84e6326592848447d2dc0b0e87dfc9a90")
+
+	proposer := primitives.NodeAddress([]byte{0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01})
 
 	bigNum := big.NewInt(0)
 	bigNum.SetBytes([]byte{0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x04,
@@ -262,6 +265,8 @@ func main() {
 			PrevBlockHashPtr:      []byte{0x11, 0x22, 0x33},
 			Timestamp:             primitives.TimestampNano(t2.UnixNano()),
 			NumSignedTransactions: 2,
+			ReferenceTime:         primitives.TimestampSeconds(ref.Unix()),
+			BlockProposerAddress:  proposer,
 		},
 		ResultsBlockHeader: &protocol.ResultsBlockHeaderBuilder{
 			ProtocolVersion:          1,
@@ -271,6 +276,8 @@ func main() {
 			Timestamp:                primitives.TimestampNano(t2.UnixNano()),
 			TransactionsBlockHashPtr: []byte{0x77, 0x88, 0x99},
 			NumTransactionReceipts:   2,
+			ReferenceTime:            primitives.TimestampSeconds(ref.Unix()),
+			BlockProposerAddress:     proposer,
 		},
 		SignedTransactions: []*protocol.SignedTransactionBuilder{
 			{
